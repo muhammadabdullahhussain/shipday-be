@@ -10,21 +10,21 @@ import NewPass from "./pages/newpass";
 import Congratulations from "./pages/congratulations"; 
 import DashboardPage from './pages/Dashboard/DashboardPage';
 import Shipments from './pages/Dashboard/Shipments';
-import RoutePlanning from './pages/Dashboard/RoutePlanning';
+import RoutePlanning from './pages/Dashboard/Routeplanning';
 import StaffManagement from './pages/Dashboard/StaffManagement';
 import OrderManagement from './pages/Dashboard/OrderManagement';
 import Customers from './pages/Dashboard/Customers';
 import Deliveries from './pages/Dashboard/Deliveries';
 import Reports from './pages/Dashboard/Reports';
 import Wherehouse from './pages/Dashboard/Wherehouse';
-import Settings from './pages/Dashboard/Settings';
-import ShipmentDetails from './pages/Dashboard/ShipmentDetails'; // ✅ import the page
+import Settings from './pages/Dashboard/settings';
+import ShipmentDetails from './pages/Dashboard/Shipmentdetails'; // ✅ import the page
 import StaffOverview from "./pages/Dashboard/Staffoverview";
-import OrderDetails from "./pages/Dashboard/OrderDetails";
-import Customerinfo from "./pages/Dashboard/Customerinfo";
+import OrderDetails from "./pages/Dashboard/Orderdetails";
+import Customerinfo from "./pages/Dashboard/customerinfo";
 import DeliveryDetails from "./pages/Dashboard/DeliveryDetails";
 import WarehouseDetails from "./pages/Dashboard/WarehouseDetails";
-import Transaction from "./pages/Dashboard/Transaction";
+import Transaction from "./pages/Dashboard/transaction";
 import Fleet from "./pages/Dashboard/fleetmanagement";
 import VehicleDetailsPage from './pages/Dashboard/VehicleDetailsPage';
 import DashboardLayout from './layouts/DashboardLayout';
