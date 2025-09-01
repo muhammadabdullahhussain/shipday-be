@@ -1,13 +1,18 @@
+
+Praneeth
+12:24 PM (0 minutes ago)
+to me
+
 // src/App.jsx
 import { Routes, Route, Navigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Forgetpass from './pages/Forgetpass';
-import Verification from './pages/Verification'; 
-import NewPass from "./pages/NewPass";
-import Congratulations from "./pages/Congratulations"; 
+import Login from './pages/login';
+import Register from './pages/register';
+import Forgetpass from './pages/forgetpass';
+import Verification from './pages/verification'; 
+import NewPass from "./pages/newpass";
+import Congratulations from "./pages/congratulations"; 
 import DashboardPage from './pages/Dashboard/DashboardPage';
 import Shipments from './pages/Dashboard/Shipments';
 import RoutePlanning from './pages/Dashboard/RoutePlanning';
