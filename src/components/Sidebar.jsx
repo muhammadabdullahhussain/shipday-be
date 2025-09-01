@@ -11,7 +11,7 @@ import customersIcon from "../assets/icons/customers.png";
 import deliveriesIcon from "../assets/icons/deliveries.png";
 import reportsIcon from "../assets/icons/reports.png";
 import settingsIcon from "../assets/icons/settings.png";
-import Wherehouse from "../assets/icons/Wherehouse.png";
+import Wherehouse from "../assets/icons/wherehouse.png";
 import Transaction from "../assets/icons/transaction.png";
 import Truck from "../assets/icons/truck-fast.png";
 import "../styles/ui/Sidebar.css";
