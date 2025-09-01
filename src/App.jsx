@@ -27,7 +27,7 @@ import WarehouseDetails from "./pages/Dashboard/WarehouseDetails";
 import Transaction from "./pages/Dashboard/transaction";
 import Fleet from "./pages/Dashboard/fleetmanagement";
 import VehicleDetailsPage from './pages/Dashboard/VehicleDetailsPage';
-import DashboardLayout from './layouts/DashboardLayout';
+import DashboardLayout from './Layouts/DashboardLayout';
 
 function App() {
   return (
