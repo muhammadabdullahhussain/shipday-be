@@ -1,9 +1,4 @@
 
-Praneeth
-12:24 PM (0 minutes ago)
-to me
-
-// src/App.jsx
 import { Routes, Route, Navigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
