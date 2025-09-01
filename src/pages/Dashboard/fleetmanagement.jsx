@@ -10,7 +10,7 @@ import InactiveVehiclesCard from "../../components/fleet/InactiveVehiclesCard";
 import MaintenanceCard from "../../components/fleet/MaintenanceCard";
 import AddVehicleModal from "../../components/fleet/AddVehicleModal";
 
-import searchIcon from "../../assets/icons/icon.png";
+import searchIcon from "../../assets/icons/Icon.png";
 
 import "../../styles/ui/FleetPage.css";
 import "../../styles/ui/FleetCards.css";
