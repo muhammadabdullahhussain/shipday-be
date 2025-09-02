@@ -1,6 +1,14 @@
 {
   "routes": [
     {
+      "route": "/assets/*",
+      "serve": "/assets/*"
+    },
+    {
+      "route": "/favicon.ico",
+      "serve": "/favicon.ico"
+    },
+    {
       "route": "/*",
       "rewrite": "/index.html"
     }
