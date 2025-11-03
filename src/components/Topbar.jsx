@@ -154,14 +154,14 @@ const Topbar = () => {
   return (
     <header className="topbar">
       <div className="d-flex align-items-center justify-content-between w-100">
-        <div className="page-title-container d-flex align-items-center justify-content-center">
+        <div className="page-title-container d-none d-md-flex align-items-center">
           <h1 className="page-title">
             {pageTitle}{" "}
             {staffName && <span className="page-title">({staffName})</span>}
           </h1>
         </div>
 
-        <div className="topbar-right d-flex align-items-center gap-4">
+        <div className="topbar-right d-flex align-items-center gap-2 gap-md-4 ms-auto">
           {/* Language Selector */}
           <div className="language d-flex align-items-center gap-2">
             <img src={globeIcon} alt="Language" className="language-icon" />
@@ -273,7 +273,7 @@ const Topbar = () => {
                 objectFit: "cover",
               }}
             />
-            <span>{user.fullName}</span>
+            <span className="d-none d-md-inline">{user.fullName}</span>
 
             {showUserMenu && (
               <div

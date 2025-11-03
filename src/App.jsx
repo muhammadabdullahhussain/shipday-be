@@ -27,6 +27,7 @@ import WarehouseDetails from "./pages/Dashboard/WarehouseDetails";
 import Transaction from "./pages/Dashboard/transaction";
 import Fleet from "./pages/Dashboard/fleetmanagement";
 import VehicleDetailsPage from './pages/Dashboard/VehicleDetailsPage';
+import Drivers from './pages/Dashboard/Drivers';
 import DashboardLayout from './Layouts/DashboardLayout';
 
 function App() {
@@ -49,6 +50,7 @@ function App() {
       <Route path="route-planning" element={<RoutePlanning />} />
       <Route path="staff" element={<StaffManagement />} />
       <Route path="staff/:id" element={<StaffOverview />} />
+      <Route path="drivers" element={<Drivers />} />
       <Route path="fleetmanagement" element={<Fleet />} />
       <Route path="/dashboard/fleetmanagement/:id" element={<VehicleDetailsPage />} />
       <Route path="orders" element={<OrderManagement />} />

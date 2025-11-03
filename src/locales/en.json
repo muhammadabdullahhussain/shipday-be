@@ -25,6 +25,9 @@
     "status": "Status",
     "back": "< Back",
     "next": "Next >",
+    "generating": "Generating...",
+    "addShipment": "Add Shipment"
+  },
   "shipmentDetailsPage": {
     "title": "Shipment Details",
     "editShipment": "Edit Shipment",
@@ -59,5 +62,4 @@
     "loading": "Loading shipment details...",
     "notFound": "Shipment not found."
   }
-}
 }

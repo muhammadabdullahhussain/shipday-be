@@ -3,6 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "../../styles/ui/ShipmentListPage.css";
 import axiosInstance from "../../utils/axiosInterceptor";
+import AssignShipmentModal from "../../components/AssignShipmentModal";
+import CreateShipmentForm from "../../components/CreateShipmentForm";
+import EditShipmentModal from "../../components/EditShipmentModal";
+import ShipmentDetailsModal from "../../components/ShipmentDetailsModal";
 
 const ShipmentsTable = () => {
   const { t } = useTranslation();
@@ -13,51 +17,49 @@ const ShipmentsTable = () => {
   const [selectedShipments, setSelectedShipments] = useState([]);
   const [sortField, setSortField] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
+  const [dropdownOpen, setDropdownOpen] = useState(null);
   const [statusFilter, setStatusFilter] = useState("");
   const [showFilter, setShowFilter] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showAssignModal, setShowAssignModal] = useState(false);
+  const [selectedShipment, setSelectedShipment] = useState(null);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [createLoading, setCreateLoading] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingShipment, setEditingShipment] = useState(null);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [selectedShipmentDetails, setSelectedShipmentDetails] = useState(null);
 
   const rowsPerPage = 8;
 
-  const fetchDriverName = async (origin, destination) => {
-    try {
-      const res = await axiosInstance.get("/staff/driver-by-route", {
-        params: { origin, destination },
-      });
-      return res.data.driverName || "Unassigned";
-    } catch {
-      return "Unassigned";
-    }
-  };
-
   const fetchShipments = async () => {
     try {
-      const res = await axiosInstance.get("/shipment");
+      const res = await axiosInstance.get("/shipments");
 
-      const processed = await Promise.all(
-        res.data.map(async (shipment) => {
-          const driverName = await fetchDriverName(shipment.start, shipment.end);
-          const allDelivered =
-            shipment.orders &&
-            shipment.orders.length > 0 &&
-            shipment.orders.every((order) => order.status === "Delivered");
+      const processed = res.data.map((shipment) => {
+        // Get driver name from the driver object if it exists, fallback to driverName field
+        const driverName = shipment.driver?.username || shipment.driverName || "Unassigned";
+        
+        // Determine status based on API response or orders
+        let status = shipment.status || "Pending";
+        
+        // If there are orders, check if all are delivered
+        if (shipment.orders && shipment.orders.length > 0) {
+          const allDelivered = shipment.orders.every((order) => order.status === "Delivered");
+          if (allDelivered) {
+            status = "Delivered";
+          }
+        }
 
-          return {
-            _id: shipment._id,
-            shipmentId: shipment.shipmentId,
-            origin: shipment.start,
-            destination: shipment.end,
-            trackingNumber: shipment.trackingNumber || "N/A",
-            vehicleType: shipment.vehicleType || "Truck",
-            estimatedDelivery: shipment.eta || "2024-10-10",
-            status: allDelivered ? t("shipments.delivered") : t("shipments.shipping"),
-            driverName,
-            dateShipped: shipment.dateShipped || "2024-10-01",
-            orders: shipment.orders || [],
-            routeId: shipment.routeId || null,
-          };
-        })
-      );
+        return {
+          ...shipment, // Keep all original fields
+          origin: shipment.start,
+          destination: shipment.end,
+          estimatedDelivery: shipment.eta || "2024-10-10",
+          status: t(`shipments.${status.toLowerCase()}`),
+          driverName,
+        };
+      });
 
       setShipments(processed);
     } catch (err) {
@@ -69,17 +71,25 @@ const ShipmentsTable = () => {
     fetchShipments();
   }, [t]);
 
-  const generateShipments = async () => {
-    setLoading(true);
-    try {
-      await axiosInstance.post("/shipment/generate");
-      await fetchShipments();
-    } catch (err) {
-      console.error("❌ Error generating shipments", err);
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    const handleClickOutside = () => setDropdownOpen(null);
+    if (dropdownOpen) {
+      document.addEventListener("click", handleClickOutside);
+      return () => document.removeEventListener("click", handleClickOutside);
     }
-  };
+  }, [dropdownOpen]);
+
+  // const generateShipments = async () => {
+  //   setLoading(true);
+  //   try {
+  //     await axiosInstance.post("/shipment/generate");
+  //     await fetchShipments();
+  //   } catch (err) {
+  //     console.error("❌ Error generating shipments", err);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const filteredShipments = shipments
     .filter((shipment) =>
@@ -116,18 +126,7 @@ const ShipmentsTable = () => {
     }
   };
 
-  const vehicleBadge = (vehicle) => {
-    switch (vehicle) {
-      case "Truck":
-        return "bg-warning text-dark";
-      case "Plane":
-        return "bg-primary text-white";
-      case "Ship":
-        return "bg-secondary text-white";
-      default:
-        return "bg-light text-dark";
-    }
-  };
+
 
   const handleSelectAll = (e) => {
     if (e.target.checked) {
@@ -159,6 +158,70 @@ const ShipmentsTable = () => {
     setCurrentPage(1);
   };
 
+  const handleDropdownToggle = (shipmentId) => {
+    setDropdownOpen(dropdownOpen === shipmentId ? null : shipmentId);
+  };
+
+  const handleEdit = (shipment) => {
+    if (shipment.status === t("shipments.pending") || shipment.status === "Pending") {
+      setEditingShipment(shipment);
+      setShowEditModal(true);
+    } else {
+      navigate(`/dashboard/shipments/${shipment.shipmentId}`, {
+        state: { shipment, action: "edit" },
+      });
+    }
+    setDropdownOpen(null);
+  };
+
+  const handleUpdateShipment = async () => {
+    setShowEditModal(false);
+    setEditingShipment(null);
+    await fetchShipments();
+  };
+
+  const handleAssignDriver = (shipment) => {
+    setSelectedShipment(shipment);
+    setShowAssignModal(true);
+    setDropdownOpen(null);
+  };
+
+  const handleCloseAssignModal = () => {
+    setShowAssignModal(false);
+    setSelectedShipment(null);
+  };
+
+  const handleDriverAssignment = async (driverId, shipmentId) => {
+    try {
+      console.log('Assigning driver:', driverId, 'to shipment:', shipmentId);
+      // Add API call here to assign driver to shipment
+      handleCloseAssignModal();
+      await fetchShipments(); // Refresh shipments
+    } catch (error) {
+      console.error('Error assigning driver:', error);
+    }
+  };
+
+  const handleCancelShipment = (shipment) => {
+    navigate(`/dashboard/shipments/${shipment.shipmentId}`, {
+      state: { shipment, action: "cancel" },
+    });
+    setDropdownOpen(null);
+  };
+
+  const handleCreateShipment = async (formData) => {
+    setCreateLoading(true);
+    try {
+      await axiosInstance.post('/admin/create-shipment', formData);
+      setShowCreateModal(false);
+      await fetchShipments();
+    } catch (error) {
+      console.error('Error creating shipment:', error);
+    } finally {
+      setCreateLoading(false);
+    }
+  };
+
   return (
     <div className="shipment-container">
       <div className="d-flex justify-content-between align-items-center mb-3">
@@ -187,12 +250,19 @@ const ShipmentsTable = () => {
           </button>
 
           <button
+            className="btn btn-success me-2"
+            onClick={() => setShowCreateModal(true)}
+          >
+            Create Shipment
+          </button>
+
+          {/* <button
             className="btn btn-primary"
             onClick={generateShipments}
             disabled={loading}
           >
-            {loading ? t("shipments.generating") : t("Add shipment")}
-          </button>
+            {loading ? t("shipments.generating") : t("shipments.addShipment")}
+          </button> */}
 
           {showFilter && (
             <select
@@ -221,8 +291,19 @@ const ShipmentsTable = () => {
 
       <h5 className="fw-bold mb-3">{t("shipments.title")}</h5>
 
-      <div className="table-responsive">
-        <table className="table table-hover align-middle">
+      {/* ✅ Fixed overflow container */}
+      <div
+        className="table-responsive"
+        style={{
+          overflow: "visible",
+          position: "relative",
+          zIndex: 1,
+        }}
+      >
+        <table
+          className="table table-hover align-middle"
+          style={{ overflow: "visible", position: "relative" }}
+        >
           <thead className="table-light">
             <tr>
               <th>
@@ -242,7 +323,7 @@ const ShipmentsTable = () => {
               <th>{t("shipments.origin")}</th>
               <th>{t("shipments.destination")}</th>
               <th>{t("shipments.dateShipped")}</th>
-              <th>{t("shipments.vehicleType")}</th>
+            
               <th>{t("shipments.eta")}</th>
               <th>{t("shipments.status")}</th>
               <th></th>
@@ -250,16 +331,15 @@ const ShipmentsTable = () => {
           </thead>
           <tbody>
             {currentRows.map((item, idx) => (
-              <tr
-                key={idx}
-                onClick={() =>
-                  navigate(`/dashboard/shipments/${item.shipmentId}`, {
-                    state: { shipment: item },
-                  })
-                }
-                style={{ cursor: "pointer" }}
+              <tr 
+                key={idx} 
+                style={{ position: "relative", overflow: "visible", cursor: "pointer" }}
+                onClick={() => {
+                  setSelectedShipmentDetails(item);
+                  setShowDetailsModal(true);
+                }}
               >
-                <td onClick={(e) => e.stopPropagation()}>
+                <td>
                   <input
                     type="checkbox"
                     checked={selectedShipments.includes(item.shipmentId)}
@@ -271,19 +351,98 @@ const ShipmentsTable = () => {
                 <td>{item.origin}</td>
                 <td>{item.destination}</td>
                 <td>{item.dateShipped}</td>
-                <td>
-                  <span className={`badge ${vehicleBadge(item.vehicleType)}`}>
-                    {item.vehicleType}
-                  </span>
-                </td>
+              
                 <td>{item.estimatedDelivery}</td>
                 <td>
                   <span className={`badge ${statusBadge(item.status)}`}>
                     {item.status}
                   </span>
                 </td>
-                <td>
-                  <span className="dots">⋯</span>
+                <td className="position-relative">
+                  <span
+                    className="dots"
+                    style={{ cursor: "pointer", fontSize: "20px" }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDropdownToggle(item.shipmentId);
+                    }}
+                  >
+                    ⋯
+                  </span>
+
+                  {dropdownOpen === item.shipmentId && item.status !== t("shipments.delivered") && (
+                    <div
+                      className="position-absolute"
+                      style={{
+                        top: "100%",
+                        right: 0,
+                        zIndex: 9999,
+                        backgroundColor: "#fff",
+                        borderRadius: "10px",
+                        padding: "8px",
+                        minWidth: "150px",
+                        border: "1px solid rgba(0,0,0,0.1)",
+                        boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                        overflow: "visible",
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {/* Edit */}
+                      <button
+                        className="w-100 border-0 text-start px-3 py-2 d-flex align-items-center gap-2 rounded"
+                        style={{
+                          backgroundColor: "rgba(131, 110, 254, 0.12)",
+                          color: "#836EFE",
+                          fontSize: "14px",
+                          transition: "background-color 0.2s",
+                          marginBottom: "6px",
+                          cursor: "pointer",
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleEdit(item);
+                        }}
+                      >
+                        ✏️ Edit
+                      </button>
+
+                      {/* Assign Driver */}
+                      <button
+                        className="w-100 border-0 text-start px-3 py-2 d-flex align-items-center gap-2 rounded"
+                        style={{
+                          backgroundColor: "rgba(131, 110, 254, 0.12)",
+                          color: "#836EFE",
+                          fontSize: "14px",
+                          transition: "background-color 0.2s",
+                          marginBottom: "6px",
+                          cursor: "pointer",
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleAssignDriver(item);
+                        }}
+                      >
+                        👤 Assign
+                      </button>
+
+                      {/* Delete */}
+                      <button
+                        className="w-100 border-0 text-start px-3 py-2 d-flex align-items-center gap-2 rounded"
+                        style={{
+                          backgroundColor: "rgba(220, 38, 38, 0.12)",
+                          color: "#dc2626",
+                          fontSize: "14px",
+                          cursor: "pointer",
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleCancelShipment(item);
+                        }}
+                      >
+                        🗑️ Delete
+                      </button>
+                    </div>
+                  )}
                 </td>
               </tr>
             ))}
@@ -291,7 +450,8 @@ const ShipmentsTable = () => {
         </table>
       </div>
 
-      <div className="pagination-wrapper mt-4">
+      {/* Pagination */}
+      <div className="pagination-wrapper mt-4 d-flex justify-content-center">
         <ul className="pagination">
           <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
             <button
@@ -312,17 +472,68 @@ const ShipmentsTable = () => {
             </li>
           ))}
           <li
-            className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}
+            className={`page-item ${
+              currentPage === totalPages ? "disabled" : ""
+            }`}
           >
             <button
               className="page-link"
-              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
             >
               {t("shipments.next")}
             </button>
           </li>
         </ul>
       </div>
+
+      <AssignShipmentModal
+        show={showAssignModal}
+        onClose={handleCloseAssignModal}
+        shipment={selectedShipment}
+        onAssign={handleDriverAssignment}
+      />
+
+      {/* Create Shipment Modal */}
+      {showCreateModal && (
+        <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Create New Shipment</h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setShowCreateModal(false)}
+                ></button>
+              </div>
+              <CreateShipmentForm
+                onSubmit={handleCreateShipment}
+                onCancel={() => setShowCreateModal(false)}
+                loading={createLoading}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      <EditShipmentModal
+        show={showEditModal}
+        onClose={() => {
+          setShowEditModal(false);
+          setEditingShipment(null);
+        }}
+        shipment={editingShipment}
+        onUpdate={handleUpdateShipment}
+      />
+
+      <ShipmentDetailsModal
+        show={showDetailsModal}
+        onClose={() => setShowDetailsModal(false)}
+        shipment={selectedShipmentDetails}
+        statusBadge={statusBadge}
+      />
     </div>
   );
 };

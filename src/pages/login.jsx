@@ -73,6 +73,10 @@ const LoginPage = () => {
 
       navigate("/dashboard");
     } catch (err) {
+      console.error('Login Error:', err);
+      console.error('Response:', err.response);
+      console.error('Status:', err.response?.status);
+      console.error('Data:', err.response?.data);
       toast.error(err.response?.data?.message || "Login failed");
     } finally {
       setLoading(false);

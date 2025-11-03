@@ -19,9 +19,23 @@ const ShipmentDetails = () => {
   const [showAddNoteModal, setShowAddNoteModal] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [selectAll, setSelectAll] = useState(false);
+  const [activeAction, setActiveAction] = useState(null);
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
+
+  // Auto-open modals based on action from dropdown
+  useEffect(() => {
+    const action = location.state?.action;
+    setActiveAction(action);
+    if (action === 'edit') {
+      setShowEditModal(true);
+    } else if (action === 'addNote') {
+      setShowAddNoteModal(true);
+    } else if (action === 'cancel') {
+      setShowCancelModal(true);
+    }
+  }, [location.state?.action]);
 
   useEffect(() => {
     const loadShipmentData = async () => {
@@ -154,9 +168,33 @@ const ShipmentDetails = () => {
       <div className="d-flex justify-content-between align-items-start mb-3 flex-wrap">
         <h2 className="shipment-title">Shipment Details</h2>
         <div className="d-flex gap-2 mt-2 mt-md-0">
-          <button className="btn btn-primary" onClick={() => setShowEditModal(true)}>Edit Shipment</button>
-          <button className="btn btn-outline-secondary" onClick={() => setShowAddNoteModal(true)}>Add Note</button>
-          <button className="btn btn-outline-secondary" onClick={() => setShowCancelModal(true)}>Cancel Shipment</button>
+          <button 
+            className={`btn ${activeAction === 'edit' ? 'btn-primary' : 'btn-outline-primary'}`} 
+            onClick={() => {
+              setActiveAction('edit');
+              setShowEditModal(true);
+            }}
+          >
+            Edit Shipment
+          </button>
+          <button 
+            className={`btn ${activeAction === 'addNote' ? 'btn-primary' : 'btn-outline-primary'}`} 
+            onClick={() => {
+              setActiveAction('addNote');
+              setShowAddNoteModal(true);
+            }}
+          >
+            Add Note
+          </button>
+          <button 
+            className={`btn ${activeAction === 'cancel' ? 'btn-primary' : 'btn-outline-primary'}`} 
+            onClick={() => {
+              setActiveAction('cancel');
+              setShowCancelModal(true);
+            }}
+          >
+            Cancel Shipment
+          </button>
         </div>
       </div>
 

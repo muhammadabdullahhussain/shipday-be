@@ -43,6 +43,11 @@ const Sidebar = () => {
           <span className="text">Staff Management</span>
         </NavLink>
 
+        <NavLink to="/dashboard/drivers" className={getActiveClass}>
+          <img src={Truck} alt="Drivers" className="menu-icon" />
+          <span className="text">Drivers</span>
+        </NavLink>
+
         <NavLink to="/dashboard/fleetmanagement" className={getActiveClass}>
           <img src={Truck} alt="fleetmanagement" className="menu-icon" />
           <span className="text">Fleet Management</span>
