@@ -35,7 +35,7 @@ const RecentActivity = () => {
 
     const fetchShipments = async () => {
       try {
-        const res = await axiosInstance.get("/shipment");
+        const res = await axiosInstance.get("/shipments");
         const processed = await Promise.all(
           res.data.map(async (shipment) => {
             const driverName = await fetchDriverName(shipment.start, shipment.end);
