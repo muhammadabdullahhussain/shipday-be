@@ -32,7 +32,7 @@ const ShipmentsTable = () => {
 
   const rowsPerPage = 8;
 
-  const fetchShipments = async () => {
+  const fetchShipments = async () => {  
     try {
       const res = await axiosInstance.get("/shipments");
 
