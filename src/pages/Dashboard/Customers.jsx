@@ -18,12 +18,12 @@ const Customers = () => {
 
   const navigate = useNavigate();
 
-  // ✅ Fetch customers from backend
+  // Fetch customers from backend
   useEffect(() => {
     const fetchCustomers = async () => {
       try {
         const res = await axiosInstance.get("/customers"); // axios call
-        const data = res.data; // ✅ get data from axios response
+        const data = res.data; // get data from axios response
 
         const formatted = data.customers.map((cust, i) => ({
           id: cust.customerId || `CUST-${i.toString().padStart(6, "0")}`,

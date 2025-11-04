@@ -9,7 +9,7 @@ import {
   Form,
 } from "react-bootstrap";
 import "../../styles/ui/WarehouseDetails.css";
-import axiosInstance from "../../utils/axiosInterceptor"; // ✅ use interceptor
+import axiosInstance from "../../utils/axiosInterceptor"; //  use interceptor
 
 const WarehouseDetails = () => {
   const { id: warehouseId } = useParams();

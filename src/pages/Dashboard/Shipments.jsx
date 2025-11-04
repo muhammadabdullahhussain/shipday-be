@@ -316,7 +316,7 @@ const ShipmentsTable = () => {
 
       <h5 className="fw-bold mb-3">{t("shipments.title")}</h5>
 
-      {/* ✅ Fixed overflow container */}
+      {/*  Fixed overflow container */}
       <div
         className="table-responsive"
         style={{

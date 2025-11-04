@@ -87,7 +87,7 @@ const ActivityOverview = () => {
       >
         {activities.map((activity, index) => (
           <div
-            key={`${activity.id}-${index}`}  // ✅ fixed key uniqueness
+            key={`${activity.id}-${index}`}  // fixed key uniqueness
             className="timeline-item d-flex mb-4 position-relative"
           >
             <div className="timeline-indicator">

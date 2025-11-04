@@ -59,7 +59,7 @@ const RegisterPage = () => {
 
     setLoading(true);
     try {
-      // ✅ Use axiosInstance instead of fetch
+      //  Use axiosInstance instead of fetch
       const { data } = await axiosInstance.post("/request-code", {
         email,
         source: "register",

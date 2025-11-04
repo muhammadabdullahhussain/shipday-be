@@ -17,7 +17,7 @@ const AddVehicleModal = ({ show, handleClose }) => {
     status: "Active",
   });
 
-  // ✅ Fetch warehouses & drivers when modal loads
+  // Fetch warehouses & drivers when modal loads
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -44,7 +44,7 @@ const AddVehicleModal = ({ show, handleClose }) => {
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
 
-  // ✅ Submit vehicle with axios
+  //  Submit vehicle with axios
   const handleSubmit = async () => {
     try {
       const res = await axiosInstance.post("/fleet/add", formData);

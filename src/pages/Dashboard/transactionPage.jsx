@@ -16,7 +16,7 @@ const Transactions = () => {
 
   const navigate = useNavigate();
 
-  // ✅ Fetch data from backend
+  //  Fetch data from backend
   useEffect(() => {
     const fetchTransactions = async () => {
       try {

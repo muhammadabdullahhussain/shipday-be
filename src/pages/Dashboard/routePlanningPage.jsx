@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/ui/Routeplanning.css";
 import { Button } from "react-bootstrap";
-import AddRouteModal from "../../components/route/AddRouteModel";
+import AddRouteModal from "../../components/route/AddRouteModal";
 import axiosInstance from "../../utils/axiosInterceptor";
 
 

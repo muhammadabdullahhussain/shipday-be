@@ -18,7 +18,7 @@ const CustomerInfo = () => {
       if (!customer?.contact) return;
 
       try {
-        // ✅ Changed fetch to axiosInstance
+        //  Changed fetch to axiosInstance
         const response = await axiosInstance.get(`/orders/by-phone/${customer.contact}`);
         const data = response.data;
         console.log("Fetched orders by phone:", data);

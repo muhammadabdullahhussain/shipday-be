@@ -7,7 +7,7 @@ import InsuranceChart from "../../components/fleet/InsuranceChart";
 import AddVehicleModal from "../../components/fleet/AddVehicleModal";
 
 import "../../styles/ui/FleetPage.css";
-import axiosInstance from "../../utils/axiosInterceptor"; // ✅ use axiosInstance
+import axiosInstance from "../../utils/axiosInterceptor"; // use axiosInstance
 
 
 const VehicleDetailsPage = () => {

@@ -38,7 +38,7 @@ const AddWarehouseModal = ({ show, handleClose, onWarehouseAdded }) => {
   const response = await axiosInstance.post("/warehouse/add", form);
   const data = response.data;
 
-  alert("✅ Warehouse added successfully!");
+  alert(" Warehouse added successfully!");
   if (onWarehouseAdded) onWarehouseAdded(data.warehouse); // 🚀 Send back to parent
   handleClose();
   setForm({

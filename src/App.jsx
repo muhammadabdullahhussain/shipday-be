@@ -2,30 +2,30 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Login from './pages/login';
-import Register from './pages/register';
-import Forgetpass from './pages/forgetpass';
-import Verification from './pages/verification'; 
-import NewPass from "./pages/newpass";
-import Congratulations from "./pages/congratulations"; 
+import Login from './pages/loginPage';
+import Register from './pages/registerPage';
+import Forgetpass from './pages/forgetPassPage';
+import Verification from './pages/verificationPage'; 
+import NewPass from "./pages/newPassPage";
+import Congratulations from "./pages/congratulationsPage"; 
 import DashboardPage from './pages/Dashboard/DashboardPage';
 import Shipments from './pages/Dashboard/Shipments';
-import RoutePlanning from './pages/Dashboard/Routeplanning';
+import RoutePlanning from './pages/Dashboard/routePlanningPage';
 import StaffManagement from './pages/Dashboard/StaffManagement';
 import OrderManagement from './pages/Dashboard/OrderManagement';
 import Customers from './pages/Dashboard/Customers';
 import Deliveries from './pages/Dashboard/Deliveries';
 import Reports from './pages/Dashboard/Reports';
-import Wherehouse from './pages/Dashboard/Wherehouse';
-import Settings from './pages/Dashboard/settings';
-import ShipmentDetails from './pages/Dashboard/Shipmentdetails'; // ✅ import the page
-import StaffOverview from "./pages/Dashboard/Staffoverview";
-import OrderDetails from "./pages/Dashboard/Orderdetails";
-import Customerinfo from "./pages/Dashboard/customerinfo";
+import Wherehouse from './pages/Dashboard/warehousePage';
+import Settings from './pages/Dashboard/settingsPage';
+import ShipmentDetails from './pages/Dashboard/shipmentDetailsPage'; //  import the page
+import StaffOverview from "./pages/Dashboard/staffOverviewPage";
+import OrderDetails from "./pages/Dashboard/orderDetailsPage";
+import Customerinfo from "./pages/Dashboard/customerInfoPage";
 import DeliveryDetails from "./pages/Dashboard/DeliveryDetails";
 import WarehouseDetails from "./pages/Dashboard/WarehouseDetails";
-import Transaction from "./pages/Dashboard/transaction";
-import Fleet from "./pages/Dashboard/fleetmanagement";
+import Transaction from "./pages/Dashboard/transactionPage";
+import Fleet from "./pages/Dashboard/fleetManagementPage";
 import VehicleDetailsPage from './pages/Dashboard/VehicleDetailsPage';
 import Drivers from './pages/Dashboard/Drivers';
 import DashboardLayout from './Layouts/DashboardLayout';
@@ -41,11 +41,11 @@ function App() {
       <Route path="/newpass" element={<NewPass />} />
       <Route path="/congratulations" element={<Congratulations />} />
 
-      {/* ✅ Nested Dashboard Routes */}
+      {/*  Nested Dashboard Routes */}
       <Route path="/dashboard" element={<DashboardLayout />}>
       <Route index element={<DashboardPage />} />
       <Route path="shipments" element={<Shipments />} />
-        <Route path="shipments/:id" element={<ShipmentDetails />} /> {/* ✅ new route */}
+        <Route path="shipments/:id" element={<ShipmentDetails />} /> {/*  new route */}
 
       <Route path="route-planning" element={<RoutePlanning />} />
       <Route path="staff" element={<StaffManagement />} />

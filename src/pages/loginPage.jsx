@@ -17,7 +17,7 @@ import "react-toastify/dist/ReactToastify.css";
 import axiosInstance from "../utils/axiosInterceptor";
 import { auth, provider, signInWithPopup } from "../utils/firebase";
 
-// ✅ Import CryptoJS for secure password storage
+//  Import CryptoJS for secure password storage
 import CryptoJS from "crypto-js";
 
 // Secret key for encryption
@@ -31,7 +31,7 @@ const LoginPage = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // ✅ Load saved credentials on mount
+  //  Load saved credentials on mount
   useEffect(() => {
     const savedEmail = localStorage.getItem("rememberedEmail");
     const encryptedPassword = localStorage.getItem("rememberedPassword");
@@ -45,8 +45,7 @@ const LoginPage = () => {
 
     if (savedEmail && encryptedPassword) setRememberMe(true);
   }, []);
-
-  // ✅ Save or remove credentials based on rememberMe
+  //  Save or remove credentials based on rememberMe
   const saveCredentials = () => {
     if (rememberMe) {
       localStorage.setItem("rememberedEmail", email);
@@ -58,7 +57,7 @@ const LoginPage = () => {
     }
   };
 
-  // ✅ Handle Email/Password Login
+  //  Handle Email/Password Login
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -83,7 +82,7 @@ const LoginPage = () => {
     }
   };
 
-  // ✅ Handle Google Login
+  //  Handle Google Login
   const handleGoogleLogin = async () => {
     setLoading(true);
     try {

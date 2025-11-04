@@ -1,6 +1,6 @@
 // src/utils/apiConfig.js
 
-//Backend base API
+// //Backend base API
 const BASE_URL = "https://swiftship-be-bxcwgcbzauhuekas.canadacentral-01.azurewebsites.net/api";
 
 // Socket.IO server (no trailing slash)

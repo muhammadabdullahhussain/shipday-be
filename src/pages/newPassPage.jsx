@@ -56,7 +56,7 @@ const NewPassPage = () => {
 
     setLoading(true);
     try {
-      // ✅ Use axiosInstance instead of fetch
+      // Use axiosInstance instead of fetch
       const { data } = await axiosInstance.post("/reset-password", {
         email,
         newPassword: password,

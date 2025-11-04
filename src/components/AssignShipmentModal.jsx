@@ -65,8 +65,8 @@ const AssignShipmentModal = ({
         !assignedDriverIds.includes(driver.driverId)
       );
       
-      console.log('✅ Available Drivers:', availableDrivers);
-      console.log('✅ Number of available drivers:', availableDrivers.length);
+      console.log(' Available Drivers:', availableDrivers);
+      console.log(' Number of available drivers:', availableDrivers.length);
       
       if (availableDrivers.length === 0) {
         setError('No available drivers found. All drivers may be assigned to active shipments.');

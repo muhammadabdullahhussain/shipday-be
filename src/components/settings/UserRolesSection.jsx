@@ -13,7 +13,7 @@ const UserRolesSection = () => {
 
   const currentRows = roles;
 
-  // ✅ Fetch roles from backend on mount
+  //  Fetch roles from backend on mount
   useEffect(() => {
     fetchRoles();
   }, []);
@@ -29,7 +29,7 @@ const UserRolesSection = () => {
     }
   };
 
-  // ✅ Add new role to state (AddRoleModal does POST)
+  //  Add new role to state (AddRoleModal does POST)
   const handleAddRole = (savedRole) => {
     setRoles([...roles, savedRole]);
     setShowModal(false);
@@ -64,7 +64,7 @@ const UserRolesSection = () => {
 
     setRoles(updatedRoles);
 
-    // ✅ Send update to backend
+    //  Send update to backend
     try {
       await fetch(`http://localhost:5000/api/roles/${updatedRoles[editIndex]._id}`, {
         method: 'PUT',
