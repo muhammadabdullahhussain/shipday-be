@@ -26,7 +26,7 @@ const AssignShipmentModal = ({
       console.log('🔑 Token:', localStorage.getItem('token') ? 'Present' : 'Missing');
       console.log('🌐 Base URL:', axiosInstance.defaults.baseURL);
       
-      const driversRes = await axiosInstance.get('/admin/drivers/approved');
+      const driversRes = await axiosInstance.get('/admin/drivers/accepted');
       console.log('📊 Drivers API Response Status:', driversRes.status);
       console.log('📊 Drivers API Response Data:', driversRes.data);
       
