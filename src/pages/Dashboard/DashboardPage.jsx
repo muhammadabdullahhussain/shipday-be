@@ -7,7 +7,8 @@ import TotalShipmentsCard from "../../components/dashboard/TotalShipmentsCard";
 import PendingDeliveriesCard from "../../components/dashboard/PendingDeliveriesCard";
 import DeliveredCard from "../../components/dashboard/DeliveredCard";
 import RevenueCard from "../../components/dashboard/RevenueCard";
-import RevenueChart from "../../components/dashboard/RevenueChart";
+// import RevenueChart from "../../components/dashboard/RevenueChart";
+
 import ShipmentDelays from "../../components/dashboard/ShipmentDelays";
 import RecentActivity from "../../components/dashboard/RecentActivity";
 import DeliveriesByCountry from "../../components/dashboard/DeliveriesByCountry";
