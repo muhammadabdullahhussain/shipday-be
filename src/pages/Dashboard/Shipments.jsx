@@ -7,6 +7,8 @@ import AssignShipmentModal from "../../components/AssignShipmentModal";
 import CreateShipmentForm from "../../components/CreateShipmentForm";
 import EditShipmentModal from "../../components/EditShipmentModal";
 import ShipmentDetailsModal from "../../components/ShipmentDetailsModal";
+import Button from "../../components/ui/Button";
+import ActionButton from "../../components/ui/ActionButton";
 
 const ShipmentsTable = () => {
   const { t } = useTranslation();
@@ -32,6 +34,16 @@ const ShipmentsTable = () => {
 
   const rowsPerPage = 8;
 
+  const formatDate = (dateString) => {
+    if (!dateString) return "N/A";
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  };
+
   const fetchShipments = async () => {  
     try {
       const res = await axiosInstance.get("/shipments");
@@ -55,7 +67,8 @@ const ShipmentsTable = () => {
           ...shipment, // Keep all original fields
           origin: shipment.start,
           destination: shipment.end,
-          estimatedDelivery: shipment.eta || "2024-10-10",
+          estimatedDelivery: formatDate(shipment.eta),
+          dateShipped: formatDate(shipment.dateShipped || shipment.createdAt),
           status: t(`shipments.${status.toLowerCase()}`),
           driverName,
         };
@@ -174,12 +187,6 @@ const ShipmentsTable = () => {
     setDropdownOpen(null);
   };
 
-  const handleUpdateShipment = async () => {
-    setShowEditModal(false);
-    setEditingShipment(null);
-    await fetchShipments();
-  };
-
   const handleAssignDriver = (shipment) => {
     setSelectedShipment(shipment);
     setShowAssignModal(true);
@@ -202,17 +209,33 @@ const ShipmentsTable = () => {
     }
   };
 
-  const handleCancelShipment = (shipment) => {
-    navigate(`/dashboard/shipments/${shipment.shipmentId}`, {
-      state: { shipment, action: "cancel" },
-    });
+  const handleUpdateShipment = async (shipmentId, updateData) => {
+    try {
+      await axiosInstance.patch(`/shipments/${shipmentId}`, updateData);
+      setShowEditModal(false);
+      setEditingShipment(null);
+      await fetchShipments();
+    } catch (error) {
+      console.error('Error updating shipment:', error);
+    }
+  };
+
+  const handleDeleteShipment = async (shipment) => {
+    if (window.confirm(`Are you sure you want to delete shipment ${shipment.shipmentId}?`)) {
+      try {
+        await axiosInstance.delete(`/admin/shipments/${shipment.shipmentId}`);
+        await fetchShipments();
+      } catch (error) {
+        console.error('Error deleting shipment:', error);
+      }
+    }
     setDropdownOpen(null);
   };
 
   const handleCreateShipment = async (formData) => {
     setCreateLoading(true);
     try {
-      await axiosInstance.post('/admin/create-shipment', formData);
+      await axiosInstance.post('/admin/shipments', formData);
       setShowCreateModal(false);
       await fetchShipments();
     } catch (error) {
@@ -233,28 +256,30 @@ const ShipmentsTable = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
 
-        <div>
-          <button
-            className="btn btn-outline-secondary me-2"
+        <div className="d-flex gap-2">
+          <Button
+            variant="outline-secondary"
             onClick={() => handleSort("shipmentId")}
           >
             {t("shipments.sortById")}{" "}
             {sortField === "shipmentId" ? (sortOrder === "asc" ? "↑" : "↓") : ""}
-          </button>
+          </Button>
 
-          <button
-            className="btn btn-outline-secondary me-2"
+          <Button
+            variant="outline-secondary"
+            icon="filter"
             onClick={() => setShowFilter((prev) => !prev)}
           >
             {t("shipments.filter")}
-          </button>
+          </Button>
 
-          <button
-            className="btn btn-success me-2"
+          <Button
+            variant="success"
+            icon="plus"
             onClick={() => setShowCreateModal(true)}
           >
             Create Shipment
-          </button>
+          </Button>
 
           {/* <button
             className="btn btn-primary"
@@ -319,11 +344,11 @@ const ShipmentsTable = () => {
                 />
               </th>
               <th>{t("shipments.shipmentId")}</th>
-              <th>{t("shipments.driverName")}</th>
+              <th>Sender</th>
+              <th>Receiver</th>
               <th>{t("shipments.origin")}</th>
               <th>{t("shipments.destination")}</th>
-              <th>{t("shipments.dateShipped")}</th>
-            
+              <th>Driver Name</th>
               <th>{t("shipments.eta")}</th>
               <th>{t("shipments.status")}</th>
               <th></th>
@@ -347,11 +372,17 @@ const ShipmentsTable = () => {
                   />
                 </td>
                 <td className="text-primary">{item.shipmentId}</td>
-                <td>{item.driverName}</td>
+                <td>
+                  <div>{item.senderName || "N/A"}</div>
+                  <small className="text-muted">{item.senderPhone || "N/A"}</small>
+                </td>
+                <td>
+                  <div>{item.receiverName || "N/A"}</div>
+                  <small className="text-muted">{item.receiverPhone || "N/A"}</small>
+                </td>
                 <td>{item.origin}</td>
                 <td>{item.destination}</td>
-                <td>{item.dateShipped}</td>
-              
+                <td>{item.driverName}</td>
                 <td>{item.estimatedDelivery}</td>
                 <td>
                   <span className={`badge ${statusBadge(item.status)}`}>
@@ -436,7 +467,7 @@ const ShipmentsTable = () => {
                         }}
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleCancelShipment(item);
+                          handleDeleteShipment(item);
                         }}
                       >
                         🗑️ Delete
@@ -525,7 +556,7 @@ const ShipmentsTable = () => {
           setEditingShipment(null);
         }}
         shipment={editingShipment}
-        onUpdate={handleUpdateShipment}
+        onUpdate={fetchShipments}
       />
 
       <ShipmentDetailsModal

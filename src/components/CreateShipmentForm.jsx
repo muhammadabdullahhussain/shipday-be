@@ -207,7 +207,7 @@ const CreateShipmentForm = ({ onSubmit, onCancel, loading }) => {
           className="btn btn-primary"
           disabled={loading}
         >
-          {loading ? 'Creating...' : 'Create Shipment'}
+          {loading ? 'Creating...' : 'Create Order'}
         </button>
       </div>
     </form>

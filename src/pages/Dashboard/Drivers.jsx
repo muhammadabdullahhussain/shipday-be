@@ -6,7 +6,7 @@ import DriverVerificationModal from "../../components/DriverVerificationModal";
 
 const Drivers = () => {
   const [drivers, setDrivers] = useState([]);
-  const [filter, setFilter] = useState("accepted");
+  const [filter, setFilter] = useState("approved");
   const [loading, setLoading] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -142,7 +142,7 @@ const Drivers = () => {
 
   const updateDriverStatus = async (driverId, status) => {
     try {
-      await axiosInstance.put('/admin/drivers/status', { driverId, status });
+      await axiosInstance.patch('/admin/drivers/status', { driverId, status });
       handleCloseVerificationModal();
       fetchDrivers(filter);
     } catch (error) {
@@ -180,10 +180,10 @@ const Drivers = () => {
         <h4 className="fw-bold">Drivers Management</h4>
         <div className="btn-group">
           <button
-            className={`btn ${filter === "accepted" ? "btn-primary" : "btn-outline-primary"}`}
-            onClick={() => setFilter("accepted")}
+            className={`btn ${filter === "approved" ? "btn-primary" : "btn-outline-primary"}`}
+            onClick={() => setFilter("approved")}
           >
-            Accepted ({drivers.length})
+            Approved ({drivers.length})
           </button>
           <button
             className={`btn ${filter === "pending" ? "btn-warning" : "btn-outline-warning"}`}

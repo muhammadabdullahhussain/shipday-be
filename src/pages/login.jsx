@@ -64,7 +64,7 @@ const LoginPage = () => {
     setLoading(true);
 
     try {
-      const { data } = await axiosInstance.post("/login", { email, password });
+      const { data } = await axiosInstance.post("/auth/login", { email, password });
 
       localStorage.setItem("token", data.token);
       localStorage.setItem("email", email);
@@ -90,7 +90,7 @@ const LoginPage = () => {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      const { data } = await axiosInstance.post("/google-login", {
+      const { data } = await axiosInstance.post("/api/auth/google-login", {
         email: user.email,
         fullName: user.displayName,
         image: user.photoURL,
