@@ -32,7 +32,7 @@ const DashboardPage = () => {
 
         {/* Row 2: Charts */}
         <div className="row gx-4 gy-4 mt-4">
-          <div className="col-12 col-md-8"><RevenueChart /></div>
+          {/* <div className="col-12 col-md-8"><RevenueChart /></div> */}
           <div className="col-12 col-md-4"><ShipmentDelays /></div>
         </div>
 
