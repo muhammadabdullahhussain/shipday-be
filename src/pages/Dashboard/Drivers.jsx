@@ -142,7 +142,13 @@ const Drivers = () => {
 
   const updateDriverStatus = async (driverId, status) => {
     try {
-      await axiosInstance.patch('/admin/drivers/status', { driverId, status });
+      await axiosInstance.patch('/admin/drivers/status', 
+        { driverId, status },
+        { 
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: false 
+        }
+      );
       handleCloseVerificationModal();
       fetchDrivers(filter);
     } catch (error) {
