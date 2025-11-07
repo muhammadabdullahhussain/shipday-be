@@ -142,18 +142,30 @@ const Drivers = () => {
 
   const updateDriverStatus = async (driverId, status) => {
     try {
-      await axiosInstance.patch('/admin/drivers/status', 
+      console.log('Updating driver status:', { driverId, status });
+      
+      const response = await axiosInstance.patch('/admin/drivers/status', 
         { driverId, status },
-        { 
-          headers: { 'Content-Type': 'application/json' },
-          withCredentials: false 
-        }
+        { headers: { 'Authorization': '' } }
       );
+      
+      console.log('Status update successful:', response.data);
       handleCloseVerificationModal();
       fetchDrivers(filter);
     } catch (error) {
-      console.error('Error updating driver status:', error);
-      alert('Error updating driver status: ' + (error.response?.data?.message || error.message));
+      console.error('Full error object:', error);
+      
+      if (error.response) {
+        console.error('Error status:', error.response.status);
+        console.error('Error data:', error.response.data);
+        alert(`Error: ${error.response.data?.message || error.response.status}`);
+      } else if (error.request) {
+        console.error('No response received:', error.request);
+        alert('No response from server. Check network connection.');
+      } else {
+        console.error('Request setup error:', error.message);
+        alert('Request failed: ' + error.message);
+      }
     }
   };
 
