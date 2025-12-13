@@ -17,7 +17,7 @@ const OrderConfirmationModal = ({ show, onClose, shipmentData }) => {
                 <Modal.Body className="text-center p-5">
                     {/* Print Header */}
                     <div className="d-none d-print-block text-center mb-5">
-                        <h2 className="fw-bold mb-1" style={{ color: '#1e293b' }}>SwiftShip Logistics</h2>
+                        <h2 className="fw-bold mb-1" style={{ color: '#1e293b' }}>ShipDay Logistics</h2>
                         <p className="text-muted small">Official Transaction Receipt</p>
                         <div style={{ borderBottom: '2px dashed #cbd5e1', margin: '20px 0' }}></div>
                     </div>
@@ -86,8 +86,8 @@ const OrderConfirmationModal = ({ show, onClose, shipmentData }) => {
 
                     {/* Print Footer */}
                     <div className="d-none d-print-block text-center mt-5">
-                        <p className="small text-muted mb-1">Thank you for choosing SwiftShip</p>
-                        <p className="small text-muted">www.swiftship.com</p>
+                        <p className="small text-muted mb-1">Thank you for choosing ShipDay</p>
+                        <p className="small text-muted">www.shipday.com</p>
                     </div>
 
                     {/* Info Message */}

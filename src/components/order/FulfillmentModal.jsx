@@ -25,8 +25,8 @@ const FulfillmentModal = ({ show, handleClose }) => {
           <div className="row mb-3">
             <div className="col-md-6">
               <Form.Label className="fw-semibold">Carrier</Form.Label>
-              <Form.Select defaultValue="SwiftShip Logistics">
-                <option>SwiftShip Logistics</option>
+              <Form.Select defaultValue="ShipDay Logistics">
+                <option>ShipDay Logistics</option>
                 <option>BlueDart</option>
                 <option>FedEx</option>
               </Form.Select>

@@ -92,7 +92,7 @@ const PaymentCancelledModal = ({ show, onClose, onRetry, errorMessage }) => {
                     <p className="mb-0 text-muted" style={{ fontSize: '13px' }}>
                         <i className="bi bi-telephone me-1"></i> +27 123 456 789
                         <span className="mx-2">|</span>
-                        <i className="bi bi-envelope me-1"></i> support@swiftship.com
+                        <i className="bi bi-envelope me-1"></i> support@shipday.com
                     </p>
                 </div>
             </Modal.Body>

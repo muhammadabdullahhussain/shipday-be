@@ -15,34 +15,34 @@ const OrderDetails = () => {
   const [loading, setLoading] = useState(!order);
 
   useEffect(() => {
-  const fetchOrder = async () => {
-    try {
-      const res = await axiosInstance.get(`/orders/${orderId}`);
-      setOrder(res.data.order || res.data);
-    } catch (err) {
-      console.error("Failed to fetch order:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+    const fetchOrder = async () => {
+      try {
+        const res = await axiosInstance.get(`/orders/${orderId}`);
+        setOrder(res.data.order || res.data);
+      } catch (err) {
+        console.error("Failed to fetch order:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
     const fetchTransactions = async () => {
-    try {
-      const res = await axiosInstance.get("/transactions/all");
-      setTransactions(res.data || []);
-    } catch (err) {
-      console.error("Failed to fetch transactions:", err);
+      try {
+        const res = await axiosInstance.get("/transactions/all");
+        setTransactions(res.data || []);
+      } catch (err) {
+        console.error("Failed to fetch transactions:", err);
+      }
+    };
+
+    if (!order) {
+      fetchOrder();
+    } else {
+      setLoading(false);
     }
-  };
 
-  if (!order) {
-    fetchOrder();
-  } else {
-    setLoading(false);
-  }
-
-  fetchTransactions();
-}, [order, orderId]);
+    fetchTransactions();
+  }, [order, orderId]);
 
   const handleFulfillClick = () => setShowModal(true);
   const toggleSelect = () => setSelected(!selected);
@@ -142,7 +142,7 @@ const OrderDetails = () => {
           <h6 className="fw-bold mb-3">Shipping Information</h6>
           <div className="d-flex flex-wrap gap-2">
             <div className="info-box"><span className="fw-semibold">Shipping Method: </span><span className="text-muted">{order.deliveryType || "Standard"}</span></div>
-            <div className="info-box"><span className="fw-semibold">Carrier: </span><span className="text-muted">SwiftShip Logistics</span></div>
+            <div className="info-box"><span className="fw-semibold">Carrier: </span><span className="text-muted">ShipDay Logistics</span></div>
             <div className="info-box"><span className="fw-semibold">Tracking Number: </span><span className="text-muted">TRK-{(order.orderId || order._id)?.slice(-6)}</span></div>
             <div className="info-box"><span className="fw-semibold">Estimated Delivery: </span><span className="text-muted">{order.pickupDate ? new Date(order.pickupDate).toLocaleDateString() : "TBD"}</span></div>
           </div>
