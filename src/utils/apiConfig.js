@@ -7,10 +7,10 @@
 // // Socket.IO server (no trailing slash)
 // const SOCKET_IO_URL = "https://swiftship-be-bxcwgcbzauhuekas.canadacentral-01.azurewebsites.net";
 
-const BASE_URL = "http://localhost:5000/api";
+const BASE_URL = "https://web-production-c25b1.up.railway.app/api";
 
 // Socket.IO server (no trailing slash)
-const SOCKET_IO_URL = "http://localhost:5000";
+const SOCKET_IO_URL = "https://web-production-c25b1.up.railway.app"
 
 export default BASE_URL;
 export { BASE_URL, SOCKET_IO_URL };
