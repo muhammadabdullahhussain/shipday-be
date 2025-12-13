@@ -1,10 +1,16 @@
 // src/utils/apiConfig.js
 
 // //Backend base API
-// 
-// Use environment variables or fallback to localhost
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
-const SOCKET_IO_URL = import.meta.env.VITE_SOCKET_IO_URL || "http://localhost:5000";
+// const BASE_URL = "https://swiftship-be-bxcwgcbzauhuekas.canadacentral-01.azurewebsites.net/api";
+// const BASE_URL = "https://swiftship-be-bxcwgcbzauhuekas.canadacentral-01.azurewebsites.net/api";
+
+// // Socket.IO server (no trailing slash)
+// const SOCKET_IO_URL = "https://swiftship-be-bxcwgcbzauhuekas.canadacentral-01.azurewebsites.net";
+
+const BASE_URL = "http://localhost:5000/api";
+
+// Socket.IO server (no trailing slash)
+const SOCKET_IO_URL = "http://localhost:5000";
 
 export default BASE_URL;
 export { BASE_URL, SOCKET_IO_URL };
