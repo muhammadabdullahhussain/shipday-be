@@ -1,0 +1,88 @@
+/* CreateShipmentFormRedesigned.css */
+
+/* Wrapper */
+.shipment-form-redesigned {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Step Container Animation */
+.step-container {
+  padding: 30px;
+  min-height: 400px;
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Form Inputs */
+.form-control, .form-select {
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  font-size: 14px;
+  background-color: #f8fafc;
+  transition: all 0.2s ease;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+  background-color: white;
+}
+
+.form-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 6px;
+}
+
+/* Titles */
+.step-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 8px;
+}
+
+.step-subtitle {
+  color: #64748b;
+  font-size: 14px;
+  margin-bottom: 30px;
+}
+
+/* Transitions for Wizard */
+.animated {
+  animation-duration: 0.4s;
+  animation-fill-mode: both;
+}
+
+@keyframes enterRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes enterLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes exitRight {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(20px); }
+}
+
+@keyframes exitLeft {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(-20px); }
+}
+
+.enterRight { animation-name: enterRight; }
+.enterLeft { animation-name: enterLeft; }
+.exitRight { animation-name: exitRight; }
+.exitLeft { animation-name: exitLeft; }

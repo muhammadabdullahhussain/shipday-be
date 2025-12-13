@@ -31,8 +31,15 @@ import Drivers from './pages/Dashboard/Drivers';
 import DashboardLayout from './Layouts/DashboardLayout';
 import ProtectedRoute from './components/ProtectedRoute';
 import AuthRedirect from './components/AuthRedirect';
+import PaymentSuccessPage from './pages/PaymentSuccessPage';
+import PaymentCancelPage from './pages/PaymentCancelPage';
+import PaymentSelectionPage from './pages/PaymentSelectionPage';
+
+console.log('📦 App.jsx: Component file loaded');
 
 function App() {
+  console.log('🎯 App.jsx: App component rendering...');
+
   return (
     <Routes>
       <Route path="/" element={<AuthRedirect />} />
@@ -43,10 +50,15 @@ function App() {
       <Route path="/newpass" element={<NewPass />} />
       <Route path="/congratulations" element={<Congratulations />} />
 
+      {/* Payment Feedback Routes */}
+      <Route path="/payment/success" element={<PaymentSuccessPage />} />
+      <Route path="/payment/cancel" element={<PaymentCancelPage />} />
+      <Route path="/payment/select" element={<PaymentSelectionPage />} />
+
       {/*  Nested Dashboard Routes - Protected */}
       <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
-        <Route index element={<DashboardPage />} />
         <Route path="shipments" element={<Shipments />} />
+        <Route index element={<DashboardPage />} />
         <Route path="shipments/:id" element={<ShipmentDetails />} /> {/*  new route */}
 
         <Route path="route-planning" element={<RoutePlanning />} />

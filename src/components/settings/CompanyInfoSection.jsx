@@ -6,8 +6,8 @@ import axiosInstance from "../../utils/axiosInterceptor";
 const CompanyInfoSection = () => {
   const [companyInfo, setCompanyInfo] = useState({
     logo: null,
-    companyName: 'Swift Ship',
-    email: 'support@swiftship.com',
+    companyName: 'ShipDay',
+    email: 'support@shipday.com',
     phone: '9876543210',
     address: '201, Logistics Tower, Mumbai, Maharashtra 400001',
   });

@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import "../../styles/ui/ShipmentListPage.css";
 import axiosInstance from "../../utils/axiosInterceptor";
 import AssignShipmentModal from "../../components/AssignShipmentModal";
-import CreateShipmentForm from "../../components/CreateShipmentForm";
+import CreateShipmentFormRedesigned from "../../components/CreateShipmentFormRedesigned";
 import EditShipmentModal from "../../components/EditShipmentModal";
 import ShipmentDetailsModal from "../../components/ShipmentDetailsModal";
 import Button from "../../components/ui/Button";
@@ -44,17 +44,17 @@ const ShipmentsTable = () => {
     });
   };
 
-  const fetchShipments = async () => {  
+  const fetchShipments = async () => {
     try {
       const res = await axiosInstance.get("/shipments");
 
       const processed = res.data.map((shipment) => {
         // Get driver name from the driver object if it exists, fallback to driverName field
         const driverName = shipment.driver?.username || shipment.driverName || "Unassigned";
-        
+
         // Determine status based on API response or orders
         let status = shipment.status || "Pending";
-        
+
         // If there are orders, check if all are delivered
         if (shipment.orders && shipment.orders.length > 0) {
           const allDelivered = shipment.orders.every((order) => order.status === "Delivered");
@@ -235,12 +235,43 @@ const ShipmentsTable = () => {
   const handleCreateShipment = async (formData) => {
     setCreateLoading(true);
     try {
-      await axiosInstance.post('/admin/shipments', formData);
-      setShowCreateModal(false);
-      await fetchShipments();
-    } catch (error) {
-      console.error('Error creating shipment:', error);
-    } finally {
+      const { data } = await axiosInstance.post('/admin/shipments', formData);
+
+      if (data.paymentData) {
+        // Handle PayFast Redirect
+        const { url, data: paymentFields } = data.paymentData;
+
+        // Create form to submit to PayFast
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = url;
+
+        Object.keys(paymentFields).forEach(key => {
+          const input = document.createElement('input');
+          input.type = 'hidden';
+          input.name = key;
+          input.value = paymentFields[key];
+          form.appendChild(input);
+        });
+
+        document.body.appendChild(form);
+        form.submit();
+
+        // Don't close modal or stop loading as we are redirecting
+      } else {
+        setShowCreateModal(false);
+        await fetchShipments();
+        setCreateLoading(false);
+
+        // Redirect to success page for COD/Wallet
+        const method = data.shipment?.payment?.method || 'cod';
+        const amount = data.shipment?.payment?.amount || 0;
+        navigate(`/payment/success?method=${method}&amount=${amount}`);
+      }
+    } catch (err) {
+      console.error("Error creating shipment:", err);
+      const errorMessage = err.response?.data?.message || err.response?.data?.error || "Failed to create shipment. Please try again.";
+      alert(errorMessage);
       setCreateLoading(false);
     }
   };
@@ -356,8 +387,8 @@ const ShipmentsTable = () => {
           </thead>
           <tbody>
             {currentRows.map((item, idx) => (
-              <tr 
-                key={idx} 
+              <tr
+                key={idx}
                 style={{ position: "relative", overflow: "visible", cursor: "pointer" }}
                 onClick={() => {
                   setSelectedShipmentDetails(item);
@@ -385,7 +416,7 @@ const ShipmentsTable = () => {
                 <td>{item.driverName}</td>
                 <td>{item.estimatedDelivery}</td>
                 <td>
-                  <span className={`badge ${statusBadge(item.status)}`}>
+                  <span className={`badge ${statusBadge(item.status)} `}>
                     {item.status}
                   </span>
                 </td>
@@ -484,7 +515,7 @@ const ShipmentsTable = () => {
       {/* Pagination */}
       <div className="pagination-wrapper mt-4 d-flex justify-content-center">
         <ul className="pagination">
-          <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
+          <li className={`page - item ${currentPage === 1 ? "disabled" : ""} `}>
             <button
               className="page-link"
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
@@ -495,7 +526,7 @@ const ShipmentsTable = () => {
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
             <li
               key={p}
-              className={`page-item ${p === currentPage ? "active" : ""}`}
+              className={`page - item ${p === currentPage ? "active" : ""} `}
             >
               <button className="page-link" onClick={() => setCurrentPage(p)}>
                 {p}
@@ -503,9 +534,8 @@ const ShipmentsTable = () => {
             </li>
           ))}
           <li
-            className={`page-item ${
-              currentPage === totalPages ? "disabled" : ""
-            }`}
+            className={`page - item ${currentPage === totalPages ? "disabled" : ""
+              } `}
           >
             <button
               className="page-link"
@@ -529,7 +559,7 @@ const ShipmentsTable = () => {
       {/* Create Shipment Modal */}
       {showCreateModal && (
         <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <div className="modal-dialog">
+          <div className="modal-dialog modal-xl">
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">Create New Shipment</h5>
@@ -539,7 +569,7 @@ const ShipmentsTable = () => {
                   onClick={() => setShowCreateModal(false)}
                 ></button>
               </div>
-              <CreateShipmentForm
+              <CreateShipmentFormRedesigned
                 onSubmit={handleCreateShipment}
                 onCancel={() => setShowCreateModal(false)}
                 loading={createLoading}

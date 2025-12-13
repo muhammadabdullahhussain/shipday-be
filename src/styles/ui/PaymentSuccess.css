@@ -1,0 +1,90 @@
+/* PaymentSuccess.css */
+.payment-success-container {
+    padding: 60px 20px;
+    margin-top: 40px;
+    animation: fadeIn 0.5s ease-in;
+}
+
+.success-card {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(40, 167, 69, 0.15);
+    border: 2px solid #e0f2f1;
+    text-align: center;
+}
+
+.success-icon {
+    font-size: 80px;
+    color: #28a745;
+    margin-bottom: 20px;
+    animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.success-title {
+    color: #333;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.success-message {
+    color: #666;
+    margin-bottom: 30px;
+    font-size: 16px;
+}
+
+.transaction-details {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 30px;
+    text-align: left;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #555;
+}
+
+.detail-row:last-child {
+    margin-bottom: 0;
+    font-weight: 600;
+    color: #333;
+    padding-top: 10px;
+    border-top: 1px solid #e0e0e0;
+}
+
+@keyframes bounceIn {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    60% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
