@@ -31,6 +31,14 @@ const LoginPage = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  // Check if user is already logged in
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [navigate]);
+
   //  Load saved credentials on mount
   useEffect(() => {
     const savedEmail = localStorage.getItem("rememberedEmail");
@@ -89,7 +97,7 @@ const LoginPage = () => {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      const { data } = await axiosInstance.post("/api/auth/google-login", {
+      const { data } = await axiosInstance.post("/auth/google-login", {
         email: user.email,
         fullName: user.displayName,
         image: user.photoURL,

@@ -57,7 +57,7 @@ const NewPassPage = () => {
     setLoading(true);
     try {
       // Use axiosInstance instead of fetch
-      const { data } = await axiosInstance.post("/reset-password", {
+      const { data } = await axiosInstance.post("/auth/reset-password", {
         email,
         newPassword: password,
       });

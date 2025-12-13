@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../components/ui/Button";
 import "../styles/ui/auth.css";
@@ -22,6 +22,14 @@ const RegisterPage = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  // Check if user is already logged in
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [navigate]);
 
   const isValidEmail = (email) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -60,7 +68,7 @@ const RegisterPage = () => {
     setLoading(true);
     try {
       //  Use axiosInstance instead of fetch
-      const { data } = await axiosInstance.post("/request-code", {
+      const { data } = await axiosInstance.post("/auth/verification/request", {
         email,
         source: "register",
       });

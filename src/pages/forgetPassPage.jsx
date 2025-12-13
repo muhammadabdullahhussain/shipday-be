@@ -26,23 +26,26 @@ const ForgetPassPage = () => {
     setLoading(true);
 
     try {
-  const { data } = await axiosInstance.post("/request-code", { email });
+      const { data } = await axiosInstance.post("/auth/verification/request", {
+        email,
+        source: "forgot"
+      });
 
-  // Show success toast and navigate
-  toast.success("Verification code sent to your email!", {
-    onClose: () => {
-      navigate("/verification", { state: { email, source: "forgot" } });
-    },
-    autoClose: 3000,
-  });
-} catch (error) {
-  // Axios error handling
-  toast.error(
-    error.response?.data?.message || "Email not found or failed to send code."
-  );
-} finally {
-  setLoading(false);
-}
+      // Show success toast and navigate
+      toast.success("Verification code sent to your email!", {
+        onClose: () => {
+          navigate("/verification", { state: { email, source: "forgot" } });
+        },
+        autoClose: 3000,
+      });
+    } catch (error) {
+      // Axios error handling
+      toast.error(
+        error.response?.data?.message || "Email not found or failed to send code."
+      );
+    } finally {
+      setLoading(false);
+    }
 
   };
 

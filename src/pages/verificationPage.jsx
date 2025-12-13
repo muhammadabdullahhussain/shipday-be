@@ -80,7 +80,7 @@ const VerificationPage = () => {
     setLoading(true);
     try {
       if (source === "register") {
-        const { data } = await axiosInstance.post("/register", {
+        const { data } = await axiosInstance.post("/auth/register", {
           email,
           password,
           code: fullCode,
@@ -98,7 +98,7 @@ const VerificationPage = () => {
           });
         }
       } else if (source === "forgot") {
-        const { data } = await axiosInstance.post("/verify-code", {
+        const { data } = await axiosInstance.post("/verification/verify-code", {
           email,
           code: fullCode,
         });

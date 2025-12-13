@@ -5,9 +5,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Login from './pages/loginPage';
 import Register from './pages/registerPage';
 import Forgetpass from './pages/forgetPassPage';
-import Verification from './pages/verificationPage'; 
+import Verification from './pages/verificationPage';
 import NewPass from "./pages/newPassPage";
-import Congratulations from "./pages/congratulationsPage"; 
+import Congratulations from "./pages/congratulationsPage";
 import DashboardPage from './pages/Dashboard/DashboardPage';
 import Shipments from './pages/Dashboard/Shipments';
 import RoutePlanning from './pages/Dashboard/routePlanningPage';
@@ -29,11 +29,13 @@ import Fleet from "./pages/Dashboard/fleetManagementPage";
 import VehicleDetailsPage from './pages/Dashboard/VehicleDetailsPage';
 import Drivers from './pages/Dashboard/Drivers';
 import DashboardLayout from './Layouts/DashboardLayout';
+import ProtectedRoute from './components/ProtectedRoute';
+import AuthRedirect from './components/AuthRedirect';
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/login" />} />
+      <Route path="/" element={<AuthRedirect />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgetpass" element={<Forgetpass />} />
@@ -41,31 +43,31 @@ function App() {
       <Route path="/newpass" element={<NewPass />} />
       <Route path="/congratulations" element={<Congratulations />} />
 
-      {/*  Nested Dashboard Routes */}
-      <Route path="/dashboard" element={<DashboardLayout />}>
-      <Route index element={<DashboardPage />} />
-      <Route path="shipments" element={<Shipments />} />
+      {/*  Nested Dashboard Routes - Protected */}
+      <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
+        <Route index element={<DashboardPage />} />
+        <Route path="shipments" element={<Shipments />} />
         <Route path="shipments/:id" element={<ShipmentDetails />} /> {/*  new route */}
 
-      <Route path="route-planning" element={<RoutePlanning />} />
-      <Route path="staff" element={<StaffManagement />} />
-      <Route path="staff/:id" element={<StaffOverview />} />
-      <Route path="drivers" element={<Drivers />} />
-      <Route path="fleetmanagement" element={<Fleet />} />
-      <Route path="/dashboard/fleetmanagement/:id" element={<VehicleDetailsPage />} />
-      <Route path="orders" element={<OrderManagement />} />
-      <Route path="orders/:orderId" element={<OrderDetails />} />
-      <Route path="customers" element={<Customers />} />
-      <Route path="customers/:id" element={<Customerinfo />} />
-      <Route path="deliveries" element={<Deliveries />} />
-      <Route path="deliveries/:deliveryId" element={<DeliveryDetails />} />
+        <Route path="route-planning" element={<RoutePlanning />} />
+        <Route path="staff" element={<StaffManagement />} />
+        <Route path="staff/:id" element={<StaffOverview />} />
+        <Route path="drivers" element={<Drivers />} />
+        <Route path="fleetmanagement" element={<Fleet />} />
+        <Route path="fleetmanagement/:id" element={<VehicleDetailsPage />} />
+        <Route path="orders" element={<OrderManagement />} />
+        <Route path="orders/:orderId" element={<OrderDetails />} />
+        <Route path="customers" element={<Customers />} />
+        <Route path="customers/:id" element={<Customerinfo />} />
+        <Route path="deliveries" element={<Deliveries />} />
+        <Route path="deliveries/:deliveryId" element={<DeliveryDetails />} />
 
-      <Route path="reports" element={<Reports />} />
-      <Route path="wherehouse" element={<Wherehouse />}/>
-      <Route path="wherehouse/:id" element={<WarehouseDetails />} />
-      <Route path="transaction" element={<Transaction/>} />
-      <Route path="settings" element={<Settings />} />
-    </Route>
+        <Route path="reports" element={<Reports />} />
+        <Route path="wherehouse" element={<Wherehouse />} />
+        <Route path="wherehouse/:id" element={<WarehouseDetails />} />
+        <Route path="transaction" element={<Transaction />} />
+        <Route path="settings" element={<Settings />} />
+      </Route>
 
     </Routes>
   );
