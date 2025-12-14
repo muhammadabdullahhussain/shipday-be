@@ -22,19 +22,68 @@ const DeliveryDetailsStep = ({ formData, updateFormData, previousStep, nextStep 
     const handleGeolocation = () => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    updateFormData({
-                        deliveryAddress: {
-                            ...formData.deliveryAddress,
-                            useGeolocation: true,
-                            latitude: position.coords.latitude,
-                            longitude: position.coords.longitude
+                async (position) => {
+                    const { latitude, longitude } = position.coords;
+
+                    try {
+                        // Reverse geocode using Nominatim API (OpenStreetMap)
+                        const response = await fetch(
+                            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1`,
+                            {
+                                headers: {
+                                    'Accept-Language': 'en'
+                                }
+                            }
+                        );
+
+                        if (!response.ok) {
+                            throw new Error('Geocoding failed');
                         }
-                    });
-                    setUseGeolocation(true);
-                    alert('Location captured! Please fill in address details.');
+
+                        const data = await response.json();
+                        const address = data.address;
+
+                        // Extract address components
+                        const street = `${address.house_number || ''} ${address.road || address.street || ''}`.trim();
+                        const suburb = address.suburb || address.neighbourhood || address.quarter || '';
+                        const city = address.city || address.town || address.village || address.municipality || '';
+                        const province = address.state || address.province || '';
+                        const postalCode = address.postcode || '';
+
+                        // Update form data with geocoded address
+                        updateFormData({
+                            deliveryAddress: {
+                                ...formData.deliveryAddress,
+                                useGeolocation: true,
+                                latitude: latitude,
+                                longitude: longitude,
+                                street: street || formData.deliveryAddress.street,
+                                suburb: suburb || formData.deliveryAddress.suburb,
+                                city: city || formData.deliveryAddress.city,
+                                province: province || formData.deliveryAddress.province,
+                                postalCode: postalCode || formData.deliveryAddress.postalCode
+                            }
+                        });
+
+                        setUseGeolocation(true);
+                        alert('Location captured and address fields filled automatically!');
+                    } catch (error) {
+                        console.error('Geocoding error:', error);
+                        // Still save coordinates even if geocoding fails
+                        updateFormData({
+                            deliveryAddress: {
+                                ...formData.deliveryAddress,
+                                useGeolocation: true,
+                                latitude: latitude,
+                                longitude: longitude
+                            }
+                        });
+                        setUseGeolocation(true);
+                        alert('Location captured! Could not auto-fill address. Please enter manually.');
+                    }
                 },
                 (error) => {
+                    console.error('Geolocation error:', error);
                     alert('Unable to get location. Please enter manually.');
                 }
             );

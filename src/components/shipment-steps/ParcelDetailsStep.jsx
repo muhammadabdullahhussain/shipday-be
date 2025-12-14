@@ -114,26 +114,42 @@ const ParcelDetailsStep = ({ formData, updateFormData, previousStep, nextStep })
                     <label className="form-label fw-bold">Service Type *</label>
                     <div className="row">
                         <div className="col-md-6">
-                            <div
-                                className={`service-card ${formData.serviceType === 'economy' ? 'selected' : ''}`}
-                                onClick={() => updateFormData({ serviceType: 'economy' })}
-                            >
-                                <div className="service-icon">{pricingConfig.economy.icon}</div>
-                                <h5>Economy</h5>
-                                <p className="text-muted">ETA: {pricingConfig.economy.eta}</p>
-                                <small>Base: R{pricingConfig.economy.baseAmount} + volumetric</small>
-                            </div>
+                            <label className={`service-card ${formData.serviceType === 'economy' ? 'selected' : ''}`}>
+                                <input
+                                    type="radio"
+                                    name="serviceType"
+                                    value="economy"
+                                    checked={formData.serviceType === 'economy'}
+                                    onChange={handleChange}
+                                    className="form-check-input me-2"
+                                    required
+                                />
+                                <div className="service-content">
+                                    <div className="service-icon">{pricingConfig.economy.icon}</div>
+                                    <h5>Economy</h5>
+                                    <p className="text-muted">ETA: {pricingConfig.economy.eta}</p>
+                                    <small>Base: R{pricingConfig.economy.baseAmount} + volumetric</small>
+                                </div>
+                            </label>
                         </div>
                         <div className="col-md-6">
-                            <div
-                                className={`service-card ${formData.serviceType === 'express' ? 'selected' : ''}`}
-                                onClick={() => updateFormData({ serviceType: 'express' })}
-                            >
-                                <div className="service-icon">{pricingConfig.express.icon}</div>
-                                <h5>Express</h5>
-                                <p className="text-muted">ETA: {pricingConfig.express.eta}</p>
-                                <small>Base: R{pricingConfig.express.baseAmount} + volumetric</small>
-                            </div>
+                            <label className={`service-card ${formData.serviceType === 'express' ? 'selected' : ''}`}>
+                                <input
+                                    type="radio"
+                                    name="serviceType"
+                                    value="express"
+                                    checked={formData.serviceType === 'express'}
+                                    onChange={handleChange}
+                                    className="form-check-input me-2"
+                                    required
+                                />
+                                <div className="service-content">
+                                    <div className="service-icon">{pricingConfig.express.icon}</div>
+                                    <h5>Express</h5>
+                                    <p className="text-muted">ETA: {pricingConfig.express.eta}</p>
+                                    <small>Base: R{pricingConfig.express.baseAmount} + volumetric</small>
+                                </div>
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -143,31 +159,55 @@ const ParcelDetailsStep = ({ formData, updateFormData, previousStep, nextStep })
                     <label className="form-label fw-bold">Parcel Type *</label>
                     <div className="row">
                         <div className="col-md-4">
-                            <div
-                                className={`parcel-type-card ${formData.parcelType === 'satchel-a4' ? 'selected' : ''}`}
-                                onClick={() => updateFormData({ parcelType: 'satchel-a4' })}
-                            >
-                                <h6>Satchel A4</h6>
-                                <p className="price">R{pricingConfig.satchel.a4}</p>
-                            </div>
+                            <label className={`parcel-type-card ${formData.parcelType === 'satchel-a4' ? 'selected' : ''}`}>
+                                <input
+                                    type="radio"
+                                    name="parcelType"
+                                    value="satchel-a4"
+                                    checked={formData.parcelType === 'satchel-a4'}
+                                    onChange={handleChange}
+                                    className="form-check-input me-2"
+                                    required
+                                />
+                                <div className="parcel-content">
+                                    <h6>Satchel A4</h6>
+                                    <p className="price">R{pricingConfig.satchel.a4}</p>
+                                </div>
+                            </label>
                         </div>
                         <div className="col-md-4">
-                            <div
-                                className={`parcel-type-card ${formData.parcelType === 'satchel-a3' ? 'selected' : ''}`}
-                                onClick={() => updateFormData({ parcelType: 'satchel-a3' })}
-                            >
-                                <h6>Satchel A3</h6>
-                                <p className="price">R{pricingConfig.satchel.a3}</p>
-                            </div>
+                            <label className={`parcel-type-card ${formData.parcelType === 'satchel-a3' ? 'selected' : ''}`}>
+                                <input
+                                    type="radio"
+                                    name="parcelType"
+                                    value="satchel-a3"
+                                    checked={formData.parcelType === 'satchel-a3'}
+                                    onChange={handleChange}
+                                    className="form-check-input me-2"
+                                    required
+                                />
+                                <div className="parcel-content">
+                                    <h6>Satchel A3</h6>
+                                    <p className="price">R{pricingConfig.satchel.a3}</p>
+                                </div>
+                            </label>
                         </div>
                         <div className="col-md-4">
-                            <div
-                                className={`parcel-type-card ${formData.parcelType === 'custom' ? 'selected' : ''}`}
-                                onClick={() => updateFormData({ parcelType: 'custom' })}
-                            >
-                                <h6>Custom Parcel</h6>
-                                <p className="price">Calculated</p>
-                            </div>
+                            <label className={`parcel-type-card ${formData.parcelType === 'custom' ? 'selected' : ''}`}>
+                                <input
+                                    type="radio"
+                                    name="parcelType"
+                                    value="custom"
+                                    checked={formData.parcelType === 'custom'}
+                                    onChange={handleChange}
+                                    className="form-check-input me-2"
+                                    required
+                                />
+                                <div className="parcel-content">
+                                    <h6>Custom Parcel</h6>
+                                    <p className="price">Calculated</p>
+                                </div>
+                            </label>
                         </div>
                     </div>
                 </div>
