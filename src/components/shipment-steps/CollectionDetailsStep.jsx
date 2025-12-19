@@ -22,20 +22,68 @@ const CollectionDetailsStep = ({ formData, updateFormData, previousStep, nextSte
     const handleGeolocation = () => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    // In production, you'd reverse geocode these coordinates
-                    updateFormData({
-                        collectionAddress: {
-                            ...formData.collectionAddress,
-                            useGeolocation: true,
-                            latitude: position.coords.latitude,
-                            longitude: position.coords.longitude
+                async (position) => {
+                    const { latitude, longitude } = position.coords;
+
+                    try {
+                        // Reverse geocode using Nominatim API (OpenStreetMap)
+                        const response = await fetch(
+                            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1`,
+                            {
+                                headers: {
+                                    'Accept-Language': 'en'
+                                }
+                            }
+                        );
+
+                        if (!response.ok) {
+                            throw new Error('Geocoding failed');
                         }
-                    });
-                    setUseGeolocation(true);
-                    alert('Location captured! Please fill in address details.');
+
+                        const data = await response.json();
+                        const address = data.address;
+
+                        // Extract address components
+                        const street = `${address.house_number || ''} ${address.road || address.street || ''}`.trim();
+                        const suburb = address.suburb || address.neighbourhood || address.quarter || '';
+                        const city = address.city || address.town || address.village || address.municipality || '';
+                        const province = address.state || address.province || '';
+                        const postalCode = address.postcode || '';
+
+                        // Update form data with geocoded address
+                        updateFormData({
+                            collectionAddress: {
+                                ...formData.collectionAddress,
+                                useGeolocation: true,
+                                latitude: latitude,
+                                longitude: longitude,
+                                street: street || formData.collectionAddress.street,
+                                suburb: suburb || formData.collectionAddress.suburb,
+                                city: city || formData.collectionAddress.city,
+                                province: province || formData.collectionAddress.province,
+                                postalCode: postalCode || formData.collectionAddress.postalCode
+                            }
+                        });
+
+                        setUseGeolocation(true);
+                        alert('Location captured and address fields filled automatically!');
+                    } catch (error) {
+                        console.error('Geocoding error:', error);
+                        // Still save coordinates even if geocoding fails
+                        updateFormData({
+                            collectionAddress: {
+                                ...formData.collectionAddress,
+                                useGeolocation: true,
+                                latitude: latitude,
+                                longitude: longitude
+                            }
+                        });
+                        setUseGeolocation(true);
+                        alert('Location captured! Could not auto-fill address. Please enter manually.');
+                    }
                 },
                 (error) => {
+                    console.error('Geolocation error:', error);
                     alert('Unable to get location. Please enter manually.');
                 }
             );
