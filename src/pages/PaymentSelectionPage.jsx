@@ -7,7 +7,7 @@ import OrderConfirmationModal from '../components/OrderConfirmationModal';
 const PaymentSelectionPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const { shipmentData, totalAmount } = location.state || {};
+    const { shipmentData, totalAmount, isPublic } = location.state || {};
 
     const [selectedMethod, setSelectedMethod] = useState('');
     const [processing, setProcessing] = useState(false);
@@ -21,7 +21,7 @@ const PaymentSelectionPage = () => {
         }
     }, [shipmentData, navigate]);
 
-    const paymentMethods = [
+    const allPaymentMethods = [
         {
             id: 'cod',
             name: 'Cash on Delivery',
@@ -40,13 +40,18 @@ const PaymentSelectionPage = () => {
         },
         {
             id: 'payfast',
-            name: 'PayFast',
-            description: 'Card payment gateway',
+            name: 'PayFast (Card / Instant EFT)',
+            description: 'Secure Online Payment',
             icon: '💳',
             gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
             color: '#4facfe'
         }
     ];
+
+    // Filter methods: If public, show ONLY PayFast. If dashboard, show ALL.
+    const paymentMethods = isPublic
+        ? allPaymentMethods.filter(m => m.id === 'payfast')
+        : allPaymentMethods;
 
     const handleConfirm = async () => {
         if (!selectedMethod) {

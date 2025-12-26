@@ -37,12 +37,28 @@ import PaymentSelectionPage from './pages/PaymentSelectionPage';
 
 console.log('📦 App.jsx: Component file loaded');
 
+import PublicLayout from './Layouts/PublicLayout';
+import Home from './pages/Public/Home';
+import Services from './pages/Public/Services';
+import Contact from './pages/Public/Contact';
+import TrackingPage from './pages/Public/TrackingPage';
+import SendParcel from './pages/Public/SendParcel';
+
 function App() {
   console.log('🎯 App.jsx: App component rendering...');
 
   return (
     <Routes>
-      <Route path="/" element={<AuthRedirect />} />
+      {/* Public Routes - Wrapped in PublicLayout */}
+      <Route element={<PublicLayout />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/services" element={<Services />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/tracking" element={<TrackingPage />} />
+        <Route path="/send-parcel" element={<SendParcel />} />
+      </Route>
+
+      {/* Auth Routes - Standalone */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgetpass" element={<Forgetpass />} />

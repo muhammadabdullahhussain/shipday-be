@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // import PaymentSelectionModal from '../PaymentSelectionModal';
 
-const TermsAndPaymentStep = ({ formData, updateFormData, previousStep, onSubmit, onCancel, loading }) => {
+const TermsAndPaymentStep = ({ formData, updateFormData, previousStep, onSubmit, onCancel, loading, isPublic }) => {
     const [showTermsModal, setShowTermsModal] = useState(false);
     const navigate = useNavigate();
 
@@ -62,7 +62,8 @@ const TermsAndPaymentStep = ({ formData, updateFormData, previousStep, onSubmit,
         navigate('/payment/select', {
             state: {
                 shipmentData,
-                totalAmount: formData.calculatedPrice
+                totalAmount: formData.calculatedPrice,
+                isPublic // Pass logic flag
             }
         });
     };

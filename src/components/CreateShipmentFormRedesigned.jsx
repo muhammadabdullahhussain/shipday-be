@@ -80,7 +80,7 @@ const Nav = (props) => {
     );
 };
 
-const CreateShipmentFormRedesigned = ({ onSubmit, onCancel, loading }) => {
+const CreateShipmentFormRedesigned = ({ onSubmit, onCancel, loading, isPublic }) => {
     const [formData, setFormData] = useState({
         // Sender Details
         senderFullName: '',
@@ -241,6 +241,7 @@ const CreateShipmentFormRedesigned = ({ onSubmit, onCancel, loading }) => {
                     onSubmit={handleFinalSubmit}
                     onCancel={onCancel}
                     loading={loading}
+                    isPublic={isPublic}
                 />
             </StepWizard>
         </div>
