@@ -1,5 +1,6 @@
 // AddWarehouseModal.jsx
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 import { Modal, Button, Form, Row, Col } from "react-bootstrap";
 import "../../styles/ui/WarehouseDetails.css";
 import axiosInstance from "../../utils/axiosInterceptor";
@@ -28,36 +29,36 @@ const AddWarehouseModal = ({ show, handleClose, onWarehouseAdded }) => {
       !form.spaceUsed.trim() ||
       !form.location.trim()
     ) {
-      alert("Please fill in all fields.");
+      toast.error("Please fill in all fields.");
       return;
     }
 
     setLoading(true);
     try {
       try {
-  const response = await axiosInstance.post("/warehouse/add", form);
-  const data = response.data;
+        const response = await axiosInstance.post("/warehouse/add", form);
+        const data = response.data;
 
-  alert(" Warehouse added successfully!");
-  if (onWarehouseAdded) onWarehouseAdded(data.warehouse); // 🚀 Send back to parent
-  handleClose();
-  setForm({
-    name: "",
-    capacity: "",
-    spaceUsed: "",
-    location: "",
-    status: "Active",
-  });
-} catch (err) {
-  console.error("Add warehouse error:", err);
-  alert(err.response?.data?.message || "❌ Server error");
-} finally {
-  setLoading(false);
-}
+        toast.success("Warehouse added successfully!");
+        if (onWarehouseAdded) onWarehouseAdded(data.warehouse); // 🚀 Send back to parent
+        handleClose();
+        setForm({
+          name: "",
+          capacity: "",
+          spaceUsed: "",
+          location: "",
+          status: "Active",
+        });
+      } catch (err) {
+        console.error("Add warehouse error:", err);
+        toast.error(err.response?.data?.message || "❌ Server error");
+      } finally {
+        setLoading(false);
+      }
 
     } catch (err) {
       console.error("Add warehouse error:", err);
-      alert("❌ Server error");
+      toast.error("❌ Server error");
     } finally {
       setLoading(false);
     }

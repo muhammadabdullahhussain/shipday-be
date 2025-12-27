@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Button from "../components/ui/Button";
 import "../styles/ui/auth.css";
 
-import logo from "../assets/logo.png";
+import logo from "../assets/shipday_logo.jpg";
 import passwordIcon from "../assets/lockicon.png";
 import eyeShowIcon from "../assets/eyeopen.png";
 import eyeHideIcon from "../assets/eyeopen.png"; // Replace with actual closed eye icon

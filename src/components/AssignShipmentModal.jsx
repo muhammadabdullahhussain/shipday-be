@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import axiosInstance from '../utils/axiosInterceptor';
 
-const AssignShipmentModal = ({ 
-  show, 
-  onClose, 
+const AssignShipmentModal = ({
+  show,
+  onClose,
   shipment,
-  onAssign 
+  onAssign
 }) => {
   const [drivers, setDrivers] = useState([]);
   const [selectedDriver, setSelectedDriver] = useState('');
@@ -25,11 +26,11 @@ const AssignShipmentModal = ({
       console.log('🔍 Fetching drivers...');
       console.log('🔑 Token:', localStorage.getItem('token') ? 'Present' : 'Missing');
       console.log('🌐 Base URL:', axiosInstance.defaults.baseURL);
-      
+
       const driversRes = await axiosInstance.get('/admin/drivers/approved');
       console.log('📊 Drivers API Response Status:', driversRes.status);
       console.log('📊 Drivers API Response Data:', driversRes.data);
-      
+
       // Extract drivers array - handle both response formats
       let allDrivers = [];
       if (Array.isArray(driversRes.data)) {
@@ -37,7 +38,7 @@ const AssignShipmentModal = ({
       } else if (driversRes.data.drivers && Array.isArray(driversRes.data.drivers)) {
         allDrivers = driversRes.data.drivers;
       }
-      
+
       console.log('👥 Extracted Drivers:', allDrivers);
       console.log('👥 Number of drivers:', allDrivers.length);
 
@@ -46,32 +47,32 @@ const AssignShipmentModal = ({
       try {
         const assignedShipmentsRes = await axiosInstance.get('/admin/shipments/assign');
         console.log('📊 Assigned Shipments Response:', assignedShipmentsRes.data);
-        
+
         const assignedShipments = assignedShipmentsRes.data.shipments || assignedShipmentsRes.data || [];
         console.log('🚛 Assigned Shipments:', assignedShipments);
-        
+
         assignedDriverIds = assignedShipments
           .filter(s => s.driver && s.status === 'Shipping')
           .map(s => s.driver.driverId);
-        
+
         console.log('🚫 Assigned Driver IDs:', assignedDriverIds);
       } catch (err) {
         console.warn('⚠️ Could not fetch assigned shipments, showing all drivers:', err.message);
         // Continue with all drivers if assigned shipments fetch fails
       }
-      
+
       // Filter available drivers
-      const availableDrivers = allDrivers.filter(driver => 
+      const availableDrivers = allDrivers.filter(driver =>
         !assignedDriverIds.includes(driver.driverId)
       );
-      
+
       console.log(' Available Drivers:', availableDrivers);
       console.log(' Number of available drivers:', availableDrivers.length);
-      
+
       if (availableDrivers.length === 0) {
         setError('No available drivers found. All drivers may be assigned to active shipments.');
       }
-      
+
       setDrivers(availableDrivers);
     } catch (error) {
       console.error('❌ Error fetching drivers:', error);
@@ -87,10 +88,10 @@ const AssignShipmentModal = ({
 
   const handleAssign = async () => {
     if (!selectedDriver) {
-      alert('Please select a driver');
+      toast.error('Please select a driver');
       return;
     }
-    
+
     setLoading(true);
     try {
       await axiosInstance.post('/admin/shipments/assign', {
@@ -102,7 +103,7 @@ const AssignShipmentModal = ({
       onClose();
     } catch (error) {
       console.error('Error assigning shipment:', error);
-      alert('Failed to assign shipment. Please try again.');
+      toast.error('Failed to assign shipment. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -111,24 +112,24 @@ const AssignShipmentModal = ({
   if (!show) return null;
 
   return (
-    <div 
-      className="modal d-block" 
+    <div
+      className="modal d-block"
       style={{
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
         zIndex: 10000
       }}
       onClick={onClose}
     >
-      <div 
+      <div
         className="modal-dialog modal-dialog-centered"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title">Assign Driver to Shipment</h5>
-            <button 
-              type="button" 
-              className="btn-close" 
+            <button
+              type="button"
+              className="btn-close"
               onClick={onClose}
               aria-label="Close"
             ></button>
@@ -196,8 +197,8 @@ const AssignShipmentModal = ({
                   >
                     <option value="">Choose a driver...</option>
                     {drivers.map((driver) => (
-                      <option 
-                        key={driver._id || driver.driverId} 
+                      <option
+                        key={driver._id || driver.driverId}
                         value={driver.driverId}
                       >
                         {driver.username || 'Unknown Driver'} (ID: {driver.driverId}) - {driver.vehicleType} ({driver.vehicleNumber})
@@ -219,16 +220,16 @@ const AssignShipmentModal = ({
             </div>
           </div>
           <div className="modal-footer">
-            <button 
-              type="button" 
-              className="btn btn-secondary" 
+            <button
+              type="button"
+              className="btn btn-secondary"
               onClick={onClose}
             >
               Cancel
             </button>
-            <button 
-              type="button" 
-              className="btn btn-success" 
+            <button
+              type="button"
+              className="btn btn-success"
               onClick={handleAssign}
               disabled={!selectedDriver || loading}
             >

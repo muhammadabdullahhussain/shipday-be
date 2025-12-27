@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useLocation } from "react-router-dom";
+import { toast } from 'react-toastify';
 import {
   Table,
   Badge,
@@ -64,7 +65,7 @@ const WarehouseDetails = () => {
       })
       .catch((err) => {
         if (err.response?.status === 409) {
-          alert("Staff is already assigned to another warehouse");
+          toast.error("Staff is already assigned to another warehouse");
         } else {
           console.error("Assign failed:", err);
         }
@@ -122,10 +123,10 @@ const WarehouseDetails = () => {
 
       <div className="mb-3 d-flex gap-4 flex-wrap">
         {[{ label: "Warehouse ID", value: warehouse.id },
-          { label: "Warehouse Name", value: warehouse.name },
-          { label: "Location", value: warehouse.location },
-          { label: "Capacity", value: warehouse.capacity },
-          { label: "Used Space", value: warehouse.spaceUsed },
+        { label: "Warehouse Name", value: warehouse.name },
+        { label: "Location", value: warehouse.location },
+        { label: "Capacity", value: warehouse.capacity },
+        { label: "Used Space", value: warehouse.spaceUsed },
         ].map((item, idx) => (
           <span
             key={idx}

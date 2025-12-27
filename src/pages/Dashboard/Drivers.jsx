@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 import axiosInstance from "../../utils/axiosInterceptor";
 import EditDriverModal from "../../components/EditDriverModal";
 import AssignDriverModal from "../../components/AssignDriverModal";
@@ -143,28 +144,28 @@ const Drivers = () => {
   const updateDriverStatus = async (driverId, status) => {
     try {
       console.log('Updating driver status:', { driverId, status });
-      
-      const response = await axiosInstance.patch('/admin/drivers/status', 
+
+      const response = await axiosInstance.patch('/admin/drivers/status',
         { driverId, status },
         { headers: { 'Authorization': '' } }
       );
-      
+
       console.log('Status update successful:', response.data);
       handleCloseVerificationModal();
       fetchDrivers(filter);
     } catch (error) {
       console.error('Full error object:', error);
-      
+
       if (error.response) {
         console.error('Error status:', error.response.status);
         console.error('Error data:', error.response.data);
-        alert(`Error: ${error.response.data?.message || error.response.status}`);
+        toast.error(`Error: ${error.response.data?.message || error.response.status}`);
       } else if (error.request) {
         console.error('No response received:', error.request);
-        alert('No response from server. Check network connection.');
+        toast.error('No response from server. Check network connection.');
       } else {
         console.error('Request setup error:', error.message);
-        alert('Request failed: ' + error.message);
+        toast.error('Request failed: ' + error.message);
       }
     }
   };
@@ -428,7 +429,7 @@ const Drivers = () => {
         onFormChange={handleFormChange}
         onSave={handleSaveChanges}
       />
-      
+
       <AssignDriverModal
         show={showAssignModal}
         onClose={handleCloseAssignModal}
@@ -436,7 +437,7 @@ const Drivers = () => {
         onFormChange={handleAssignFormChange}
         onAssign={handleAssignDriver}
       />
-      
+
       <DriverVerificationModal
         show={showVerificationModal}
         onClose={handleCloseVerificationModal}

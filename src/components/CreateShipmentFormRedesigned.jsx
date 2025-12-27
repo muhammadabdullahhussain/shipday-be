@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import StepWizard from 'react-step-wizard';
+import { toast } from 'react-toastify';
 import '../styles/ui/CreateShipmentFormRedesigned.css';
 
 // Import step components (we'll create these)
@@ -27,12 +28,13 @@ const Nav = (props) => {
 
                 {/* Active Progress Track */}
                 <div
-                    className="position-absolute top-50 start-0 translate-middle-y bg-primary rounded transition-all"
+                    className="position-absolute top-50 start-0 translate-middle-y rounded transition-all"
                     style={{
                         height: '4px',
                         width: `${((props.currentStep - 1) / (props.totalSteps - 1)) * 100}%`,
                         zIndex: 0,
-                        transition: 'width 0.4s ease'
+                        transition: 'width 0.4s ease',
+                        backgroundColor: 'var(--brand-yellow)'
                     }}
                 ></div>
 
@@ -43,8 +45,8 @@ const Nav = (props) => {
                         const isActive = props.currentStep === stepNum;
                         const isCompleted = props.currentStep > stepNum;
 
-                        let circleClass = 'bg-white border border-2 border-secondary text-secondary';
-                        if (isActive) circleClass = 'bg-primary border-primary text-white shadow-lg scale-110';
+                        let circleClass = 'bg-white border border-2 border-secondary text-muted';
+                        if (isActive) circleClass = 'bg-brand-yellow border-brand-primary text-dark shadow-lg scale-110';
                         if (isCompleted) circleClass = 'bg-success border-success text-white';
 
                         return (
@@ -159,7 +161,7 @@ const CreateShipmentFormRedesigned = ({ onSubmit, onCancel, loading, isPublic })
         const finalData = { ...formData, ...overrideData };
 
         if (!finalData.termsAccepted) {
-            alert('Please accept terms and conditions');
+            toast.error('Please accept terms and conditions');
             return;
         }
 

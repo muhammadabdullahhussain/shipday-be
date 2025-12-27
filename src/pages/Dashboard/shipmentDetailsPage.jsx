@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useLocation } from "react-router-dom";
+import { toast } from 'react-toastify';
 import EditShipmentModal from "../../components/shipments/EditShipmentModal";
 import AddNoteModal from "../../components/shipments/AddNoteModal";
 import Cancelshipment from "../../components/shipments/cancelshipment";
@@ -156,7 +157,7 @@ const ShipmentDetails = () => {
       }));
     } catch (err) {
       console.error("Failed to update order status", err);
-      alert("Error updating order status");
+      toast.error("Error updating order status");
     }
   };
 
@@ -168,8 +169,8 @@ const ShipmentDetails = () => {
       <div className="d-flex justify-content-between align-items-start mb-3 flex-wrap">
         <h2 className="shipment-title">Shipment Details</h2>
         <div className="d-flex gap-2 mt-2 mt-md-0">
-          <button 
-            className={`btn ${activeAction === 'edit' ? 'btn-primary' : 'btn-outline-primary'}`} 
+          <button
+            className={`btn ${activeAction === 'edit' ? 'btn-primary' : 'btn-outline-primary'}`}
             onClick={() => {
               setActiveAction('edit');
               setShowEditModal(true);
@@ -177,8 +178,8 @@ const ShipmentDetails = () => {
           >
             Edit Shipment
           </button>
-          <button 
-            className={`btn ${activeAction === 'addNote' ? 'btn-primary' : 'btn-outline-primary'}`} 
+          <button
+            className={`btn ${activeAction === 'addNote' ? 'btn-primary' : 'btn-outline-primary'}`}
             onClick={() => {
               setActiveAction('addNote');
               setShowAddNoteModal(true);
@@ -186,8 +187,8 @@ const ShipmentDetails = () => {
           >
             Add Note
           </button>
-          <button 
-            className={`btn ${activeAction === 'cancel' ? 'btn-primary' : 'btn-outline-primary'}`} 
+          <button
+            className={`btn ${activeAction === 'cancel' ? 'btn-primary' : 'btn-outline-primary'}`}
             onClick={() => {
               setActiveAction('cancel');
               setShowCancelModal(true);
@@ -255,11 +256,10 @@ const ShipmentDetails = () => {
                 <td>{item.delayedDate}</td>
                 <td>
                   <span
-                    className={`badge pointer ${
-                      item.status === "Delivered" ? "bg-primary" :
-                      item.status === "Pending" ? "bg-warning text-dark" :
-                      "bg-secondary"
-                    }`}
+                    className={`badge pointer ${item.status === "Delivered" ? "bg-primary" :
+                        item.status === "Pending" ? "bg-warning text-dark" :
+                          "bg-secondary"
+                      }`}
                     onClick={() => handleStatusClick(index)}
                     style={{ cursor: "pointer" }}
                   >

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 
 const CollectionDetailsStep = ({ formData, updateFormData, previousStep, nextStep }) => {
     const [useGeolocation, setUseGeolocation] = useState(false);
+    const [geoLoading, setGeoLoading] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -21,17 +23,20 @@ const CollectionDetailsStep = ({ formData, updateFormData, previousStep, nextSte
 
     const handleGeolocation = () => {
         if (navigator.geolocation) {
+            setGeoLoading(true);
             navigator.geolocation.getCurrentPosition(
                 async (position) => {
                     const { latitude, longitude } = position.coords;
 
                     try {
                         // Reverse geocode using Nominatim API (OpenStreetMap)
+                        // Adding User-Agent and Referer as per Nominatim Usage Policy
                         const response = await fetch(
                             `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1`,
                             {
                                 headers: {
-                                    'Accept-Language': 'en'
+                                    'Accept-Language': 'en',
+                                    'User-Agent': 'ShipDay-Admin-Dashboard/1.0 (https://shipday.co.za)'
                                 }
                             }
                         );
@@ -41,13 +46,30 @@ const CollectionDetailsStep = ({ formData, updateFormData, previousStep, nextSte
                         }
 
                         const data = await response.json();
-                        const address = data.address;
+                        const address = data.address || {};
 
-                        // Extract address components
-                        const street = `${address.house_number || ''} ${address.road || address.street || ''}`.trim();
-                        const suburb = address.suburb || address.neighbourhood || address.quarter || '';
-                        const city = address.city || address.town || address.village || address.municipality || '';
-                        const province = address.state || address.province || '';
+                        // Extract address components specifically for SA structure
+                        const houseNumber = address.house_number || '';
+                        const road = address.road || address.street || address.pedestrian || '';
+                        const street = `${houseNumber} ${road}`.trim();
+
+                        // SA specific: Suburb mapping
+                        const suburb = address.suburb || address.neighbourhood || address.quarter || address.subdistrict || '';
+                        const city = address.city || address.town || address.village || address.municipality || address.city_district || '';
+
+                        // OSM 'state' usually maps to SA Province
+                        const rawProvince = address.state || address.province || '';
+                        let province = '';
+
+                        // Normalize to match the provinces array exactly
+                        if (rawProvince) {
+                            const matched = provinces.find(p =>
+                                rawProvince.toLowerCase().includes(p.toLowerCase()) ||
+                                p.toLowerCase().includes(rawProvince.toLowerCase())
+                            );
+                            province = matched || rawProvince;
+                        }
+
                         const postalCode = address.postcode || '';
 
                         // Update form data with geocoded address
@@ -66,7 +88,7 @@ const CollectionDetailsStep = ({ formData, updateFormData, previousStep, nextSte
                         });
 
                         setUseGeolocation(true);
-                        alert('Location captured and address fields filled automatically!');
+                        toast.success('Location captured and address fields filled automatically!');
                     } catch (error) {
                         console.error('Geocoding error:', error);
                         // Still save coordinates even if geocoding fails
@@ -79,16 +101,27 @@ const CollectionDetailsStep = ({ formData, updateFormData, previousStep, nextSte
                             }
                         });
                         setUseGeolocation(true);
-                        alert('Location captured! Could not auto-fill address. Please enter manually.');
+                        toast.warning('Location captured! Could not auto-fill address details. Please check and enter manually.');
+                    } finally {
+                        setGeoLoading(false);
                     }
                 },
                 (error) => {
+                    setGeoLoading(false);
                     console.error('Geolocation error:', error);
-                    alert('Unable to get location. Please enter manually.');
+                    let msg = 'Unable to get location. Please enter manually.';
+                    if (error.code === 1) msg = 'Location access denied. Please enable location permissions.';
+                    if (error.code === 3) msg = 'Location request timed out. Please try again.';
+                    toast.error(msg);
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 15000,
+                    maximumAge: 0
                 }
             );
         } else {
-            alert('Geolocation not supported. Please enter manually.');
+            toast.error('Geolocation not supported. Please enter manually.');
         }
     };
 
@@ -96,13 +129,13 @@ const CollectionDetailsStep = ({ formData, updateFormData, previousStep, nextSte
         e.preventDefault();
 
         if (!formData.dispatcherName || !formData.collectionMobile || !formData.collectionEmail) {
-            alert('Please fill in all required fields');
+            toast.error('Please fill in all required fields');
             return;
         }
 
         if (!formData.collectionAddress.street || !formData.collectionAddress.city ||
             !formData.collectionAddress.province || !formData.collectionAddress.postalCode) {
-            alert('Please complete the address details');
+            toast.error('Please complete the address details');
             return;
         }
 
@@ -201,17 +234,23 @@ const CollectionDetailsStep = ({ formData, updateFormData, previousStep, nextSte
                     </div>
                 </div>
 
-                <h5 className="mt-4 mb-3">Collection Address</h5>
-
                 <div className="mb-3">
                     <button
                         type="button"
-                        className="btn btn-outline-primary"
+                        className="btn btn-outline-brand-black"
                         onClick={handleGeolocation}
+                        disabled={geoLoading}
                     >
-                        📍 Use Current Location
+                        {geoLoading ? (
+                            <>
+                                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                Locating...
+                            </>
+                        ) : (
+                            <>📍 Use Current Location</>
+                        )}
                     </button>
-                    {useGeolocation && (
+                    {useGeolocation && !geoLoading && (
                         <span className="text-success ms-2">✓ Location captured</span>
                     )}
                 </div>
@@ -225,7 +264,7 @@ const CollectionDetailsStep = ({ formData, updateFormData, previousStep, nextSte
                             name="collectionAddress.street"
                             value={formData.collectionAddress.street}
                             onChange={handleChange}
-                            placeholder="456 Business Avenue"
+                            placeholder="456 William Nicol Dr"
                             required
                         />
                     </div>
@@ -240,7 +279,7 @@ const CollectionDetailsStep = ({ formData, updateFormData, previousStep, nextSte
                             name="collectionAddress.suburb"
                             value={formData.collectionAddress.suburb}
                             onChange={handleChange}
-                            placeholder="Rosebank"
+                            placeholder="Rosebank / Hyde Park"
                             required
                         />
                     </div>
@@ -261,14 +300,14 @@ const CollectionDetailsStep = ({ formData, updateFormData, previousStep, nextSte
 
                 <div className="row">
                     <div className="col-md-6 mb-3">
-                        <label className="form-label">Complex Name</label>
+                        <label className="form-label">Complex / Building</label>
                         <input
                             type="text"
                             className="form-control"
                             name="collectionAddress.complex"
                             value={formData.collectionAddress.complex}
                             onChange={handleChange}
-                            placeholder="Business Park (Optional)"
+                            placeholder="Business Park / Unit No (Optional)"
                         />
                     </div>
 
@@ -305,11 +344,11 @@ const CollectionDetailsStep = ({ formData, updateFormData, previousStep, nextSte
                 </div>
 
                 <div className="d-flex justify-content-between mt-4">
-                    <button type="button" className="btn btn-secondary" onClick={previousStep}>
+                    <button type="button" className="btn btn-outline-secondary" onClick={previousStep}>
                         ← Back
                     </button>
-                    <button type="submit" className="btn btn-primary">
-                        Next: Delivery Details →
+                    <button type="submit" className="btn btn-brand-black">
+                        Next: Delivery Details <i className="bi bi-arrow-right ms-2 text-yellow"></i>
                     </button>
                 </div>
             </form>

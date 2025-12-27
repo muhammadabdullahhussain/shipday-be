@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
 import AddNewStaffModal from "../../components/staff/AddNewStaffModal";
 import AssignNewTaskModal from "../../components/staff/AssignNewTaskModal";
 import "../../styles/ui/staff.css";
@@ -327,7 +328,7 @@ const StaffManagement = () => {
                       handleSaveEdit(res.data.staff);
                     }
                   } catch {
-                    alert("Update failed");
+                    toast.error("Update failed");
                   }
                 }}
               >

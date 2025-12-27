@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import axiosInstance from '../../utils/axiosInterceptor';
 
 const ParcelDetailsStep = ({ formData, updateFormData, previousStep, nextStep }) => {
@@ -90,13 +91,13 @@ const ParcelDetailsStep = ({ formData, updateFormData, previousStep, nextStep })
         if (formData.parcelType === 'custom') {
             const { length, width, height, weight } = formData.dimensions;
             if (!length || !width || !height || !weight) {
-                alert('Please fill in all parcel dimensions');
+                toast.error('Please fill in all parcel dimensions');
                 return;
             }
         }
 
         if (calculatedPrice === 0) {
-            alert('Please select a valid parcel type');
+            toast.error('Please select a valid parcel type');
             return;
         }
 
@@ -299,16 +300,16 @@ const ParcelDetailsStep = ({ formData, updateFormData, previousStep, nextStep })
                 <div className="price-summary mb-4">
                     <div className="d-flex justify-content-between align-items-center p-3 bg-light rounded">
                         <h5 className="mb-0">Estimated Courier Fee:</h5>
-                        <h4 className="mb-0 text-primary">R{calculatedPrice.toFixed(2)}</h4>
+                        <h4 className="mb-0 text-dark">R{calculatedPrice.toFixed(2)}</h4>
                     </div>
                 </div>
 
                 <div className="d-flex justify-content-between mt-4">
-                    <button type="button" className="btn btn-secondary" onClick={previousStep}>
+                    <button type="button" className="btn btn-outline-secondary" onClick={previousStep}>
                         ← Back
                     </button>
-                    <button type="submit" className="btn btn-primary">
-                        Next: Terms & Payment →
+                    <button type="submit" className="btn btn-brand-black">
+                        Next: Terms & Payment <i className="bi bi-arrow-right ms-2 text-yellow"></i>
                     </button>
                 </div>
             </form>

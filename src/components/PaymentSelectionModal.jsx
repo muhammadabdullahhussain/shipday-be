@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Button, Spinner } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 import axiosInstance from '../utils/axiosInterceptor';
 import OrderConfirmationModal from './OrderConfirmationModal';
 
@@ -51,7 +52,7 @@ const PaymentSelectionModal = ({
 
     const handleConfirm = async () => {
         if (!selectedMethod) {
-            alert('Please select a payment method');
+            toast.error('Please select a payment method');
             return;
         }
 
@@ -97,7 +98,7 @@ const PaymentSelectionModal = ({
             } catch (error) {
                 console.error('COD order error:', error);
                 console.error('Error response:', error.response?.data);
-                alert(error.response?.data?.message || 'Failed to create order. Please try again.');
+                toast.error(error.response?.data?.message || 'Failed to create order. Please try again.');
             } finally {
                 setProcessing(false);
             }
@@ -120,13 +121,13 @@ const PaymentSelectionModal = ({
                 if (paymentResponse.data.redirectUrl) {
                     window.location.href = paymentResponse.data.redirectUrl;
                 } else {
-                    alert('Payment gateway URL not available');
+                    toast.error('Payment gateway URL not available');
                     setProcessing(false);
                 }
             } catch (error) {
                 console.error('Payment error:', error);
                 console.error('Error response:', error.response?.data);
-                alert(error.response?.data?.message || 'Failed to initiate payment. Please try again.');
+                toast.error(error.response?.data?.message || 'Failed to initiate payment. Please try again.');
                 setProcessing(false);
             }
         }

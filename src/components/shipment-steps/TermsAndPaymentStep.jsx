@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-// import PaymentSelectionModal from '../PaymentSelectionModal';
+import { toast } from 'react-toastify';
 
 const TermsAndPaymentStep = ({ formData, updateFormData, previousStep, onSubmit, onCancel, loading, isPublic }) => {
     const [showTermsModal, setShowTermsModal] = useState(false);
@@ -17,7 +17,7 @@ const TermsAndPaymentStep = ({ formData, updateFormData, previousStep, onSubmit,
         e.preventDefault();
 
         if (!formData.termsAccepted) {
-            alert('Please accept the terms and conditions to proceed');
+            toast.error('Please accept the terms and conditions to proceed');
             return;
         }
 
@@ -139,7 +139,7 @@ const TermsAndPaymentStep = ({ formData, updateFormData, previousStep, onSubmit,
                         <hr />
                         <div className="row">
                             <div className="col-6"><strong>Total Amount:</strong></div>
-                            <div className="col-6 text-end"><h5 className="text-primary mb-0">R{formData.calculatedPrice.toFixed(2)}</h5></div>
+                            <div className="col-6 text-end"><h5 className="text-dark mb-0">R{formData.calculatedPrice.toFixed(2)}</h5></div>
                         </div>
                     </div>
                 </div>
@@ -160,7 +160,7 @@ const TermsAndPaymentStep = ({ formData, updateFormData, previousStep, onSubmit,
                             I accept the{' '}
                             <button
                                 type="button"
-                                className="btn btn-link p-0"
+                                className="btn btn-link p-0 text-decoration-none text-dark fw-bold"
                                 onClick={() => setShowTermsModal(true)}
                             >
                                 Terms and Conditions
@@ -173,20 +173,20 @@ const TermsAndPaymentStep = ({ formData, updateFormData, previousStep, onSubmit,
 
                 {/* Action Buttons */}
                 <div className="d-flex justify-content-between mt-4">
-                    <button type="button" className="btn btn-secondary" onClick={previousStep}>
+                    <button type="button" className="btn btn-outline-secondary" onClick={previousStep}>
                         ← Back
                     </button>
                     <div>
-                        <button type="button" className="btn btn-outline-secondary me-2" onClick={onCancel}>
+                        <button type="button" className="btn btn-outline-danger me-2" onClick={onCancel}>
                             Cancel
                         </button>
                         <button
                             type="button"
-                            className="btn btn-success"
+                            className="btn btn-brand-black"
                             disabled={loading}
                             onClick={handleSubmit} // Opens modal
                         >
-                            Proceed to Payment
+                            Proceed to Payment <i className="bi bi-credit-card ms-2 text-yellow"></i>
                         </button>
                     </div>
                 </div>
@@ -222,7 +222,7 @@ const TermsAndPaymentStep = ({ formData, updateFormData, previousStep, onSubmit,
                                 </button>
                                 <button
                                     type="button"
-                                    className="btn btn-primary"
+                                    className="btn btn-brand-black"
                                     onClick={() => {
                                         updateFormData({ termsAccepted: true });
                                         setShowTermsModal(false);

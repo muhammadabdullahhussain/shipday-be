@@ -1,5 +1,6 @@
 // src/components/settings/AddRoleModal.jsx
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import '../../styles/ui/UserRoleSection.css';
 import axiosInstance from "../../utils/axiosInterceptor";
 
@@ -32,34 +33,34 @@ const AddRoleModal = ({ onClose, onSave }) => {
   };
 
   const handleSubmit = async () => {
-  if (!roleName.trim()) {
-    alert("Role name is required");
-    return;
-  }
+    if (!roleName.trim()) {
+      toast.error("Role name is required");
+      return;
+    }
 
-  const newRole = {
-    role: roleName,
-    description,
-    permissions: selectedPermissions,
-  };
+    const newRole = {
+      role: roleName,
+      description,
+      permissions: selectedPermissions,
+    };
 
-  try {
-    setLoading(true);
-    const res = await axiosInstance.post("/roles", newRole);
-    const savedRole = res.data;
+    try {
+      setLoading(true);
+      const res = await axiosInstance.post("/roles", newRole);
+      const savedRole = res.data;
 
-    onSave(savedRole); // Update parent state with new role
-    onClose();
-  } catch (err) {
-    console.error(err);
-    alert(
-      "Error creating role: " +
+      onSave(savedRole); // Update parent state with new role
+      onClose();
+    } catch (err) {
+      console.error(err);
+      toast.error(
+        "Error creating role: " +
         (err.response?.data?.error || err.response?.data?.message || err.message)
-    );
-  } finally {
-    setLoading(false);
-  }
-};
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
 
   return (

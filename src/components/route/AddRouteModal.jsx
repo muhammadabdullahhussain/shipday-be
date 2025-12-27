@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Form, Row, Col } from "react-bootstrap";
+import { toast } from 'react-toastify';
 import axiosInstance from "../../utils/axiosInterceptor";
 
 const AddTrackingModal = ({ show, handleClose, handleAdd }) => {
@@ -40,17 +41,17 @@ const AddTrackingModal = ({ show, handleClose, handleAdd }) => {
       const response = await axiosInstance.post("/trackings", tracking);
       console.log("Server response:", response.data);
 
-      alert("Tracking saved successfully!");
+      toast.success("Tracking saved successfully!");
       if (handleAdd) handleAdd(response.data.tracking);
       setTracking({ start: "", end: "", eta: "", distance: "", vehicle: "" });
       handleClose();
     } catch (error) {
       console.error("Error saving tracking:", error);
-      alert(
+      toast.error(
         "Failed to save tracking: " +
-          (error.response?.data?.error ||
-            error.response?.data?.message ||
-            error.message)
+        (error.response?.data?.error ||
+          error.response?.data?.message ||
+          error.message)
       );
     }
   };

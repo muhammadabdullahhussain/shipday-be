@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Button, Form, Row, Col } from "react-bootstrap";
+import { toast } from 'react-toastify';
 import "../../styles/ui/FleetPage.css";
 import axiosInstance from "../../utils/axiosInterceptor";
 
@@ -48,11 +49,11 @@ const AddVehicleModal = ({ show, handleClose }) => {
   const handleSubmit = async () => {
     try {
       const res = await axiosInstance.post("/fleet/add", formData);
-      alert("Vehicle added successfully!");
+      toast.success("Vehicle added successfully!");
       handleClose();
     } catch (err) {
       console.error("Error adding vehicle:", err);
-      alert("Failed to save vehicle.");
+      toast.error("Failed to save vehicle.");
     }
   };
 

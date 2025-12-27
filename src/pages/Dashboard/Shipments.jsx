@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { toast } from 'react-toastify';
 import "../../styles/ui/ShipmentListPage.css";
 import axiosInstance from "../../utils/axiosInterceptor";
 import AssignShipmentModal from "../../components/AssignShipmentModal";
@@ -271,7 +272,7 @@ const ShipmentsTable = () => {
     } catch (err) {
       console.error("Error creating shipment:", err);
       const errorMessage = err.response?.data?.message || err.response?.data?.error || "Failed to create shipment. Please try again.";
-      alert(errorMessage);
+      toast.error(errorMessage);
       setCreateLoading(false);
     }
   };

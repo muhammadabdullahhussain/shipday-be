@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Button from "../components/ui/Button";
 import "../styles/ui/auth.css";
 
-import logo from "../assets/logo.png";
+import logo from "../assets/shipday_logo.jpg";
 import rightSideImage from "../assets/bg3.png";
 import emailIcon from "../assets/email.png";
 

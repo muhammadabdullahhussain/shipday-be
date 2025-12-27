@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Button from "../components/ui/Button";
 import "../styles/ui/auth.css";
 
-import logo from "../assets/logo.png";
+import logo from "../assets/shipday_logo.jpg";
 import rightSideImage from "../assets/bg4.png";
 
 import { ToastContainer, toast } from "react-toastify";

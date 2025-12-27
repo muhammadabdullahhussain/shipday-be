@@ -1,5 +1,6 @@
 // src/components/settings/CompanyInfoSection.jsx
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import axiosInstance from "../../utils/axiosInterceptor";
 
 
@@ -57,10 +58,10 @@ const CompanyInfoSection = () => {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
-      alert('Company information saved successfully!');
+      toast.success('Company information saved successfully!');
     } catch (err) {
       console.error('Error saving company info:', err);
-      alert('Failed to save company information.');
+      toast.error('Failed to save company information.');
     } finally {
       setLoading(false);
     }

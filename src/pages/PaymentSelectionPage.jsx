@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button, Spinner } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 import axiosInstance from '../utils/axiosInterceptor';
 import OrderConfirmationModal from '../components/OrderConfirmationModal';
 
@@ -55,7 +56,7 @@ const PaymentSelectionPage = () => {
 
     const handleConfirm = async () => {
         if (!selectedMethod) {
-            alert('Please select a payment method');
+            toast.error('Please select a payment method');
             return;
         }
 
@@ -94,7 +95,7 @@ const PaymentSelectionPage = () => {
                 setShowConfirmation(true);
             } catch (error) {
                 console.error('COD error:', error);
-                alert(error.response?.data?.message || 'Failed to create order.');
+                toast.error(error.response?.data?.message || 'Failed to create order.');
             } finally {
                 setProcessing(false);
             }
@@ -111,12 +112,12 @@ const PaymentSelectionPage = () => {
                 if (paymentResponse.data.redirectUrl) {
                     window.location.href = paymentResponse.data.redirectUrl;
                 } else {
-                    alert('Payment gateway URL not available');
+                    toast.error('Payment gateway URL not available');
                     setProcessing(false);
                 }
             } catch (error) {
                 console.error('PayFast error:', error);
-                alert(error.response?.data?.message || 'Failed to initiate payment.');
+                toast.error(error.response?.data?.message || 'Failed to initiate payment.');
                 setProcessing(false);
             }
         }

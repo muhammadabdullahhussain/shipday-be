@@ -27,7 +27,7 @@ const PublicFooter = () => {
                         </p>
                         <div className="d-flex gap-2">
                             {['bi-facebook', 'bi-twitter-x', 'bi-linkedin', 'bi-instagram'].map((icon, i) => (
-                                <a key={i} href="#" className="btn btn-outline-light rounded-circle btn-sm d-flex align-items-center justify-content-center border-secondary hover-bg-purple text-secondary" style={{ width: '36px', height: '36px' }}>
+                                <a key={i} href="#" className="btn btn-outline-light rounded-circle btn-sm d-flex align-items-center justify-content-center border-secondary hover-bg-yellow text-secondary" style={{ width: '36px', height: '36px' }}>
                                     <i className={`bi ${icon}`}></i>
                                 </a>
                             ))}
@@ -39,22 +39,22 @@ const PublicFooter = () => {
                         <h6 className="fw-bold text-white mb-4">Company</h6>
                         <ul className="list-unstyled d-flex flex-column gap-2 small">
                             <li>
-                                <Link to="/" className={`d-inline-block text-decoration-none transition-all ${isActive('/') ? 'bg-purple text-white rounded-pill px-3 py-1 shadow-sm' : 'text-white-50 hover-text-white'}`}>
+                                <Link to="/" className={`d-inline-block text-decoration-none transition-all ${isActive('/') ? 'bg-yellow text-black rounded-pill px-3 py-1 shadow-sm' : 'text-white-50 hover-text-white hover-text-yellow'}`}>
                                     Home
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/about" className={`d-inline-block text-decoration-none transition-all ${isActive('/about') ? 'bg-purple text-white rounded-pill px-3 py-1 shadow-sm' : 'text-white-50 hover-text-white'}`}>
+                                <Link to="/about" className={`d-inline-block text-decoration-none transition-all ${isActive('/about') ? 'bg-yellow text-black rounded-pill px-3 py-1 shadow-sm' : 'text-white-50 hover-text-white hover-text-yellow'}`}>
                                     About Us
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/services" className={`d-inline-block text-decoration-none transition-all ${isActive('/services') ? 'bg-purple text-white rounded-pill px-3 py-1 shadow-sm' : 'text-white-50 hover-text-white'}`}>
+                                <Link to="/services" className={`d-inline-block text-decoration-none transition-all ${isActive('/services') ? 'bg-yellow text-black rounded-pill px-3 py-1 shadow-sm' : 'text-white-50 hover-text-white hover-text-yellow'}`}>
                                     Services
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/careers" className={`d-inline-block text-decoration-none transition-all ${isActive('/careers') ? 'bg-purple text-white rounded-pill px-3 py-1 shadow-sm' : 'text-white-50 hover-text-white'}`}>
+                                <Link to="/careers" className={`d-inline-block text-decoration-none transition-all ${isActive('/careers') ? 'bg-yellow text-black rounded-pill px-3 py-1 shadow-sm' : 'text-white-50 hover-text-white hover-text-yellow'}`}>
                                     Careers
                                 </Link>
                             </li>
@@ -66,22 +66,22 @@ const PublicFooter = () => {
                         <h6 className="fw-bold text-white mb-4">Support</h6>
                         <ul className="list-unstyled d-flex flex-column gap-2 small">
                             <li>
-                                <Link to="/tracking" className={`d-inline-block text-decoration-none transition-all ${isActive('/tracking') ? 'bg-purple text-white rounded-pill px-3 py-1 shadow-sm' : 'text-white-50 hover-text-white'}`}>
+                                <Link to="/tracking" className={`d-inline-block text-decoration-none transition-all ${isActive('/tracking') ? 'bg-yellow text-black rounded-pill px-3 py-1 shadow-sm' : 'text-white-50 hover-text-white hover-text-yellow'}`}>
                                     Track Parcel
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/faqs" className={`d-inline-block text-decoration-none transition-all ${isActive('/faqs') ? 'bg-purple text-white rounded-pill px-3 py-1 shadow-sm' : 'text-white-50 hover-text-white'}`}>
+                                <Link to="/faqs" className={`d-inline-block text-decoration-none transition-all ${isActive('/faqs') ? 'bg-yellow text-black rounded-pill px-3 py-1 shadow-sm' : 'text-white-50 hover-text-white hover-text-yellow'}`}>
                                     FAQs
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/contact" className={`d-inline-block text-decoration-none transition-all ${isActive('/contact') ? 'bg-purple text-white rounded-pill px-3 py-1 shadow-sm' : 'text-white-50 hover-text-white'}`}>
+                                <Link to="/contact" className={`d-inline-block text-decoration-none transition-all ${isActive('/contact') ? 'bg-yellow text-black rounded-pill px-3 py-1 shadow-sm' : 'text-white-50 hover-text-white hover-text-yellow'}`}>
                                     Contact Us
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/terms" className={`d-inline-block text-decoration-none transition-all ${isActive('/terms') ? 'bg-purple text-white rounded-pill px-3 py-1 shadow-sm' : 'text-white-50 hover-text-white'}`}>
+                                <Link to="/terms" className={`d-inline-block text-decoration-none transition-all ${isActive('/terms') ? 'bg-yellow text-black rounded-pill px-3 py-1 shadow-sm' : 'text-white-50 hover-text-white hover-text-yellow'}`}>
                                     Terms & Conditions
                                 </Link>
                             </li>
@@ -95,10 +95,10 @@ const PublicFooter = () => {
                         <InputGroup className="mb-3">
                             <Form.Control
                                 placeholder="Enter your email"
-                                className="bg-dark border-secondary text-white placeholder-secondary focus-ring-0"
+                                className="bg-dark border-secondary text-white placeholder-secondary shadow-none"
                                 style={{ borderRadius: '8px 0 0 8px', borderColor: '#333' }}
                             />
-                            <Button className="fw-bold btn-purple border-0" style={{ borderRadius: '0 8px 8px 0' }}>
+                            <Button className="fw-bold btn-yellow border-0" style={{ borderRadius: '0 8px 8px 0' }}>
                                 Subscribe
                             </Button>
                         </InputGroup>
@@ -123,10 +123,10 @@ const PublicFooter = () => {
                 </div>
             </Container>
             <style>{`
-                .hover-text-white:hover { color: #fff !important; padding-left: 5px; }
-                .hover-bg-purple:hover { background-color: var(--primary-purple) !important; border-color: var(--primary-purple) !important; color: white !important; }
-                .placeholder-secondary::placeholder { color: #6c757d; }
-                .bg-purple { background-color: var(--primary-purple) !important; }
+                .hover-text-yellow:hover { color: var(--brand-yellow) !important; }
+                .hover-bg-yellow:hover { background-color: var(--brand-yellow) !important; border-color: var(--brand-yellow) !important; color: black !important; }
+                .placeholder-secondary::placeholder { color: #666; }
+                .bg-yellow { background-color: var(--brand-yellow) !important; }
                 .transition-all { transition: all 0.3s ease; }
             `}</style>
         </footer>

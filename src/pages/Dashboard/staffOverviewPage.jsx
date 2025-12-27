@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { toast } from 'react-toastify';
 import AssignRouteModal from "../../components/staff/AssignRouteModal";
 import "../../styles/ui/staff.css";
 import axiosInstance from "../../utils/axiosInterceptor";
@@ -61,7 +62,7 @@ const StaffOverview = () => {
         setEditRoute(null);
       }
     } catch {
-      alert("Failed to update route");
+      toast.error("Failed to update route");
     }
   };
 
@@ -74,7 +75,7 @@ const StaffOverview = () => {
         );
         setSelectedRoutes((prev) => prev.filter((id) => id !== routeId));
       } catch {
-        alert("Delete failed");
+        toast.error("Delete failed");
       }
     }
     setMenuIndex(null);

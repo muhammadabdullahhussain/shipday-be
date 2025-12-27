@@ -1,4 +1,5 @@
 import React from 'react';
+import { toast } from 'react-toastify';
 
 const SenderDetailsStep = ({ formData, updateFormData, nextStep }) => {
     const handleChange = (e) => {
@@ -22,13 +23,13 @@ const SenderDetailsStep = ({ formData, updateFormData, nextStep }) => {
 
         // Validation
         if (!formData.senderFullName || !formData.senderEmail || !formData.senderMobile) {
-            alert('Please fill in all required fields');
+            toast.error('Please fill in all required fields');
             return;
         }
 
         if (!formData.senderAddress.street || !formData.senderAddress.city ||
             !formData.senderAddress.province || !formData.senderAddress.postalCode) {
-            alert('Please complete the address details');
+            toast.error('Please complete the address details');
             return;
         }
 
@@ -141,7 +142,7 @@ const SenderDetailsStep = ({ formData, updateFormData, nextStep }) => {
                             name="senderAddress.suburb"
                             value={formData.senderAddress.suburb}
                             onChange={handleChange}
-                            placeholder="Sandton"
+                            placeholder="Sandton / Bryanston"
                             required
                         />
                     </div>
@@ -162,14 +163,14 @@ const SenderDetailsStep = ({ formData, updateFormData, nextStep }) => {
 
                 <div className="row">
                     <div className="col-md-6 mb-3">
-                        <label className="form-label">Complex Name</label>
+                        <label className="form-label">Complex / Building</label>
                         <input
                             type="text"
                             className="form-control"
                             name="senderAddress.complex"
                             value={formData.senderAddress.complex}
                             onChange={handleChange}
-                            placeholder="Sunset Complex (Optional)"
+                            placeholder="Sunset Complex / Unit No (Optional)"
                         />
                     </div>
 
@@ -206,8 +207,8 @@ const SenderDetailsStep = ({ formData, updateFormData, nextStep }) => {
                 </div>
 
                 <div className="d-flex justify-content-end mt-4">
-                    <button type="submit" className="btn btn-primary">
-                        Next: Collection Details →
+                    <button type="submit" className="btn btn-brand-black">
+                        Next: Collection Details <i className="bi bi-arrow-right ms-2 text-yellow"></i>
                     </button>
                 </div>
             </form>

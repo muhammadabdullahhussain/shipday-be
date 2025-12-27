@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import axiosInstance from '../utils/axiosInterceptor';
 
 const EditShipmentModal = ({ show, onClose, shipment, onUpdate }) => {
@@ -21,10 +22,10 @@ const EditShipmentModal = ({ show, onClose, shipment, onUpdate }) => {
   useEffect(() => {
     if (show && shipment) {
       console.log('Received shipment object:', shipment);
-      
+
       // Extract the correct ID from shipment object
       const id = shipment.shipmentId || shipment._id || shipment.id || '';
-      
+
       setFormData({
         shipmentId: id,
         senderName: shipment.senderName || '',
@@ -36,8 +37,8 @@ const EditShipmentModal = ({ show, onClose, shipment, onUpdate }) => {
         parcelWeight: shipment.parcelWeight || '',
         packageType: shipment.packageType || 'parcel',
         cost: shipment.cost || '',
-        eta: shipment.estimatedDelivery 
-          ? new Date(shipment.estimatedDelivery).toISOString().slice(0, 10) 
+        eta: shipment.estimatedDelivery
+          ? new Date(shipment.estimatedDelivery).toISOString().slice(0, 10)
           : (shipment.eta ? new Date(shipment.eta).toISOString().slice(0, 10) : ''),
         notes: shipment.notes || ''
       });
@@ -53,16 +54,16 @@ const EditShipmentModal = ({ show, onClose, shipment, onUpdate }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Validate shipmentId exists
     if (!formData.shipmentId) {
-      alert('Shipment ID is missing. Cannot update shipment.');
+      toast.error('Shipment ID is missing. Cannot update shipment.');
       console.error('shipmentId is undefined or empty');
       return;
     }
 
     setLoading(true);
-    
+
     try {
       // Match Postman request structure exactly
       const payload = {
@@ -82,9 +83,9 @@ const EditShipmentModal = ({ show, onClose, shipment, onUpdate }) => {
 
       console.log('Sending PUT request to:', `/shipments/${formData.shipmentId}`);
       console.log('Payload:', payload);
-      
+
       const response = await axiosInstance.put(
-        `/shipments/${formData.shipmentId}`, 
+        `/shipments/${formData.shipmentId}`,
         payload,
         {
           headers: {
@@ -92,22 +93,22 @@ const EditShipmentModal = ({ show, onClose, shipment, onUpdate }) => {
           }
         }
       );
-      
+
       console.log('Update successful:', response.data);
-     // alert('Shipment updated successfully!');
+      toast.success('Shipment updated successfully!');
       onUpdate();
       onClose();
     } catch (error) {
       console.error('Error updating shipment:', error);
       console.error('Error response:', error.response?.data);
       console.error('Error status:', error.response?.status);
-      
-      const errorMessage = error.response?.data?.message 
-        || error.response?.data?.error 
-        || error.message 
+
+      const errorMessage = error.response?.data?.message
+        || error.response?.data?.error
+        || error.message
         || 'Unknown error occurred';
-      
-      alert(`Failed to update shipment: ${errorMessage}`);
+
+      toast.error(`Failed to update shipment: ${errorMessage}`);
     } finally {
       setLoading(false);
     }
@@ -141,7 +142,7 @@ const EditShipmentModal = ({ show, onClose, shipment, onUpdate }) => {
                   style={{ backgroundColor: '#e9ecef' }}
                 />
               </div>
-              
+
               <div className="row">
                 <div className="col-md-6">
                   <div className="mb-3">
@@ -156,7 +157,7 @@ const EditShipmentModal = ({ show, onClose, shipment, onUpdate }) => {
                     />
                   </div>
                 </div>
-                
+
                 <div className="col-md-6">
                   <div className="mb-3">
                     <label className="form-label">Sender Phone *</label>
@@ -171,7 +172,7 @@ const EditShipmentModal = ({ show, onClose, shipment, onUpdate }) => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="row">
                 <div className="col-md-6">
                   <div className="mb-3">
@@ -186,7 +187,7 @@ const EditShipmentModal = ({ show, onClose, shipment, onUpdate }) => {
                     />
                   </div>
                 </div>
-                
+
                 <div className="col-md-6">
                   <div className="mb-3">
                     <label className="form-label">Receiver Phone *</label>
@@ -201,7 +202,7 @@ const EditShipmentModal = ({ show, onClose, shipment, onUpdate }) => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="row">
                 <div className="col-md-6">
                   <div className="mb-3">
@@ -216,7 +217,7 @@ const EditShipmentModal = ({ show, onClose, shipment, onUpdate }) => {
                     />
                   </div>
                 </div>
-                
+
                 <div className="col-md-6">
                   <div className="mb-3">
                     <label className="form-label">End Location *</label>
@@ -231,7 +232,7 @@ const EditShipmentModal = ({ show, onClose, shipment, onUpdate }) => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="row">
                 <div className="col-md-4">
                   <div className="mb-3">
@@ -248,7 +249,7 @@ const EditShipmentModal = ({ show, onClose, shipment, onUpdate }) => {
                     />
                   </div>
                 </div>
-                
+
                 <div className="col-md-4">
                   <div className="mb-3">
                     <label className="form-label">Package Type *</label>
@@ -270,7 +271,7 @@ const EditShipmentModal = ({ show, onClose, shipment, onUpdate }) => {
                     </select>
                   </div>
                 </div>
-                
+
                 <div className="col-md-4">
                   <div className="mb-3">
                     <label className="form-label">Cost ($) *</label>
@@ -287,7 +288,7 @@ const EditShipmentModal = ({ show, onClose, shipment, onUpdate }) => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="mb-3">
                 <label className="form-label">ETA (Expected Arrival Date) *</label>
                 <input
@@ -299,7 +300,7 @@ const EditShipmentModal = ({ show, onClose, shipment, onUpdate }) => {
                   required
                 />
               </div>
-              
+
               <div className="mb-3">
                 <label className="form-label">Notes</label>
                 <textarea
@@ -312,7 +313,7 @@ const EditShipmentModal = ({ show, onClose, shipment, onUpdate }) => {
                 />
               </div>
             </div>
-            
+
             <div className="modal-footer">
               <button
                 type="button"

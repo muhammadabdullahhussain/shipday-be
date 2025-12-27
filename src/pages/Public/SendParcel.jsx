@@ -3,7 +3,7 @@ import { Container, Card } from 'react-bootstrap';
 import CreateShipmentFormRedesigned from '../../components/CreateShipmentFormRedesigned';
 import { useNavigate } from 'react-router-dom';
 
-const SendParcel = () => {
+export default function SendParcel() {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
 
@@ -20,7 +20,7 @@ const SendParcel = () => {
         <div className="py-5 bg-light min-vh-100">
             <Container>
                 <div className="text-center mb-5 fade-in-down">
-                    <h1 className="display-4 fw-bold text-dark">Send a Parcel</h1>
+                    <h1 className="display-4 fw-bold text-dark">PREPAID QOUTE TO CHECKOUT</h1>
                     <p className="lead text-muted">Fast, reliable, and secure delivery to your doorstep.</p>
                 </div>
 
@@ -38,6 +38,4 @@ const SendParcel = () => {
             </Container>
         </div>
     );
-};
-
-export default SendParcel;
+}
