@@ -29,7 +29,6 @@ const DeliveryDetailsStep = ({ formData, updateFormData, previousStep, nextStep 
                     const { latitude, longitude } = position.coords;
 
                     try {
-                        // Reverse geocode using Nominatim API (OpenStreetMap)
                         // Adding User-Agent and Referer as per Nominatim Usage Policy
                         const response = await fetch(
                             `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1`,
@@ -69,7 +68,6 @@ const DeliveryDetailsStep = ({ formData, updateFormData, previousStep, nextStep 
                             );
                             province = matched || rawProvince;
                         }
-
                         const postalCode = address.postcode || '';
 
                         // Update form data with geocoded address
