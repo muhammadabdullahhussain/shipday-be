@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import axiosInstance from "../../utils/axiosInterceptor";
+import { isSuperAdmin, isAdmin } from "../../utils/authHelper";
 import EditDriverModal from "../../components/EditDriverModal";
 import AssignDriverModal from "../../components/AssignDriverModal";
 import DriverVerificationModal from "../../components/DriverVerificationModal";
@@ -16,6 +17,8 @@ const Drivers = () => {
   const [showAssignModal, setShowAssignModal] = useState(false);
   const [assignForm, setAssignForm] = useState({});
   const [showVerificationModal, setShowVerificationModal] = useState(false);
+  const isUserSuperAdmin = isSuperAdmin();
+  const isUserAdmin = isAdmin();
 
   const fetchDrivers = async (status) => {
     setLoading(true);
@@ -335,73 +338,81 @@ const Drivers = () => {
                               </>
                             ) : (
                               <>
-                                <button
-                                  className="w-100 border-0 text-start px-3 py-2 d-flex align-items-center gap-2 rounded"
-                                  style={{
-                                    backgroundColor: "rgba(131, 110, 254, 0.12)",
-                                    color: "#836EFE",
-                                    fontSize: "14px",
-                                    transition: "background-color 0.2s",
-                                    marginBottom: "6px",
-                                    cursor: "pointer",
-                                  }}
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleEdit(driver);
-                                  }}
-                                  onMouseOver={(e) =>
-                                    (e.target.style.backgroundColor = "rgba(131, 110, 254, 0.2)")
-                                  }
-                                  onMouseOut={(e) =>
-                                    (e.target.style.backgroundColor = "rgba(131, 110, 254, 0.12)")
-                                  }
-                                >
-                                  Edit
-                                </button>
-                                <button
-                                  className="w-100 border-0 text-start px-3 py-2 d-flex align-items-center gap-2 rounded"
-                                  style={{
-                                    backgroundColor: "rgba(131, 110, 254, 0.12)",
-                                    color: "#836EFE",
-                                    fontSize: "14px",
-                                    transition: "background-color 0.2s",
-                                    marginBottom: "6px",
-                                    cursor: "pointer",
-                                  }}
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleAssign(driver);
-                                  }}
-                                  onMouseOver={(e) =>
-                                    (e.target.style.backgroundColor = "rgba(131, 110, 254, 0.2)")
-                                  }
-                                  onMouseOut={(e) =>
-                                    (e.target.style.backgroundColor = "rgba(131, 110, 254, 0.12)")
-                                  }
-                                >
-                                  Assign
-                                </button>
-                                <button
-                                  className="w-100 border-0 text-start px-3 py-2 d-flex align-items-center gap-2 rounded"
-                                  style={{
-                                    backgroundColor: "rgba(220, 38, 38, 0.12)",
-                                    color: "#dc2626",
-                                    fontSize: "14px",
-                                    cursor: "pointer",
-                                  }}
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleDelete(driver);
-                                  }}
-                                  onMouseOver={(e) =>
-                                    (e.target.style.backgroundColor = "rgba(220, 38, 38, 0.2)")
-                                  }
-                                  onMouseOut={(e) =>
-                                    (e.target.style.backgroundColor = "rgba(220, 38, 38, 0.12)")
-                                  }
-                                >
-                                  Delete
-                                </button>
+                                {isUserSuperAdmin && (
+                                  <button
+                                    className="w-100 border-0 text-start px-3 py-2 d-flex align-items-center gap-2 rounded"
+                                    style={{
+                                      backgroundColor: "rgba(131, 110, 254, 0.12)",
+                                      color: "#836EFE",
+                                      fontSize: "14px",
+                                      transition: "background-color 0.2s",
+                                      marginBottom: "6px",
+                                      cursor: "pointer",
+                                    }}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleEdit(driver);
+                                    }}
+                                    onMouseOver={(e) =>
+                                      (e.target.style.backgroundColor = "rgba(131, 110, 254, 0.2)")
+                                    }
+                                    onMouseOut={(e) =>
+                                      (e.target.style.backgroundColor = "rgba(131, 110, 254, 0.12)")
+                                    }
+                                  >
+                                    Edit
+                                  </button>
+                                )}
+
+                                {isUserAdmin && (
+                                  <button
+                                    className="w-100 border-0 text-start px-3 py-2 d-flex align-items-center gap-2 rounded"
+                                    style={{
+                                      backgroundColor: "rgba(131, 110, 254, 0.12)",
+                                      color: "#836EFE",
+                                      fontSize: "14px",
+                                      transition: "background-color 0.2s",
+                                      marginBottom: "6px",
+                                      cursor: "pointer",
+                                    }}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleAssign(driver);
+                                    }}
+                                    onMouseOver={(e) =>
+                                      (e.target.style.backgroundColor = "rgba(131, 110, 254, 0.2)")
+                                    }
+                                    onMouseOut={(e) =>
+                                      (e.target.style.backgroundColor = "rgba(131, 110, 254, 0.12)")
+                                    }
+                                  >
+                                    Assign
+                                  </button>
+                                )}
+
+                                {isUserSuperAdmin && (
+                                  <button
+                                    className="w-100 border-0 text-start px-3 py-2 d-flex align-items-center gap-2 rounded"
+                                    style={{
+                                      backgroundColor: "rgba(220, 38, 38, 0.12)",
+                                      color: "#dc2626",
+                                      fontSize: "14px",
+                                      cursor: "pointer",
+                                    }}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleDelete(driver);
+                                    }}
+                                    onMouseOver={(e) =>
+                                      (e.target.style.backgroundColor = "rgba(220, 38, 38, 0.2)")
+                                    }
+                                    onMouseOut={(e) =>
+                                      (e.target.style.backgroundColor = "rgba(220, 38, 38, 0.12)")
+                                    }
+                                  >
+                                    Delete
+                                  </button>
+                                )}
                               </>
                             )}
                           </div>

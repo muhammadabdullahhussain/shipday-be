@@ -22,15 +22,30 @@ const PublicFooter = () => {
                             />
                         </div>
                         <p className="text-white-50 small mb-4" style={{ lineHeight: '1.8', maxWidth: '85%' }}>
-                            ShipDay is South Africa's leading tech-enabled logistics provider.
+                            ShipDay is South Africa's leading tech-enabled courier provider.
                             We move your world with speed, precision, and care.
                         </p>
-                        <div className="d-flex gap-2">
-                            {['bi-facebook', 'bi-twitter-x', 'bi-linkedin', 'bi-instagram'].map((icon, i) => (
-                                <a key={i} href="#" className="btn btn-outline-light rounded-circle btn-sm d-flex align-items-center justify-content-center border-secondary hover-bg-yellow text-secondary" style={{ width: '36px', height: '36px' }}>
-                                    <i className={`bi ${icon}`}></i>
-                                </a>
-                            ))}
+                        <div className="d-flex gap-3">
+                            {['bi-facebook', 'bi-twitter-x', 'bi-linkedin', 'bi-instagram'].map((icon, i) => {
+                                const links = [
+                                    'https://facebook.com/shipday',
+                                    'https://twitter.com/shipday',
+                                    'https://linkedin.com/company/shipday',
+                                    'https://instagram.com/shipday'
+                                ];
+                                return (
+                                    <a
+                                        key={i}
+                                        href={links[i]}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="social-icon-link d-flex align-items-center justify-content-center rounded-circle border border-yellow border-opacity-25 text-yellow"
+                                        style={{ width: '40px', height: '40px', textDecoration: 'none', transition: 'all 0.3s ease' }}
+                                    >
+                                        <i className={`bi ${icon} fs-5`}></i>
+                                    </a>
+                                );
+                            })}
                         </div>
                     </Col>
 
@@ -91,7 +106,7 @@ const PublicFooter = () => {
                     {/* Newsletter */}
                     <Col lg={4} md={6}>
                         <h6 className="fw-bold text-white mb-4">Stay Updated</h6>
-                        <p className="small text-white-50 mb-3">Subscribe to get the latest logistics news and delivery updates.</p>
+                        <p className="small text-white-50 mb-3">Subscribe to get the latest courier news and delivery updates.</p>
                         <InputGroup className="mb-3">
                             <Form.Control
                                 placeholder="Enter your email"
@@ -102,6 +117,10 @@ const PublicFooter = () => {
                                 Subscribe
                             </Button>
                         </InputGroup>
+                        <div className="text-white-50 small">
+                            <i className="bi bi-envelope-fill text-yellow me-2"></i>
+                            <a href="mailto:support@shipday.co.za" className="text-white-50 text-decoration-none hover-text-white">support@shipday.co.za</a>
+                        </div>
                     </Col>
                 </Row>
 
@@ -109,7 +128,7 @@ const PublicFooter = () => {
                     <Row className="align-items-center">
                         <Col md={6} className="text-center text-md-start mb-3 mb-md-0">
                             <small className="text-white-50">
-                                &copy; {new Date().getFullYear()} ShipDay Logistics (Pty) Ltd. All rights reserved.
+                                &copy; 2026 ShipDay Logistics (Pty) Ltd. All rights reserved.
                             </small>
                         </Col>
                         <Col md={6} className="text-center text-md-end">
@@ -125,11 +144,19 @@ const PublicFooter = () => {
             <style>{`
                 .hover-text-yellow:hover { color: var(--brand-yellow) !important; }
                 .hover-bg-yellow:hover { background-color: var(--brand-yellow) !important; border-color: var(--brand-yellow) !important; color: black !important; }
+                .social-icon-link:hover { 
+                    background-color: var(--brand-yellow); 
+                    color: black !important; 
+                    border-color: var(--brand-yellow) !important;
+                    transform: translateY(-3px);
+                    box-shadow: 0 5px 15px rgba(250, 187, 5, 0.3);
+                }
+                .border-yellow { border-color: var(--brand-yellow) !important; }
                 .placeholder-secondary::placeholder { color: #666; }
                 .bg-yellow { background-color: var(--brand-yellow) !important; }
                 .transition-all { transition: all 0.3s ease; }
             `}</style>
-        </footer>
+        </footer >
     );
 };
 

@@ -40,7 +40,7 @@ const ShipmentStatusChart = () => {
   useEffect(() => {
     const fetchStatusBreakdown = async () => {
       try {
-        const res = await axiosInstance.get("/shipment/status-breakdown");
+        const res = await axiosInstance.get("/shipments/status-breakdown");
         setStatusCounts(res.data);
       } catch (err) {
         console.error("Failed to fetch status breakdown:", err);

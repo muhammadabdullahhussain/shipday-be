@@ -5,6 +5,7 @@ import AddNewStaffModal from "../../components/staff/AddNewStaffModal";
 import AssignNewTaskModal from "../../components/staff/AssignNewTaskModal";
 import "../../styles/ui/staff.css";
 import axiosInstance from "../../utils/axiosInterceptor";
+import { isSuperAdmin } from "../../utils/authHelper";
 
 const StaffManagement = () => {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ const StaffManagement = () => {
   const [staffData, setStaffData] = useState([]);
   const [editStaff, setEditStaff] = useState(null);
   const menuRef = useRef();
+  const isUserSuperAdmin = isSuperAdmin();
 
   // Fetch all staff
   useEffect(() => {
@@ -188,25 +190,31 @@ const StaffManagement = () => {
                         className="dropdown-menu show"
                         style={{ position: "absolute", top: "20px", right: "0", zIndex: 1000 }}
                       >
-                        <button
-                          className="dropdown-item"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setEditStaff(staff);
-                            setMenuIndex(null);
-                          }}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          className="dropdown-item text-danger"
-                          onClick={(e) => {
-                            handleDelete(e, staff._id);
-                            setMenuIndex(null);
-                          }}
-                        >
-                          Delete
-                        </button>
+                        {!isUserSuperAdmin && <div className="dropdown-item text-muted disabled">View Only</div>}
+
+                        {isUserSuperAdmin && (
+                          <>
+                            <button
+                              className="dropdown-item"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setEditStaff(staff);
+                                setMenuIndex(null);
+                              }}
+                            >
+                              Edit
+                            </button>
+                            <button
+                              className="dropdown-item text-danger"
+                              onClick={(e) => {
+                                handleDelete(e, staff._id);
+                                setMenuIndex(null);
+                              }}
+                            >
+                              Delete
+                            </button>
+                          </>
+                        )}
                       </div>
                     )}
                   </td>

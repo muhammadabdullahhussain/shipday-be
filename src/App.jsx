@@ -15,6 +15,7 @@ import RoutePlanning from './pages/Dashboard/routePlanningPage';
 import StaffManagement from './pages/Dashboard/StaffManagement';
 import OrderManagement from './pages/Dashboard/OrderManagement';
 import Customers from './pages/Dashboard/Customers';
+import AdminUsers from './pages/Dashboard/AdminUsers';
 import Deliveries from './pages/Dashboard/Deliveries';
 import Reports from './pages/Dashboard/Reports';
 import Wherehouse from './pages/Dashboard/warehousePage';
@@ -29,6 +30,7 @@ import Transaction from "./pages/Dashboard/transactionPage";
 import Fleet from "./pages/Dashboard/fleetManagementPage";
 import VehicleDetailsPage from './pages/Dashboard/VehicleDetailsPage';
 import Drivers from './pages/Dashboard/Drivers';
+import Wallet from './pages/Dashboard/WalletPage';
 import DashboardLayout from './Layouts/DashboardLayout';
 import ProtectedRoute from './components/ProtectedRoute';
 import AuthRedirect from './components/AuthRedirect';
@@ -44,6 +46,10 @@ import Services from './pages/Public/Services';
 import Contact from './pages/Public/Contact';
 import TrackingPage from './pages/Public/TrackingPage';
 import SendParcel from './pages/Public/SendParcel';
+import About from './pages/Public/About';
+import Careers from './pages/Public/Careers';
+import FAQs from './pages/Public/FAQs';
+import Terms from './pages/Public/Terms';
 
 function App() {
   console.log('🎯 App.jsx: App component rendering...');
@@ -58,6 +64,10 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/tracking" element={<TrackingPage />} />
           <Route path="/send-parcel" element={<SendParcel />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/careers" element={<Careers />} />
+          <Route path="/faqs" element={<FAQs />} />
+          <Route path="/terms" element={<Terms />} />
         </Route>
 
         {/* Auth Routes - Standalone */}
@@ -88,6 +98,7 @@ function App() {
           <Route path="orders" element={<OrderManagement />} />
           <Route path="orders/:orderId" element={<OrderDetails />} />
           <Route path="customers" element={<Customers />} />
+          <Route path="admin-users" element={<AdminUsers />} /> {/* New Admin Page */}
           <Route path="customers/:id" element={<Customerinfo />} />
           <Route path="deliveries" element={<Deliveries />} />
           <Route path="deliveries/:deliveryId" element={<DeliveryDetails />} />
@@ -96,6 +107,7 @@ function App() {
           <Route path="wherehouse" element={<Wherehouse />} />
           <Route path="wherehouse/:id" element={<WarehouseDetails />} />
           <Route path="transaction" element={<Transaction />} />
+          <Route path="wallet" element={<Wallet />} />
           <Route path="settings" element={<Settings />} />
         </Route>
 

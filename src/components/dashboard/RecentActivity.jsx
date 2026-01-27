@@ -22,36 +22,22 @@ const RecentActivity = () => {
   const [shipments, setShipments] = useState([]);
 
   useEffect(() => {
-    const fetchDriverName = async (origin, destination) => {
-      try {
-        const res = await axiosInstance.get("/staff/driver-by-route", {
-          params: { origin, destination },
-        });
-        return res.data.driverName || "Unassigned";
-      } catch {
-        return "Unassigned";
-      }
-    };
-
     const fetchShipments = async () => {
       try {
         const res = await axiosInstance.get("/shipments");
-        const processed = await Promise.all(
-          res.data.map(async (shipment) => {
-            const driverName = await fetchDriverName(shipment.start, shipment.end);
-            const allDelivered = shipment.orders?.every((o) => o.status === "Delivered");
-            const status = allDelivered ? "Delivered" : shipment.status || "Shipping";
-            return {
-              id: shipment.shipmentId,
-              name: driverName,
-              origin: shipment.start,
-              destination: shipment.end,
-              date: shipment.createdAt || "N/A",
-              delivery: shipment.eta || "N/A",
-              status,
-            };
-          })
-        );
+        const processed = res.data.map((shipment) => {
+          const allDelivered = shipment.orders?.every((o) => o.status === "Delivered");
+          const status = allDelivered ? "Delivered" : shipment.status || "Shipping";
+          return {
+            id: shipment.shipmentId,
+            name: shipment.driverName || "Unassigned", // Used backend populated value
+            origin: shipment.start,
+            destination: shipment.end,
+            date: shipment.createdAt ? new Date(shipment.createdAt).toLocaleDateString() : "N/A",
+            delivery: shipment.eta ? new Date(shipment.eta).toLocaleDateString() : "N/A",
+            status,
+          };
+        });
         setShipments(processed);
       } catch (err) {
         console.error("Failed to fetch recent shipments:", err);

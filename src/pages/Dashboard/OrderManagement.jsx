@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "../../styles/ui/ordermanagement.css";
 import axiosInstance from "../../utils/axiosInterceptor";
 
-
+import { isAdmin, isSuperAdmin, isManager } from "../../utils/authHelper";
 const OrderManagement = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
@@ -19,7 +19,7 @@ const OrderManagement = () => {
     const fetchOrders = async () => {
       try {
         const res = await axiosInstance.get("/orders");
-setOrderList(res.data.orders || res.data || []);
+        setOrderList(res.data.orders || res.data || []);
       } catch (err) {
         console.error("Failed to fetch orders:", err);
       } finally {
@@ -29,8 +29,8 @@ setOrderList(res.data.orders || res.data || []);
 
     const fetchTransactions = async () => {
       try {
-       const res = await axiosInstance.get("/transactions/all");
-      setTransactions(res.data || []);
+        const res = await axiosInstance.get("/transactions/all");
+        setTransactions(res.data || []);
       } catch (err) {
         console.error("Failed to fetch transactions:", err);
       }
@@ -41,19 +41,19 @@ setOrderList(res.data.orders || res.data || []);
   }, []);
 
   const getPaymentStatusForOrder = (order) => {
-  if (!order.orderId && !order._id) return "Pending";
+    if (!order.orderId && !order._id) return "Pending";
 
-  const orderId = order.orderId || order._id;
+    const orderId = order.orderId || order._id;
 
-  // Get all transactions for this orderId
-  const relatedTxns = transactions
-    .filter((txn) => txn.orderId === orderId)
-    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // most recent first
+    // Get all transactions for this orderId
+    const relatedTxns = transactions
+      .filter((txn) => txn.orderId === orderId)
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // most recent first
 
-  const latestTxn = relatedTxns[0];
+    const latestTxn = relatedTxns[0];
 
-  return latestTxn?.status || "Pending";
-};
+    return latestTxn?.status || "Pending";
+  };
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -251,22 +251,26 @@ setOrderList(res.data.orders || res.data || []);
                         className="dropdown-menu show"
                         style={{ display: "block", position: "absolute" }}
                       >
-                        <li>
-                          <button
-                            className="dropdown-item text-primary"
-                            onClick={() => handleEdit(order)}
-                          >
-                            Edit
-                          </button>
-                        </li>
-                        <li>
-                          <button
-                            className="dropdown-item text-danger"
-                            onClick={() => handleDelete(order)}
-                          >
-                            Delete
-                          </button>
-                        </li>
+                        {(isAdmin() || isSuperAdmin() || isManager()) && (
+                          <li>
+                            <button
+                              className="dropdown-item text-primary"
+                              onClick={() => handleEdit(order)}
+                            >
+                              Edit
+                            </button>
+                          </li>
+                        )}
+                        {(isAdmin() || isSuperAdmin()) && (
+                          <li>
+                            <button
+                              className="dropdown-item text-danger"
+                              onClick={() => handleDelete(order)}
+                            >
+                              Delete
+                            </button>
+                          </li>
+                        )}
                       </ul>
                     )}
                   </div>

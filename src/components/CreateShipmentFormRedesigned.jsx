@@ -12,6 +12,8 @@ import TermsAndPaymentStep from './shipment-steps/TermsAndPaymentStep';
 
 // Progress Navigation Component
 const Nav = (props) => {
+    // Destructure with defaults to avoid defaultProps reliance if passed from parent
+    const { currentStep = 1, totalSteps = 1, goToStep = () => { } } = props;
     const steps = [
         { label: 'Sender', icon: 'bi-person-fill' },
         { label: 'Collection', icon: 'bi-geo-alt-fill' },
@@ -31,7 +33,7 @@ const Nav = (props) => {
                     className="position-absolute top-50 start-0 translate-middle-y rounded transition-all"
                     style={{
                         height: '4px',
-                        width: `${((props.currentStep - 1) / (props.totalSteps - 1)) * 100}%`,
+                        width: `${((currentStep - 1) / (totalSteps - 1)) * 100}%`,
                         zIndex: 0,
                         transition: 'width 0.4s ease',
                         backgroundColor: 'var(--brand-yellow)'
@@ -42,8 +44,8 @@ const Nav = (props) => {
                 <div className="d-flex justify-content-between position-relative" style={{ zIndex: 1 }}>
                     {steps.map((step, index) => {
                         const stepNum = index + 1;
-                        const isActive = props.currentStep === stepNum;
-                        const isCompleted = props.currentStep > stepNum;
+                        const isActive = currentStep === stepNum;
+                        const isCompleted = currentStep > stepNum;
 
                         let circleClass = 'bg-white border border-2 border-secondary text-muted';
                         if (isActive) circleClass = 'bg-brand-yellow border-brand-primary text-dark shadow-lg scale-110';
@@ -53,8 +55,8 @@ const Nav = (props) => {
                             <div
                                 key={index}
                                 className="d-flex flex-column align-items-center"
-                                style={{ cursor: props.currentStep > stepNum ? 'pointer' : 'default', width: '80px' }}
-                                onClick={() => props.currentStep > stepNum && props.goToStep(stepNum)}
+                                style={{ cursor: currentStep > stepNum ? 'pointer' : 'default', width: '80px' }}
+                                onClick={() => currentStep > stepNum && goToStep(stepNum)}
                             >
                                 <div
                                     className={`rounded-circle d-flex align-items-center justify-content-center transition-all ${circleClass}`}
@@ -82,11 +84,12 @@ const Nav = (props) => {
     );
 };
 
-const CreateShipmentFormRedesigned = ({ onSubmit, onCancel, loading, isPublic }) => {
+const CreateShipmentFormRedesigned = ({ onSubmit, onCancel, loading, isPublic, customers }) => {
     const [formData, setFormData] = useState({
         // Sender Details
         senderFullName: '',
         senderCompany: '',
+        senderCustomerId: '', // For Admin-on-behalf wallet payment
         senderEmail: '',
         senderMobile: '',
         senderTelephone: '',
@@ -224,6 +227,7 @@ const CreateShipmentFormRedesigned = ({ onSubmit, onCancel, loading, isPublic })
                 <SenderDetailsStep
                     formData={formData}
                     updateFormData={updateFormData}
+                    customers={customers}
                 />
                 <CollectionDetailsStep
                     formData={formData}

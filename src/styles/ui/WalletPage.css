@@ -1,0 +1,88 @@
+.wallet-container {
+    background-color: #f8fafc;
+    min-height: calc(100vh - 100px);
+}
+
+.balance-card {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    min-height: 240px;
+}
+
+.card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(circle at 100% 0%, rgba(250, 187, 5, 0.15) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.fw-black {
+    font-weight: 900 !important;
+}
+
+.tracking-widest {
+    letter-spacing: 0.25em !important;
+}
+
+.x-small {
+    font-size: 0.7rem !important;
+}
+
+.x-small-text {
+    font-size: 0.65rem !important;
+}
+
+.uppercase {
+    text-transform: uppercase !important;
+}
+
+.table-custom-padding td {
+    border: none;
+}
+
+.letter-spacing-tight {
+    letter-spacing: -1.5px;
+}
+
+/* Button with Scanner Animation */
+.btn-topup {
+    position: relative;
+    background: #fabb05 !important;
+    color: #0f172a !important;
+    transition: all 0.3s ease;
+}
+
+.btn-topup:hover {
+    background: #e5a504 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(250, 187, 5, 0.2) !important;
+}
+
+.btn-scanner {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    animation: scan-btn 3s infinite;
+}
+
+@keyframes scan-btn {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+.wallet-container .card {
+    transition: all 0.3s ease;
+}
+
+.wallet-container .card:hover {
+    transform: translateY(-5px);
+}
+
+.display-4 {
+    font-family: 'Outfit', sans-serif !important;
+}

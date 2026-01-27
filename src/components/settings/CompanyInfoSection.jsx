@@ -8,14 +8,14 @@ const CompanyInfoSection = () => {
   const [companyInfo, setCompanyInfo] = useState({
     logo: null,
     companyName: 'ShipDay',
-    email: 'support@shipday.com',
+    email: 'support@shipday.co.za',
     phone: '9876543210',
     address: '201, Logistics Tower, Mumbai, Maharashtra 400001',
   });
 
   const [preferences, setPreferences] = useState({
-    currency: '₹ INR - Indian Rupee',
-    timezone: 'Asia/Kolkata (GMT+5:30)',
+    currency: 'R ZAR - South African Rand',
+    timezone: 'Africa/Johannesburg (GMT+2)',
     language: 'English',
   });
 
@@ -167,7 +167,7 @@ const CompanyInfoSection = () => {
               value={preferences.currency}
               onChange={handlePrefChange}
             >
-              <option>₹ INR - Indian Rupee</option>
+              <option>R ZAR - South African Rand</option>
               <option>$ USD - US Dollar</option>
               <option>€ EUR - Euro</option>
             </select>
@@ -180,7 +180,7 @@ const CompanyInfoSection = () => {
               value={preferences.timezone}
               onChange={handlePrefChange}
             >
-              <option>Asia/Kolkata (GMT+5:30)</option>
+              <option>Africa/Johannesburg (GMT+2)</option>
               <option>America/New_York (GMT-4)</option>
               <option>Europe/London (GMT+1)</option>
             </select>

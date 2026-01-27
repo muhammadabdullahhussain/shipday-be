@@ -32,7 +32,7 @@ const ShipmentDetailsModal = ({ show, onClose, shipment, statusBadge }) => {
                     <p><strong>Company:</strong> {shipment.senderDetails.company || 'N/A'}</p>
                     <p><strong>Phone:</strong> {shipment.senderDetails.mobile}</p>
                     <p><strong>Email:</strong> {shipment.senderDetails.email}</p>
-                    <p><strong>Address:</strong> {shipment.senderDetails.address.street}, {shipment.senderDetails.address.suburb}, {shipment.senderDetails.address.city}</p>
+                    <p><strong>Address:</strong> {shipment.senderDetails.address?.street}, {shipment.senderDetails.address?.suburb}, {shipment.senderDetails.address?.city}</p>
                   </>
                 ) : (
                   <>
@@ -49,7 +49,7 @@ const ShipmentDetailsModal = ({ show, onClose, shipment, statusBadge }) => {
                     <p><strong>Company:</strong> {shipment.deliveryDetails.company || 'N/A'}</p>
                     <p><strong>Phone:</strong> {shipment.deliveryDetails.mobile}</p>
                     <p><strong>Email:</strong> {shipment.deliveryDetails.email}</p>
-                    <p><strong>Address:</strong> {shipment.deliveryDetails.address.street}, {shipment.deliveryDetails.address.suburb}, {shipment.deliveryDetails.address.city}</p>
+                    <p><strong>Address:</strong> {shipment.deliveryDetails.address?.street}, {shipment.deliveryDetails.address?.suburb}, {shipment.deliveryDetails.address?.city}</p>
                   </>
                 ) : (
                   <>
@@ -67,8 +67,8 @@ const ShipmentDetailsModal = ({ show, onClose, shipment, statusBadge }) => {
                   <>
                     <p><strong>Service:</strong> <span className="text-capitalize">{shipment.parcelDetails.serviceType}</span></p>
                     <p><strong>Parcel:</strong> {shipment.parcelDetails.parcelType}</p>
-                    <p><strong>Dimensions:</strong> {shipment.parcelDetails.dimensions.length}x{shipment.parcelDetails.dimensions.width}x{shipment.parcelDetails.dimensions.height} cm</p>
-                    <p><strong>Weight:</strong> {shipment.parcelDetails.dimensions.weight}kg</p>
+                    <p><strong>Dimensions:</strong> {shipment.parcelDetails.dimensions?.length}x{shipment.parcelDetails.dimensions?.width}x{shipment.parcelDetails.dimensions?.height} cm</p>
+                    <p><strong>Weight:</strong> {shipment.parcelDetails.dimensions?.weight}kg</p>
                   </>
                 ) : (
                   <>
@@ -82,7 +82,7 @@ const ShipmentDetailsModal = ({ show, onClose, shipment, statusBadge }) => {
               <div className="col-md-6">
                 <h6 className="fw-bold mb-3">Other Information</h6>
                 <p><strong>Cost:</strong> R{shipment?.payment?.amount?.toFixed(2) || shipment?.cost || '0.00'}</p>
-                <p><strong>ETA:</strong> {new Date(shipment?.eta).toLocaleDateString()}</p>
+                <p><strong>ETA:</strong> {shipment?.eta ? new Date(shipment.eta).toLocaleDateString() : 'N/A'}</p>
                 <p><strong>Status:</strong> <span className={`badge ${statusBadge(shipment?.status)}`}>{shipment?.status}</span></p>
                 <p><strong>Notes:</strong> {shipment?.notes || 'No notes'}</p>
               </div>

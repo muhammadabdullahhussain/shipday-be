@@ -102,7 +102,7 @@ const Topbar = () => {
 
   const handleLogout = async () => {
     try {
-      await axiosInstance.post("/logout");
+      await axiosInstance.post("/auth/logout");
     } catch (err) {
       console.error("Logout failed", err);
     }

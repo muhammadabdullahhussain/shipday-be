@@ -3,7 +3,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AddWarehouseModal from "../../components/warehouse/AddWarehouseModal";
 import "../../styles/ui/transaction.css";
-import axiosInstance from "../../utils/axiosInterceptor"; 
+import axiosInstance from "../../utils/axiosInterceptor";
+import ConfirmationModal from "../../components/common/ConfirmationModal";
 
 
 const Warehouse = () => {
@@ -13,14 +14,17 @@ const Warehouse = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedWarehouses, setSelectedWarehouses] = useState([]);
   const [warehouses, setWarehouses] = useState([]);
+  const [editingWarehouse, setEditingWarehouse] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-  axiosInstance.get("/warehouse/all")
-    .then(res => setWarehouses(res.data))
-    .catch(err => console.error("Fetch error:", err));
-}, []);
+    axiosInstance.get("/warehouse/all")
+      .then(res => setWarehouses(res.data))
+      .catch(err => console.error("Fetch error:", err));
+  }, []);
 
 
   const getStatusColor = (status) => {
@@ -28,6 +32,7 @@ const Warehouse = () => {
       case "Active": return "success";
       case "Under Maintenance": return "warning";
       case "Full Capacity": return "danger";
+      case "Closed": return "dark";
       default: return "secondary";
     }
   };
@@ -38,22 +43,24 @@ const Warehouse = () => {
   };
 
   const handleEdit = (warehouse) => {
-    const updated = prompt("Enter new name", warehouse.name);
-    if (updated) {
-      setWarehouses(prev =>
-        prev.map(w => w._id === warehouse._id ? { ...w, name: updated } : w)
-      );
-    }
+    setEditingWarehouse(warehouse);
+    setShowModal(true);
   };
 
-  const handleDelete = (warehouse) => {
-    if (window.confirm(`Are you sure you want to delete ${warehouse.name}?`)) {
-      axiosInstance.delete(`/warehouse/delete/${warehouse._id}`)
-  .then(() => {
-    setWarehouses(prev => prev.filter(w => w._id !== warehouse._id));
-  })
-  .catch(err => console.error("Delete error:", err));
+  const handleDeleteClick = (warehouse) => {
+    setItemToDelete(warehouse);
+    setShowDeleteModal(true);
+  };
 
+  const confirmDelete = () => {
+    if (itemToDelete) {
+      axiosInstance.delete(`/warehouse/delete/${itemToDelete._id}`)
+        .then(() => {
+          setWarehouses(prev => prev.filter(w => w._id !== itemToDelete._id));
+          setShowDeleteModal(false);
+          setItemToDelete(null);
+        })
+        .catch(err => console.error("Delete error:", err));
     }
   };
 
@@ -124,8 +131,9 @@ const Warehouse = () => {
               <th>Warehouse ID</th>
               <th>Name</th>
               <th>Location</th>
-              <th>Capacity</th>
-              <th>Used Space</th>
+              <th>Manager</th>
+              <th>Admin Email</th>
+              <th>Contact</th>
               <th>Status</th>
               <th></th>
             </tr>
@@ -143,8 +151,9 @@ const Warehouse = () => {
                 <td className="text-warning fw-semibold">{w.id}</td>
                 <td>{w.name}</td>
                 <td className="text-success">{w.location}</td>
-                <td>{w.capacity}</td>
-                <td>{w.spaceUsed}</td>
+                <td>{w.managerName || "--"}</td>
+                <td>{w.adminEmail || "--"}</td>
+                <td>{w.contactNumber || "--"}</td>
                 <td>
                   <span className={`badge bg-${getStatusColor(w.status)}`} style={{ width: "130px", display: "inline-block" }}>
                     {w.status}
@@ -155,7 +164,7 @@ const Warehouse = () => {
                     <button className="btn btn-light btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">⋯</button>
                     <ul className="dropdown-menu dropdown-menu-end">
                       <li><button className="dropdown-item" onClick={() => handleEdit(w)}>Edit</button></li>
-                      <li><button className="dropdown-item text-danger" onClick={() => handleDelete(w)}>Delete</button></li>
+                      <li><button className="dropdown-item text-danger" onClick={() => handleDeleteClick(w)}>Delete</button></li>
                     </ul>
                   </div>
                 </td>
@@ -189,10 +198,28 @@ const Warehouse = () => {
       {/* Modal */}
       <AddWarehouseModal
         show={showModal}
-        handleClose={() => setShowModal(false)}
+        handleClose={() => {
+          setShowModal(false);
+          setEditingWarehouse(null);
+        }}
+        editingWarehouse={editingWarehouse}
         onWarehouseAdded={(newWarehouse) =>
           setWarehouses((prev) => [...prev, newWarehouse])
         }
+        onWarehouseUpdated={(updatedWarehouse) =>
+          setWarehouses((prev) =>
+            prev.map((w) => (w._id === updatedWarehouse._id ? updatedWarehouse : w))
+          )
+        }
+      />
+      <ConfirmationModal
+        show={showDeleteModal}
+        title="Delete Warehouse"
+        message={`Are you sure you want to delete ${itemToDelete?.name}?`}
+        onConfirm={confirmDelete}
+        onCancel={() => setShowDeleteModal(false)}
+        confirmText="Delete"
+        variant="danger"
       />
     </div>
   );

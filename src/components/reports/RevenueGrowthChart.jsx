@@ -98,6 +98,7 @@ const RevenueGrowthChart = () => {
       y: {
         ticks: {
           beginAtZero: true,
+          callback: (value) => `R ${value}`,
         },
         grid: {
           drawBorder: false,

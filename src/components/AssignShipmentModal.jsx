@@ -150,7 +150,7 @@ const AssignShipmentModal = ({
                 <input
                   type="text"
                   className="form-control"
-                  value={shipment?.customerContact || 'N/A'}
+                  value={shipment?.senderDetails?.mobile || shipment?.senderPhone || 'N/A'}
                   readOnly
                 />
               </div>
@@ -161,7 +161,7 @@ const AssignShipmentModal = ({
                 <input
                   type="text"
                   className="form-control"
-                  value={shipment?.origin || ''}
+                  value={shipment?.collectionDetails?.address?.city || shipment?.start || ''}
                   readOnly
                 />
               </div>
@@ -170,7 +170,7 @@ const AssignShipmentModal = ({
                 <input
                   type="text"
                   className="form-control"
-                  value={shipment?.destination || ''}
+                  value={shipment?.deliveryDetails?.address?.city || shipment?.end || ''}
                   readOnly
                 />
               </div>

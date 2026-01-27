@@ -77,7 +77,12 @@ const ParcelDetailsStep = ({ formData, updateFormData, previousStep, nextStep })
             if (length && width && height) {
                 const config = pricingConfig[formData.serviceType];
                 const volumetricWeight = (parseFloat(length) * parseFloat(width) * parseFloat(height)) / config.divisor;
-                price = config.baseAmount + (volumetricWeight * config.rate);
+                const actualWeight = parseFloat(formData.dimensions.weight) || 0;
+                const chargeableWeight = Math.max(actualWeight, volumetricWeight);
+
+                // Logic: Base + (Chargeable * Rate) 
+                // Note: User prompt asked for "Max(...) * Multiplier", we keep Base Amount as usually required for courier start fees.
+                price = config.baseAmount + (chargeableWeight * config.rate);
             }
         }
 
@@ -275,9 +280,8 @@ const ParcelDetailsStep = ({ formData, updateFormData, previousStep, nextStep })
                         {/* Formula Display */}
                         {formData.dimensions.length && formData.dimensions.width && formData.dimensions.height && (
                             <div className="alert alert-info mt-3">
-                                <strong>Calculation:</strong> R{pricingConfig[formData.serviceType].baseAmount} +
-                                ({formData.dimensions.length} × {formData.dimensions.width} × {formData.dimensions.height}) /
-                                {pricingConfig[formData.serviceType].divisor} × R{pricingConfig[formData.serviceType].rate}
+                                <strong>Calculation:</strong> Base R{pricingConfig[formData.serviceType].baseAmount} +
+                                (Max(Actual {formData.dimensions.weight}kg, Volumetric {((formData.dimensions.length * formData.dimensions.width * formData.dimensions.height) / pricingConfig[formData.serviceType].divisor).toFixed(2)}kg) × Rate R{pricingConfig[formData.serviceType].rate})
                             </div>
                         )}
                     </div>

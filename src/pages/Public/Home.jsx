@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Button, Row, Col, Card, Carousel, Badge } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { Trophy, TrendingUp, MapPin, Users, ShieldCheck, Star } from 'lucide-react';
 
 // Import carousel images
 import carouselImg1 from '../../assets/shipday_hero_warehouse_new.jpg';
@@ -23,7 +24,7 @@ const Home = () => {
     const carouselSlides = [
         {
             image: carouselImg1,
-            badge: 'SMART LOGISTICS',
+            badge: 'SMART COURIER',
             title: 'Efficient Warehousing.',
             subtitle: 'State-of-the-art facilities handling thousands of parcels with ShipDay precision',
             cta: 'Start Shipping',
@@ -51,7 +52,7 @@ const Home = () => {
         {
             image: carouselImg4,
             badge: 'NATIONWIDE FLEET',
-            title: 'Reliable Logistics network.',
+            title: 'Reliable Courier network.',
             subtitle: 'Connecting cities across South Africa with our modern and reliable delivery fleet',
             cta: 'Get Quote',
             link: '/contact',
@@ -144,7 +145,7 @@ const Home = () => {
 
                                                 {/* Animated Buttons */}
                                                 <div className="slide-in-left d-flex flex-wrap gap-3 mb-5" style={{ animationDelay: '0.8s' }}>
-                                                    <Button as={Link} to={slide.link}
+                                                    <Button as={Link} to="/register"
                                                         className="btn-yellow rounded-pill px-5 py-4 fw-bold hover-lift shadow-lg border-0 btn-glow"
                                                         style={{ fontSize: '1.15rem' }}>
                                                         <i className="bi bi-box-seam me-2"></i>
@@ -178,42 +179,72 @@ const Home = () => {
                                             </div>
                                         </Col>
 
-                                        {/* Floating Stats Card */}
+                                        {/* Floating Stats Card - Premium Redesign */}
                                         <Col lg={5} xl={6} className="d-none d-lg-block">
                                             <div className="slide-in-right" style={{ animationDelay: '0.6s' }}>
-                                                <Card className="border-0 shadow-2xl rounded-5 overflow-hidden glass-card-enhanced floating-card"
-                                                    style={{ backdropFilter: 'blur(20px)', background: 'rgba(255, 255, 255, 0.1)' }}>
-                                                    <div className="position-absolute top-0 start-0 w-100"
-                                                        style={{ height: '6px', background: 'linear-gradient(90deg, #fabb05 0%, #f59e0b 100%)' }}></div>
-                                                    <Card.Body className="p-5">
-                                                        <div className="text-center mb-4">
-                                                            <div className="rounded-circle bg-yellow d-inline-flex align-items-center justify-content-center mb-3 pulse-icon"
-                                                                style={{ width: '90px', height: '90px' }}>
-                                                                <i className="bi bi-award-fill fs-1 text-dark"></i>
+                                                <div className="premium-stats-wrapper">
+                                                    {/* Main Glass Card */}
+                                                    <Card className="stats-glass-card shadow-2xl">
+                                                        <Card.Body className="p-5 p-xl-5">
+                                                            <div className="text-center mb-5 position-relative">
+                                                                <div className="icon-badge-modern mb-4">
+                                                                    <Trophy className="text-yellow trophy-anim" size={42} />
+                                                                    <div className="badge-glow"></div>
+                                                                </div>
+                                                                <div className="mb-2">
+                                                                    <Badge bg="warning" className="text-dark px-3 py-2 rounded-pill fw-black" style={{ fontSize: '0.65rem', letterSpacing: '1px' }}>
+                                                                        MARKET LEADER 2024
+                                                                    </Badge>
+                                                                </div>
+                                                                <h3 className="fw-black text-white display-6 mb-2">Trusted Excellence</h3>
+                                                                <div className="d-flex align-items-center justify-content-center gap-2">
+                                                                    <div className="h-line"></div>
+                                                                    <p className="text-white-50 small mb-0 fw-bold tracking-widest text-uppercase">Premium Network</p>
+                                                                    <div className="h-line"></div>
+                                                                </div>
                                                             </div>
-                                                            <h4 className="fw-bold text-white mb-2">Trusted Excellence</h4>
-                                                            <p className="text-white-50 small mb-0">South Africa's Premier Delivery Network</p>
-                                                        </div>
-                                                        <Row className="g-3">
-                                                            {[
-                                                                { num: '10k+', label: 'Deliveries' },
-                                                                { num: '99.9%', label: 'On-Time' },
-                                                                { num: '50+', label: 'Cities' },
-                                                                { num: '2k+', label: 'Clients' }
-                                                            ].map((stat, i) => (
-                                                                <Col xs={6} key={i}>
-                                                                    <div className="text-center p-3 rounded-4 stat-card"
-                                                                        style={{ background: 'rgba(250, 187, 5, 0.1)', border: '1px solid rgba(250, 187, 5, 0.2)' }}>
-                                                                        <div className="h3 fw-bold text-yellow mb-1">{stat.num}</div>
-                                                                        <small className="text-white-50 text-uppercase" style={{ fontSize: '0.7rem', letterSpacing: '1px' }}>
-                                                                            {stat.label}
-                                                                        </small>
+
+                                                            <Row className="g-4">
+                                                                {[
+                                                                    { num: '10k+', label: 'Deliveries', icon: ShieldCheck, color: '#fabb05' },
+                                                                    { num: '99.9%', label: 'On-Time', icon: TrendingUp, color: '#10b981' },
+                                                                    { num: '50+', label: 'Cities', icon: MapPin, color: '#3b82f6' },
+                                                                    { num: '2k+', label: 'Clients', icon: Users, color: '#f59e0b' }
+                                                                ].map((stat, i) => (
+                                                                    <Col xs={6} key={i}>
+                                                                        <div className="premium-stat-item" style={{ '--delay': `${i * 0.1}s` }}>
+                                                                            <div className="stat-icon-wrap" style={{ '--accent': stat.color }}>
+                                                                                <stat.icon size={20} />
+                                                                            </div>
+                                                                            <div className="stat-content">
+                                                                                <div className="stat-value">{stat.num}</div>
+                                                                                <div className="stat-label">{stat.label}</div>
+                                                                            </div>
+                                                                            <div className="stat-shine"></div>
+                                                                        </div>
+                                                                    </Col>
+                                                                ))}
+                                                            </Row>
+
+                                                            <div className="mt-5 pt-4 border-top border-white border-opacity-10 text-center">
+                                                                <div className="d-flex align-items-center justify-content-center gap-3">
+                                                                    <div className="avatar-group">
+                                                                        {[1, 2, 3].map(i => (
+                                                                            <div key={i} className="avatar-mini">
+                                                                                <Users size={12} />
+                                                                            </div>
+                                                                        ))}
                                                                     </div>
-                                                                </Col>
-                                                            ))}
-                                                        </Row>
-                                                    </Card.Body>
-                                                </Card>
+                                                                    <span className="text-white-50 small fw-bold">Joined by <span className="text-white">500+</span> new partners this month</span>
+                                                                </div>
+                                                            </div>
+                                                        </Card.Body>
+                                                    </Card>
+
+                                                    {/* Decorative Floating Elements */}
+                                                    <div className="float-element card-accent-1"></div>
+                                                    <div className="float-element card-accent-2"></div>
+                                                </div>
                                             </div>
                                         </Col>
                                     </Row>
@@ -264,7 +295,7 @@ const Home = () => {
                             <Badge bg="warning" className="text-dark mb-4 px-3 py-2 fw-bold tracking-wider">
                                 SIMPLE PROCESS
                             </Badge>
-                            <h2 className="display-4 fw-bold text-dark mb-4">Four steps to <span className="text-yellow">logistics mastery.</span></h2>
+                            <h2 className="display-4 fw-bold text-dark mb-4">Four steps to <span className="text-yellow">courier mastery.</span></h2>
                             <p className="text-muted lead mb-5">
                                 We've streamlined our operations so you can focus on your business. Experience the easiest shipping process in South Africa.
                             </p>
@@ -314,14 +345,14 @@ const Home = () => {
                         </Badge>
                         <h2 className="display-4 fw-bold text-white mb-3">Tailored solutions for <span className="text-yellow">enterprise growth.</span></h2>
                         <p className="text-white-50 lead max-width-700 mx-auto">
-                            From mission-critical B2B logistics to rapid door-to-door delivery, we power your success.
+                            From mission-critical B2B courier solutions to rapid door-to-door delivery, we power your success.
                         </p>
                     </div>
 
                     <Row className="g-4">
                         {[
                             {
-                                title: 'B2B Logistics',
+                                title: 'B2B Couriers',
                                 icon: 'bi-building-fill-gear',
                                 desc: 'Reliable business-to-business delivery solutions for high-volume consistent operations.',
                                 color: '#fabb05'
@@ -387,7 +418,7 @@ const Home = () => {
                         <div className="position-absolute bottom-0 start-0 p-5 text-white z-2" style={{ maxWidth: '400px' }}>
                             <div className="bg-yellow text-dark d-inline-block px-3 py-1 fw-bold rounded mb-3 small">EST. 2024</div>
                             <h3 className="display-6 fw-bold mb-3">Our Operations Center</h3>
-                            <p className="opacity-75">Witness the power behind ShipDay's 24/7 logistics network across South Africa.</p>
+                            <p className="opacity-75">Witness the power behind ShipDay's 24/7 courier network across South Africa.</p>
                         </div>
                     </Col>
                     <Col lg={6} className="py-5 px-4 px-md-5 bg-light">
@@ -420,7 +451,7 @@ const Home = () => {
                                     {
                                         title: 'Bespoke Solutions',
                                         icon: 'bi-gear-wide-connected',
-                                        desc: 'Customized logistics for businesses of all sizes, from SMEs to Enterprises.',
+                                        desc: 'Customized courier solutions for businesses of all sizes, from SMEs to Enterprises.',
                                     }
                                 ].map((feat, i) => (
                                     <Col md={6} key={i}>
@@ -461,7 +492,7 @@ const Home = () => {
                                 name: 'Michael Chen',
                                 role: 'Business Owner, Johannesburg',
                                 rating: 5,
-                                text: 'The B2B delivery service is exceptional. We\'ve reduced our logistics costs by 30% while improving delivery times. Highly recommended!'
+                                text: 'The B2B delivery service is exceptional. We\'ve reduced our courier costs by 30% while improving delivery times. Highly recommended!'
                             },
                             {
                                 name: 'Priya Naidoo',
@@ -520,7 +551,7 @@ const Home = () => {
                         <Col lg={9}>
                             <Badge bg="warning" className="text-dark mb-4 px-4 py-2 fw-bold tracking-widest shadow-lg pulse-badge">
                                 <i className="bi bi-rocket-takeoff-fill me-2"></i>
-                                ELEVATE YOUR LOGISTICS
+                                ELEVATE YOUR COURIER EXPERIENCE
                             </Badge>
                             <h2 className="display-2 fw-black text-white mb-4 lh-1" style={{ letterSpacing: '-2px' }}>
                                 Ready to experience <span className="text-yellow">next-gen shipping?</span>
@@ -633,6 +664,175 @@ const Home = () => {
                     opacity: 0;
                 }
 
+                .float-element {
+                    position: absolute;
+                    z-index: -1;
+                    border-radius: 50%;
+                    filter: blur(40px);
+                }
+
+                .card-accent-1 {
+                    width: 150px;
+                    height: 150px;
+                    background: var(--brand-yellow);
+                    top: -20px;
+                    right: -20px;
+                    opacity: 0.2;
+                    animation: float 8s infinite ease-in-out;
+                }
+
+                .card-accent-2 {
+                    width: 100px;
+                    height: 100px;
+                    background: #3b82f6;
+                    bottom: 20px;
+                    left: -30px;
+                    opacity: 0.15;
+                    animation: float 6s infinite ease-in-out reverse;
+                }
+
+                .premium-stats-wrapper {
+                    position: relative;
+                    padding: 20px;
+                }
+
+                .stats-glass-card {
+                    background: rgba(255, 255, 255, 0.03) !important;
+                    backdrop-filter: blur(25px) saturate(180%) !important;
+                    -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
+                    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                    border-radius: 40px !important;
+                    overflow: visible !important;
+                }
+
+                .icon-badge-modern {
+                    position: relative;
+                    width: 80px;
+                    height: 80px;
+                    margin: 0 auto;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 2;
+                }
+
+                .trophy-anim {
+                    filter: drop-shadow(0 0 15px rgba(250, 187, 5, 0.4));
+                    animation: trophyBounce 3s infinite ease-in-out;
+                }
+
+                @keyframes trophyBounce {
+                    0%, 100% { transform: translateY(0) scale(1); }
+                    50% { transform: translateY(-5px) scale(1.1); }
+                }
+
+                .badge-glow {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    width: 100%;
+                    height: 100%;
+                    background: radial-gradient(circle, rgba(250, 187, 5, 0.2) 0%, transparent 70%);
+                    z-index: -1;
+                }
+
+                .h-line {
+                    width: 30px;
+                    height: 1px;
+                    background: rgba(255, 255, 255, 0.2);
+                }
+
+                .premium-stat-item {
+                    background: rgba(255, 255, 255, 0.05);
+                    border: 1px solid rgba(255, 255, 255, 0.08);
+                    padding: 1.5rem;
+                    border-radius: 24px;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1rem;
+                    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                    position: relative;
+                    overflow: hidden;
+                    animation: statReveal 0.6s ease forwards;
+                    animation-delay: var(--delay);
+                    opacity: 0;
+                }
+
+                @keyframes statReveal {
+                    from { transform: scale(0.9); opacity: 0; }
+                    to { transform: scale(1); opacity: 1; }
+                }
+
+                .premium-stat-item:hover {
+                    background: rgba(255, 255, 255, 0.08);
+                    border-color: rgba(255, 255, 255, 0.15);
+                    transform: translateY(-5px) scale(1.02);
+                }
+
+                .stat-icon-wrap {
+                    width: 40px;
+                    height: 40px;
+                    background: rgba(255, 255, 255, 0.1);
+                    border-radius: 12px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: var(--accent);
+                    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                }
+
+                .stat-value {
+                    font-size: 1.75rem;
+                    font-weight: 900;
+                    color: #fff;
+                    line-height: 1;
+                    letter-spacing: -0.5px;
+                }
+
+                .stat-label {
+                    font-size: 0.65rem;
+                    font-weight: 800;
+                    color: rgba(255, 255, 255, 0.5);
+                    text-transform: uppercase;
+                    letter-spacing: 1.5px;
+                    margin-top: 0.25rem;
+                }
+
+                .stat-shine {
+                    position: absolute;
+                    top: 0;
+                    left: -100%;
+                    width: 100%;
+                    height: 100%;
+                    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+                    transition: 0.5s;
+                }
+
+                .premium-stat-item:hover .stat-shine {
+                    left: 100%;
+                }
+
+                .avatar-group {
+                    display: flex;
+                    align-items: center;
+                }
+
+                .avatar-mini {
+                    width: 24px;
+                    height: 24px;
+                    background: rgba(255, 255, 255, 0.1);
+                    border: 2px solid #1a2333;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-left: -8px;
+                    color: rgba(255, 255, 255, 0.5);
+                }
+
+                .avatar-mini:first-child { margin-left: 0; }
+
                 .slide-in-right {
                     animation: slideInRight 0.8s ease-out forwards;
                     opacity: 0;
@@ -685,6 +885,44 @@ const Home = () => {
                     background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
                     transform: skewX(-25deg);
                     animation: shine 3s infinite;
+                }
+
+                @media (max-width: 991px) {
+                    .hero-title {
+                        font-size: 3.5rem !important;
+                        letter-spacing: -1.5px !important;
+                    }
+                    .lead {
+                        font-size: 1.25rem !important;
+                    }
+                    .btn-yellow, .btn-outline-light {
+                        padding: 1rem 2rem !important;
+                        font-size: 1rem !important;
+                    }
+                    .carousel-item > div {
+                        min-height: 80vh !important;
+                    }
+                    .carousel-item .container {
+                        min-height: 80vh !important;
+                    }
+                }
+
+                @media (max-width: 575px) {
+                    .hero-title {
+                        font-size: 2.5rem !important;
+                        letter-spacing: -1px !important;
+                    }
+                    .lead {
+                        font-size: 1.1rem !important;
+                        margin-bottom: 2rem !important;
+                    }
+                    .display-2 {
+                        font-size: 2rem !important;
+                    }
+                    .btn-yellow, .btn-outline-light {
+                        width: 100%;
+                        margin-bottom: 10px;
+                    }
                 }
 
                 .shadow-glow {

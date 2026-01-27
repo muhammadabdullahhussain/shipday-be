@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 const CollectionDetailsStep = ({ formData, updateFormData, previousStep, nextStep }) => {
     const [useGeolocation, setUseGeolocation] = useState(false);
     const [geoLoading, setGeoLoading] = useState(false);
+    const [searchLoading, setSearchLoading] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -145,6 +146,79 @@ const CollectionDetailsStep = ({ formData, updateFormData, previousStep, nextSte
         'Limpopo', 'Mpumalanga', 'Northern Cape', 'North West', 'Western Cape'
     ];
 
+    const [suggestions, setSuggestions] = useState([]);
+    const [showSuggestions, setShowSuggestions] = useState(false);
+
+    const handleAddressChange = async (e) => {
+        const value = e.target.value;
+        // Update form data immediately
+        updateFormData({
+            collectionAddress: {
+                ...formData.collectionAddress,
+                street: value
+            }
+        });
+
+        // Debounce logic for API calls
+        if (value.length > 3) {
+            setSearchLoading(true);
+            try {
+                // Using LocationIQ Autocomplete
+                const response = await fetch(
+                    `https://api.locationiq.com/v1/autocomplete.php?key=pk.407624cdd11f51300fe4f336e0860d95&q=${encodeURIComponent(value)}&countrycodes=za&limit=5&tag=place:house,place:building,highway:residential`
+                );
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setSuggestions(data);
+                    setShowSuggestions(true);
+                }
+            } catch (err) {
+                console.error("Autocomplete error:", err);
+            } finally {
+                setSearchLoading(false);
+            }
+        } else {
+            setSuggestions([]);
+            setShowSuggestions(false);
+        }
+    };
+
+    const selectSuggestion = (item) => {
+        // Parse the selected item (LocationIQ structure)
+        const address = item.address || {};
+
+        const street = address.road || address.pedestrian || item.display_place || item.display_name.split(',')[0];
+        const suburb = address.suburb || address.neighbourhood || address.residential || '';
+        const city = address.city || address.town || address.village || address.county || '';
+        const state = address.state || address.province || '';
+        const postcode = address.postcode || '';
+
+        // Match province
+        let province = '';
+        if (state) {
+            province = provinces.find(p => state.toLowerCase().includes(p.toLowerCase())) || state;
+        }
+
+        updateFormData({
+            collectionAddress: {
+                ...formData.collectionAddress,
+                street: street,
+                suburb: suburb,
+                city: city,
+                province: province,
+                postalCode: postcode,
+                latitude: item.lat,
+                longitude: item.lon
+            }
+        });
+
+        setSuggestions([]);
+        setShowSuggestions(false);
+        toast.success("Address selected!");
+    };
+
+
     return (
         <div className="step-container">
             <h4 className="step-title">Collection Details</h4>
@@ -232,39 +306,61 @@ const CollectionDetailsStep = ({ formData, updateFormData, previousStep, nextSte
                     </div>
                 </div>
 
-                <div className="mb-3">
+                <div className="mb-3 d-flex align-items-center">
                     <button
                         type="button"
-                        className="btn btn-outline-brand-black"
+                        className="btn btn-outline-dark btn-sm rounded-pill d-flex align-items-center gap-2 px-3"
                         onClick={handleGeolocation}
                         disabled={geoLoading}
                     >
                         {geoLoading ? (
-                            <>
-                                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                                Locating...
-                            </>
+                            <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                         ) : (
-                            <>📍 Use Current Location</>
+                            <i className="bi bi-geo-alt-fill text-yellow"></i>
                         )}
+                        {geoLoading ? 'Locating...' : 'Use Current Location'}
                     </button>
                     {useGeolocation && !geoLoading && (
-                        <span className="text-success ms-2">✓ Location captured</span>
+                        <span className="text-success ms-3 small fw-bold">
+                            <i className="bi bi-check-circle-fill me-1"></i> Address Captured
+                        </span>
                     )}
                 </div>
 
                 <div className="row">
-                    <div className="col-md-12 mb-3">
-                        <label className="form-label">Street Name and Number *</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            name="collectionAddress.street"
-                            value={formData.collectionAddress.street}
-                            onChange={handleChange}
-                            placeholder="456 William Nicol Dr"
-                            required
-                        />
+
+                    <div className="col-md-12 mb-3 position-relative">
+                        <label className="form-label mb-0">Street Name and Number *</label>
+                        <div className="input-group mt-1">
+                            <span className="input-group-text bg-white border-end-0"><i className="bi bi-search text-muted"></i></span>
+                            <input
+                                type="text"
+                                className="form-control border-start-0"
+                                name="collectionAddress.street"
+                                value={formData.collectionAddress.street}
+                                onChange={handleAddressChange}
+                                placeholder="Start typing address..."
+                                required
+                                autoComplete="off"
+                            />
+                        </div>
+
+                        {/* Suggestions Dropdown */}
+                        {showSuggestions && suggestions.length > 0 && (
+                            <div className="position-absolute w-100 bg-white shadow-lg rounded mt-1 overflow-hidden" style={{ zIndex: 1000, maxHeight: '200px', overflowY: 'auto' }}>
+                                {suggestions.map((item, index) => (
+                                    <div
+                                        key={index}
+                                        className="p-2 border-bottom hover-bg-light cursor-pointer"
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={() => selectSuggestion(item)}
+                                    >
+                                        <div className="fw-bold small">{item.display_place || item.address.road}</div>
+                                        <div className="text-muted" style={{ fontSize: '0.75rem' }}>{item.display_name}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </div>
 

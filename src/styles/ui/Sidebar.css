@@ -1,7 +1,8 @@
 /* Sidebar wrapper */
 .sidebar {
   position: fixed;
-  top: 80px !important; /* adjust if needed below top navbar */
+  top: 80px !important;
+  /* adjust if needed below top navbar */
   left: 0;
   bottom: 0;
   width: 280px;
@@ -44,7 +45,8 @@
 
 .menu-item.active .menu-icon,
 .menu-item:hover .menu-icon {
-  filter: brightness(0) invert(1); /* white icon on active/hover */
+  filter: brightness(0) invert(1);
+  /* white icon on active/hover */
 }
 
 /* Icon sizing */
@@ -67,7 +69,8 @@
 @media (max-width: 576px) {
   .sidebar {
     position: fixed;
-    top: 60px; /* adjust if you have a smaller mobile navbar */
+    top: 60px;
+    /* adjust if you have a smaller mobile navbar */
     width: 100%;
     height: auto;
     padding: 0.5rem 1rem;
@@ -94,13 +97,15 @@
   }
 
   .menu-item .text {
-    display: none; /* optionally hide text on very small screens */
+    display: none;
+    /* optionally hide text on very small screens */
   }
 }
+
 @media (max-width:1300px) {
-.menu-item {
-  
-  padding: 0.39rem 0.7rem;
-  
-}
+  .menu-item {
+
+    padding: 0.39rem 0.7rem;
+
+  }
 }

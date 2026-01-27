@@ -34,9 +34,7 @@ const AddNewStaffModal = ({ onClose, onStaffAdded }) => {
       .catch((err) => console.error("Failed to load warehouses", err));
   }, []);
 
-  useEffect(() => {
-    setValidationErrors(validateForm());
-  }, [formData]);
+  /* Removed useEffect for validation on every keystroke to prevent premature error messages */
 
   const capitalizeName = (name) =>
     name
@@ -49,12 +47,18 @@ const AddNewStaffModal = ({ onClose, onStaffAdded }) => {
 
   const validateForm = () => {
     const errors = {};
-    if (!validateEmail(formData.email)) {
+    if (!formData.email || !formData.email.trim()) {
+      errors.email = "Email is required";
+    } else if (!validateEmail(formData.email)) {
       errors.email = "Invalid email format";
     }
-    if (!/^\d{10,15}$/.test(formData.contactInfo)) {
+
+    if (!formData.contactInfo) {
+      errors.contactInfo = "Phone number is required";
+    } else if (!/^\d{10,15}$/.test(formData.contactInfo)) {
       errors.contactInfo = "Phone number must be 10–15 digits";
     }
+
     if (!formData.fullName.trim()) {
       errors.fullName = "Name is required";
     }
@@ -66,6 +70,11 @@ const AddNewStaffModal = ({ onClose, onStaffAdded }) => {
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
+
+    // Clear error for this field when user types
+    if (validationErrors[name]) {
+      setValidationErrors(prev => ({ ...prev, [name]: null }));
+    }
 
     if (name === "profilePicture" && files.length > 0) {
       const file = files[0];
@@ -104,26 +113,23 @@ const AddNewStaffModal = ({ onClose, onStaffAdded }) => {
 
     try {
       const response = await axiosInstance.post("/staff/add", payload);
-      if (response.status === 200 || response.status === 201) {
-        const data = response.data;
-        toast.success("Staff added successfully!");
-        setFormData({
-          profilePicture: "",
-          fullName: "",
-          contactInfo: "",
-          role: "Driver",
-          shift: "Morning",
-          email: "",
-          baseLocation: "New York Warehouse",
-          warehouseName: "",
-        });
-        onStaffAdded(data.staff);
-        setTimeout(() => onClose(), 1500);
-      } else {
-        toast.error(response.data.message || "Something went wrong.");
-      }
+      toast.success("Staff added successfully!");
+      setFormData({
+        profilePicture: "",
+        fullName: "",
+        contactInfo: "",
+        role: "Driver",
+        shift: "Morning",
+        email: "",
+        baseLocation: "New York Warehouse",
+        warehouseName: "",
+      });
+      onStaffAdded(response.data.staff);
+      setTimeout(() => onClose(), 1500);
     } catch (err) {
-      toast.error("Failed to connect to server.");
+      const errorMsg = err.response?.data?.error || err.response?.data?.message || "Failed to add staff. Please check your connection and try again.";
+      toast.error(errorMsg);
+      console.error("Add staff error:", err);
     } finally {
       setLoading(false);
     }

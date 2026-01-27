@@ -75,6 +75,7 @@ const LoginPage = () => {
             const { data } = await axiosInstance.post("/auth/login", { email, password });
             localStorage.setItem("token", data.token);
             localStorage.setItem("email", email);
+            localStorage.setItem("user", JSON.stringify(data.user));
             saveCredentials();
             navigate("/dashboard");
         } catch (err) {
@@ -99,6 +100,7 @@ const LoginPage = () => {
 
             localStorage.setItem("token", data.token);
             localStorage.setItem("email", user.email);
+            localStorage.setItem("user", JSON.stringify(data.user));
             saveCredentials();
             navigate("/dashboard");
         } catch (error) {

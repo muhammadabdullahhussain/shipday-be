@@ -23,6 +23,7 @@ const TermsAndPaymentStep = ({ formData, updateFormData, previousStep, onSubmit,
 
         const shipmentData = {
             senderDetails: {
+                customerId: formData.senderCustomerId,
                 fullName: formData.senderFullName,
                 company: formData.senderCompany,
                 email: formData.senderEmail,
@@ -184,7 +185,63 @@ const TermsAndPaymentStep = ({ formData, updateFormData, previousStep, onSubmit,
                             type="button"
                             className="btn btn-brand-black"
                             disabled={loading}
-                            onClick={handleSubmit} // Opens modal
+                            onClick={() => {
+                                // Verify terms
+                                if (!formData.termsAccepted) {
+                                    toast.error('Please accept the terms and conditions');
+                                    return;
+                                }
+
+                                // Structure the data to match the public/selection page expectations
+                                const payload = {
+                                    senderDetails: {
+                                        customerId: formData.senderCustomerId,
+                                        fullName: formData.senderFullName,
+                                        company: formData.senderCompany,
+                                        email: formData.senderEmail,
+                                        mobile: formData.senderMobile,
+                                        telephone: formData.senderTelephone,
+                                        address: formData.senderAddress
+                                    },
+                                    collectionDetails: {
+                                        dispatcherName: formData.dispatcherName,
+                                        company: formData.collectionCompany,
+                                        mobile: formData.collectionMobile,
+                                        office: formData.collectionOffice,
+                                        email: formData.collectionEmail,
+                                        address: formData.collectionAddress,
+                                        numberOfItems: formData.collectionAddress.numberOfItems
+                                    },
+                                    deliveryDetails: {
+                                        receiverName: formData.receiverName,
+                                        company: formData.deliveryCompany,
+                                        mobile: formData.receiverMobile,
+                                        office: formData.receiverOffice,
+                                        email: formData.receiverEmail,
+                                        address: formData.deliveryAddress
+                                    },
+                                    parcelDetails: {
+                                        serviceType: formData.serviceType,
+                                        parcelType: formData.parcelType,
+                                        dimensions: formData.dimensions,
+                                        specialInstructions: formData.specialInstructions
+                                    },
+                                    payment: {
+                                        method: '', // Will be selected on selection page
+                                        amount: formData.calculatedPrice
+                                    }
+                                };
+
+                                // Navigate to selection page for BOTH guest and admin flows
+                                // as requested by user to allow method selection
+                                navigate('/payment/select', {
+                                    state: {
+                                        shipmentData: payload,
+                                        totalAmount: formData.calculatedPrice,
+                                        isPublic: !!isPublic
+                                    }
+                                });
+                            }}
                         >
                             Proceed to Payment <i className="bi bi-credit-card ms-2 text-yellow"></i>
                         </button>

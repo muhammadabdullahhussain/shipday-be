@@ -5,6 +5,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "../../styles/ui/transaction.css";
 import axiosInstance from "../../utils/axiosInterceptor";
+import { isAdmin, isSuperAdmin } from "../../utils/authHelper";
+
+import AddNewCustomerModal from "../../components/customers/AddNewCustomerModal";
 
 const Customers = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -15,30 +18,36 @@ const Customers = () => {
   const [showFilterDropdown, setShowFilterDropdown] = useState(false);
   const [selectedCustomers, setSelectedCustomers] = useState([]);
   const [customersData, setCustomersData] = useState([]);
+  const [showAddModal, setShowAddModal] = useState(false);
 
   const navigate = useNavigate();
 
   // Fetch customers from backend
-  useEffect(() => {
-    const fetchCustomers = async () => {
-      try {
-        const res = await axiosInstance.get("/customers"); // axios call
-        const data = res.data; // get data from axios response
+  const fetchCustomers = async () => {
+    try {
+      const res = await axiosInstance.get("/customers"); // axios call
+      const data = res.data; // get data from axios response
 
-        const formatted = data.customers.map((cust, i) => ({
+      const formatted = data.customers
+        .filter(cust => !['Admin', 'Manager', 'Super Admin', 'Admin Staff'].includes(cust.role))
+        .map((cust, i) => ({
           id: cust.customerId || `CUST-${i.toString().padStart(6, "0")}`,
           name: cust.fullName || "N/A",
+          company: cust.company || "N/A", // Assuming company field exists in response, otherwise fallback
+          address: cust.location?.address || "N/A",
           email: cust.email || "N/A",
           contact: cust.phone || "N/A",
           totalOrders: cust.totalOrders || "0",
-          status: cust.status || "Delivered",
+          walletBalance: cust.walletBalance !== undefined ? `R${cust.walletBalance.toFixed(2)}` : "R0.00",
+          status: cust.status || "Active",
         }));
-        setCustomersData(formatted);
-      } catch (error) {
-        console.error("Fetch error:", error);
-      }
-    };
+      setCustomersData(formatted);
+    } catch (error) {
+      console.error("Fetch error:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchCustomers();
   }, []);
 
@@ -134,6 +143,11 @@ const Customers = () => {
           </div>
         </div>
         <div className="col-md-9 d-flex justify-content-end gap-2 mt-2 mt-md-0 position-relative">
+          {(isAdmin() || isSuperAdmin()) && (
+            <button className="btn btn-primary" onClick={() => setShowAddModal(true)}>
+              <i className="bi bi-plus-lg me-1"></i> Add Manually
+            </button>
+          )}
           <button className="btn btn-outline-secondary" onClick={handleSortClick}>
             <i className="bi bi-funnel"></i> Sort
           </button>
@@ -174,9 +188,12 @@ const Customers = () => {
               </th>
               <th>Customer ID</th>
               <th>Name</th>
+              <th>Company</th>
+              <th>Address</th>
               <th>Email</th>
               <th>Contact Number</th>
               <th>Total Orders</th>
+              <th>Wallet</th>
               <th>Status</th>
               <th></th>
             </tr>
@@ -193,9 +210,12 @@ const Customers = () => {
                 </td>
                 <td className="shipment-id">{customer.id}</td>
                 <td>{customer.name}</td>
+                <td>{customer.company}</td>
+                <td>{customer.address}</td>
                 <td>{customer.email}</td>
                 <td>{customer.contact}</td>
                 <td>{customer.totalOrders}</td>
+                <td className="fw-bold text-dark">{customer.walletBalance}</td>
                 <td><span className="badge bg-success">{customer.status}</span></td>
                 <td onClick={(e) => e.stopPropagation()}>
                   <div className="dropdown">
@@ -232,6 +252,12 @@ const Customers = () => {
           </nav>
         </div>
       </div>
+
+      <AddNewCustomerModal
+        show={showAddModal}
+        handleClose={() => setShowAddModal(false)}
+        onCustomerAdded={fetchCustomers}
+      />
     </div>
   );
 };

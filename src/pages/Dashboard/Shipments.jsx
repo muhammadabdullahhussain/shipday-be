@@ -10,6 +10,8 @@ import EditShipmentModal from "../../components/EditShipmentModal";
 import ShipmentDetailsModal from "../../components/ShipmentDetailsModal";
 import Button from "../../components/ui/Button";
 import ActionButton from "../../components/ui/ActionButton";
+import { isAdmin, isSuperAdmin, isManager } from "../../utils/authHelper";
+import ConfirmationModal from "../../components/common/ConfirmationModal";
 
 const ShipmentsTable = () => {
   const { t } = useTranslation();
@@ -32,16 +34,21 @@ const ShipmentsTable = () => {
   const [editingShipment, setEditingShipment] = useState(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [selectedShipmentDetails, setSelectedShipmentDetails] = useState(null);
+  const [customers, setCustomers] = useState([]);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
+  const isUserAdmin = isAdmin();
 
   const rowsPerPage = 8;
 
   const formatDate = (dateString) => {
     if (!dateString) return "N/A";
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
+    return date.toLocaleDateString('en-ZA', {
       year: 'numeric',
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
+      timeZone: 'Africa/Johannesburg'
     });
   };
 
@@ -70,7 +77,7 @@ const ShipmentsTable = () => {
           destination: shipment.end,
           estimatedDelivery: formatDate(shipment.eta),
           dateShipped: formatDate(shipment.dateShipped || shipment.createdAt),
-          status: t(`shipments.${status.toLowerCase()}`),
+          status: t(`shipments.${status.toLowerCase().replace(/ /g, '_')}`),
           driverName,
         };
       });
@@ -83,7 +90,19 @@ const ShipmentsTable = () => {
 
   useEffect(() => {
     fetchShipments();
-  }, [t]);
+
+    if (isUserAdmin) {
+      const fetchCustomers = async () => {
+        try {
+          const res = await axiosInstance.get("/customers");
+          setCustomers(res.data.customers || []);
+        } catch (error) {
+          console.error("Error fetching customers for admin:", error);
+        }
+      };
+      fetchCustomers();
+    }
+  }, [t, isUserAdmin]);
 
   useEffect(() => {
     const handleClickOutside = () => setDropdownOpen(null);
@@ -128,15 +147,16 @@ const ShipmentsTable = () => {
   const statusBadge = (status) => {
     switch (status) {
       case t("shipments.delivered"):
-        return "bg-success text-white";
+        return "badge-soft-success";
       case t("shipments.pending"):
-        return "bg-warning text-dark";
+      case t("shipments.pending_collect"):
+        return "badge-soft-warning";
       case t("shipments.shipping"):
-        return "bg-info text-dark";
+        return "badge-soft-info";
       case t("shipments.delayed"):
-        return "bg-danger text-white";
+        return "badge-soft-danger";
       default:
-        return "bg-dark text-white";
+        return "badge-soft-dark";
     }
   };
 
@@ -221,16 +241,30 @@ const ShipmentsTable = () => {
     }
   };
 
-  const handleDeleteShipment = async (shipment) => {
-    if (window.confirm(`Are you sure you want to delete shipment ${shipment.shipmentId}?`)) {
+  const handleDeleteClick = (shipment) => {
+    setItemToDelete(shipment);
+    setShowDeleteModal(true);
+    setDropdownOpen(null);
+  };
+
+  const confirmDelete = async () => {
+    if (itemToDelete) {
       try {
-        await axiosInstance.delete(`/admin/shipments/${shipment.shipmentId}`);
+        await axiosInstance.delete(`/admin/shipments/${itemToDelete.shipmentId}`);
         await fetchShipments();
+        toast.success("Shipment deleted successfully");
       } catch (error) {
         console.error('Error deleting shipment:', error);
+        toast.error("Failed to delete shipment");
       }
     }
-    setDropdownOpen(null);
+    setShowDeleteModal(false);
+    setItemToDelete(null);
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteModal(false);
+    setItemToDelete(null);
   };
 
   const handleCreateShipment = async (formData) => {
@@ -306,6 +340,7 @@ const ShipmentsTable = () => {
           </Button>
 
           <Button
+            type="button"
             variant="success"
             icon="plus"
             onClick={() => setShowCreateModal(true)}
@@ -376,11 +411,11 @@ const ShipmentsTable = () => {
                 />
               </th>
               <th>{t("shipments.shipmentId")}</th>
-              <th>Sender</th>
-              <th>Receiver</th>
+              <th>{t("shipments.sender")}</th>
+              <th>{t("shipments.receiver")}</th>
               <th>{t("shipments.origin")}</th>
               <th>{t("shipments.destination")}</th>
-              <th>Driver Name</th>
+              <th>{t("shipments.driverName")}</th>
               <th>{t("shipments.eta")}</th>
               <th>{t("shipments.status")}</th>
               <th></th>
@@ -469,41 +504,45 @@ const ShipmentsTable = () => {
                         ✏️ Edit
                       </button>
 
-                      {/* Assign Driver */}
-                      <button
-                        className="w-100 border-0 text-start px-3 py-2 d-flex align-items-center gap-2 rounded"
-                        style={{
-                          backgroundColor: "rgba(131, 110, 254, 0.12)",
-                          color: "#836EFE",
-                          fontSize: "14px",
-                          transition: "background-color 0.2s",
-                          marginBottom: "6px",
-                          cursor: "pointer",
-                        }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleAssignDriver(item);
-                        }}
-                      >
-                        👤 Assign
-                      </button>
+                      {/* Assign Driver - Admins & Managers Only */}
+                      {(isUserAdmin || isSuperAdmin() || isManager()) && (
+                        <button
+                          className="w-100 border-0 text-start px-3 py-2 d-flex align-items-center gap-2 rounded"
+                          style={{
+                            backgroundColor: "rgba(131, 110, 254, 0.12)",
+                            color: "#836EFE",
+                            fontSize: "14px",
+                            transition: "background-color 0.2s",
+                            marginBottom: "6px",
+                            cursor: "pointer",
+                          }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAssignDriver(item);
+                          }}
+                        >
+                          👤 Assign
+                        </button>
+                      )}
 
-                      {/* Delete */}
-                      <button
-                        className="w-100 border-0 text-start px-3 py-2 d-flex align-items-center gap-2 rounded"
-                        style={{
-                          backgroundColor: "rgba(220, 38, 38, 0.12)",
-                          color: "#dc2626",
-                          fontSize: "14px",
-                          cursor: "pointer",
-                        }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeleteShipment(item);
-                        }}
-                      >
-                        🗑️ Delete
-                      </button>
+                      {/* Delete - Admins Only */}
+                      {(isUserAdmin || isSuperAdmin()) && (
+                        <button
+                          className="w-100 border-0 text-start px-3 py-2 d-flex align-items-center gap-2 rounded"
+                          style={{
+                            backgroundColor: "rgba(220, 38, 38, 0.12)",
+                            color: "#dc2626",
+                            fontSize: "14px",
+                            cursor: "pointer",
+                          }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteClick(item);
+                          }}
+                        >
+                          🗑️ Delete
+                        </button>
+                      )}
                     </div>
                   )}
                 </td>
@@ -516,7 +555,7 @@ const ShipmentsTable = () => {
       {/* Pagination */}
       <div className="pagination-wrapper mt-4 d-flex justify-content-center">
         <ul className="pagination">
-          <li className={`page - item ${currentPage === 1 ? "disabled" : ""} `}>
+          <li className={`page-item ${currentPage === 1 ? "disabled" : ""} `}>
             <button
               className="page-link"
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
@@ -527,7 +566,7 @@ const ShipmentsTable = () => {
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
             <li
               key={p}
-              className={`page - item ${p === currentPage ? "active" : ""} `}
+              className={`page-item ${p === currentPage ? "active" : ""} `}
             >
               <button className="page-link" onClick={() => setCurrentPage(p)}>
                 {p}
@@ -535,7 +574,7 @@ const ShipmentsTable = () => {
             </li>
           ))}
           <li
-            className={`page - item ${currentPage === totalPages ? "disabled" : ""
+            className={`page-item ${currentPage === totalPages ? "disabled" : ""
               } `}
           >
             <button
@@ -574,6 +613,7 @@ const ShipmentsTable = () => {
                 onSubmit={handleCreateShipment}
                 onCancel={() => setShowCreateModal(false)}
                 loading={createLoading}
+                customers={customers}
               />
             </div>
           </div>
@@ -595,6 +635,15 @@ const ShipmentsTable = () => {
         onClose={() => setShowDetailsModal(false)}
         shipment={selectedShipmentDetails}
         statusBadge={statusBadge}
+      />
+      <ConfirmationModal
+        show={showDeleteModal}
+        title="Delete Shipment"
+        message={`Are you sure you want to delete shipment ${itemToDelete?.shipmentId}?`}
+        onConfirm={confirmDelete}
+        onCancel={handleCancelDelete}
+        confirmText="Delete"
+        variant="danger"
       />
     </div>
   );

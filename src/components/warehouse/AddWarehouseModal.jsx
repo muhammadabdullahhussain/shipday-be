@@ -6,12 +6,16 @@ import "../../styles/ui/WarehouseDetails.css";
 import axiosInstance from "../../utils/axiosInterceptor";
 
 
-const AddWarehouseModal = ({ show, handleClose, onWarehouseAdded }) => {
+const AddWarehouseModal = ({ show, handleClose, onWarehouseAdded, onWarehouseUpdated, editingWarehouse }) => {
   const [form, setForm] = useState({
     name: "",
-    capacity: "",
-    spaceUsed: "",
     location: "",
+    managerName: "",
+    adminName: "",
+    contactNumber: "",
+    adminContact: "",
+    centerEmail: "",
+    adminEmail: "",
     status: "Active",
   });
 
@@ -25,8 +29,6 @@ const AddWarehouseModal = ({ show, handleClose, onWarehouseAdded }) => {
   const handleSubmit = async () => {
     if (
       !form.name.trim() ||
-      !form.capacity.trim() ||
-      !form.spaceUsed.trim() ||
       !form.location.trim()
     ) {
       toast.error("Please fill in all fields.");
@@ -36,17 +38,32 @@ const AddWarehouseModal = ({ show, handleClose, onWarehouseAdded }) => {
     setLoading(true);
     try {
       try {
-        const response = await axiosInstance.post("/warehouse/add", form);
+        const url = editingWarehouse
+          ? `/warehouse/update/${editingWarehouse._id}`
+          : "/warehouse/add";
+
+        const method = editingWarehouse ? axiosInstance.put : axiosInstance.post;
+
+        const response = await method(url, form);
         const data = response.data;
 
-        toast.success("Warehouse added successfully!");
-        if (onWarehouseAdded) onWarehouseAdded(data.warehouse); // 🚀 Send back to parent
+        toast.success(editingWarehouse ? "Warehouse updated!" : "Warehouse added successfully!");
+
+        if (editingWarehouse && onWarehouseUpdated) {
+          onWarehouseUpdated(data.warehouse);
+        } else if (onWarehouseAdded) {
+          onWarehouseAdded(data.warehouse);
+        }
+
         handleClose();
         setForm({
           name: "",
-          capacity: "",
-          spaceUsed: "",
           location: "",
+          managerName: "",
+          adminName: "",
+          contactNumber: "",
+          centerEmail: "",
+          adminEmail: "",
           status: "Active",
         });
       } catch (err) {
@@ -74,7 +91,7 @@ const AddWarehouseModal = ({ show, handleClose, onWarehouseAdded }) => {
     >
       <Modal.Body className="p-4">
         <div className="d-flex justify-content-between align-items-start mb-3">
-          <h5 className="fw-bold">Add New Warehouse</h5>
+          <h5 className="fw-bold">{editingWarehouse ? "Edit Warehouse" : "Add New Warehouse"}</h5>
           <button className="btn-close" onClick={handleClose}></button>
         </div>
 
@@ -91,33 +108,10 @@ const AddWarehouseModal = ({ show, handleClose, onWarehouseAdded }) => {
               />
             </Col>
             <Col>
-              <Form.Label>Capacity</Form.Label>
+              <Form.Label>Address</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="e.g. 150,000 sq.ft."
-                name="capacity"
-                value={form.capacity}
-                onChange={handleChange}
-              />
-            </Col>
-          </Row>
-
-          <Row className="mb-3">
-            <Col>
-              <Form.Label>Space Used</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="e.g. 75,000 sq.ft."
-                name="spaceUsed"
-                value={form.spaceUsed}
-                onChange={handleChange}
-              />
-            </Col>
-            <Col>
-              <Form.Label>Location</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter warehouse location"
+                placeholder="Enter warehouse address/location"
                 name="location"
                 value={form.location}
                 onChange={handleChange}
@@ -125,7 +119,76 @@ const AddWarehouseModal = ({ show, handleClose, onWarehouseAdded }) => {
             </Col>
           </Row>
 
-          <Row className="mb-4">
+          <Row className="mb-3">
+            <Col>
+              <Form.Label>Manager Name</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Manager Name"
+                name="managerName"
+                value={form.managerName}
+                onChange={handleChange}
+              />
+            </Col>
+            <Col>
+              <Form.Label>Admin Name</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Admin Name"
+                name="adminName"
+                value={form.adminName}
+                onChange={handleChange}
+              />
+            </Col>
+          </Row>
+
+          <Row className="mb-3">
+            <Col>
+              <Form.Label>Center Contact</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Center Contact"
+                name="contactNumber"
+                value={form.contactNumber}
+                onChange={handleChange}
+              />
+            </Col>
+            <Col>
+              <Form.Label>Admin Contact</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Admin Contact"
+                name="adminContact"
+                value={form.adminContact}
+                onChange={handleChange}
+              />
+            </Col>
+          </Row>
+
+          <Row className="mb-3">
+            <Col>
+              <Form.Label>Center Email</Form.Label>
+              <Form.Control
+                type="email"
+                placeholder="center@email.com"
+                name="centerEmail"
+                value={form.centerEmail}
+                onChange={handleChange}
+              />
+            </Col>
+            <Col>
+              <Form.Label>Admin Email</Form.Label>
+              <Form.Control
+                type="email"
+                placeholder="admin@email.com"
+                name="adminEmail"
+                value={form.adminEmail}
+                onChange={handleChange}
+              />
+            </Col>
+          </Row>
+
+          <Row className="mb-3">
             <Col>
               <Form.Label>Status</Form.Label>
               <Form.Select
@@ -134,8 +197,8 @@ const AddWarehouseModal = ({ show, handleClose, onWarehouseAdded }) => {
                 onChange={handleChange}
               >
                 <option>Active</option>
-                <option>Full Capacity</option>
                 <option>Under Maintenance</option>
+                <option>Closed</option>
               </Form.Select>
             </Col>
           </Row>

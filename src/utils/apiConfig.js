@@ -14,13 +14,8 @@
 // const BASE_URL = "https://swiftship-backend-production.up.railway.app/api";
 // const SOCKET_IO_URL = "https://swiftship-backend-production.up.railway.app";
 
-// Environment Variables (Vite requires VITE_ prefix)
-const BASE_URL = import.meta.env.VITE_API_URL
-const SOCKET_IO_URL = import.meta.env.VITE_SOCKET_URL
+const BASE_URL = import.meta.env.VITE_API_URL || "/api";
+const SOCKET_IO_URL = import.meta.env.VITE_SOCKET_URL || window.location.origin;
 
-// Note: To change these, update your .env file:
-// VITE_API_URL=https://swiftship-backend-production.up.railway.app/api
-// VITE_SOCKET_URL=https://swiftship-backend-production.up.railway.app
-// Note: import.meta.env.BASE_URL is for the router base, NOT the API URL.
 export default BASE_URL;
 export { BASE_URL, SOCKET_IO_URL };

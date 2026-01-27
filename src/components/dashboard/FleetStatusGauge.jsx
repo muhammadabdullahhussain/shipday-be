@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "../../styles/ui/dashboard/DashboardPage.css"; 
+import "../../styles/ui/dashboard/DashboardPage.css";
 import axiosInstance from "../../utils/axiosInterceptor";
 
 const ActivityOverview = () => {
@@ -9,7 +9,7 @@ const ActivityOverview = () => {
   useEffect(() => {
     const fetchActivities = async () => {
       try {
-        const { data } = await axiosInstance.get("shipment");
+        const { data } = await axiosInstance.get("/shipments");
 
         const activityLog = [];
 
@@ -36,8 +36,8 @@ const ActivityOverview = () => {
                     order.status === "Delivered"
                       ? "success"
                       : order.status === "Pending"
-                      ? "warning"
-                      : "info"
+                        ? "warning"
+                        : "info"
                 });
               }
             });

@@ -7,6 +7,8 @@ import "../../styles/ui/transaction.css";
 import axiosInstance from "../../utils/axiosInterceptor";
 
 
+import { isAdmin, isSuperAdmin } from "../../utils/authHelper";
+
 const Transactions = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -147,7 +149,7 @@ const Transactions = () => {
               <th>Method</th>
               <th>Date</th>
               <th>Status</th>
-              <th></th>
+              {(isAdmin() || isSuperAdmin()) && <th></th>}
             </tr>
           </thead>
           <tbody>
@@ -175,30 +177,33 @@ const Transactions = () => {
                     {item.status}
                   </span>
                 </td>
-                <td>
-                  <div className="dropdown">
-                    <button
-                      className="btn btn-light btn-sm"
-                      type="button"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                    >
-                      ⋯
-                    </button>
-                    <ul className="dropdown-menu dropdown-menu-end">
-                      <li>
-                        <button className="dropdown-item" onClick={() => handleEdit(item)}>
-                          Edit
-                        </button>
-                      </li>
-                      <li>
-                        <button className="dropdown-item text-danger" onClick={() => handleDelete(item)}>
-                          Delete
-                        </button>
-                      </li>
-                    </ul>
-                  </div>
-                </td>
+                {/* Actions - Only for Admins */}
+                {(isAdmin() || isSuperAdmin()) && (
+                  <td>
+                    <div className="dropdown">
+                      <button
+                        className="btn btn-light btn-sm"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        ⋯
+                      </button>
+                      <ul className="dropdown-menu dropdown-menu-end">
+                        <li>
+                          <button className="dropdown-item" onClick={() => handleEdit(item)}>
+                            Edit
+                          </button>
+                        </li>
+                        <li>
+                          <button className="dropdown-item text-danger" onClick={() => handleDelete(item)}>
+                            Delete
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>

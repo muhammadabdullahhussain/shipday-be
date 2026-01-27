@@ -8,10 +8,13 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'https://swiftship-be-bxcwgcbzauhuekas.canadacentral-01.azurewebsites.net',
+        target: 'http://localhost:5000',
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path.replace(/^\/api/, '/api')
+      },
+      '/socket.io': {
+        target: 'http://localhost:5000',
+        ws: true,
       }
     }
   }

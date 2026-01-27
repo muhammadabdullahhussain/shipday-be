@@ -3,8 +3,6 @@ import React, { useEffect, useState } from "react";
 import shipmentImg from "../../assets/icons/truck.png";
 import "../../styles/ui/report.css";
 import axiosInstance from "../../utils/axiosInterceptor";
-
-
 const TotalShipmentsCard = () => {
   const [totalShipments, setTotalShipments] = useState(0);
   const [growth, setGrowth] = useState(0);
@@ -12,7 +10,7 @@ const TotalShipmentsCard = () => {
   useEffect(() => {
     const fetchShipmentMetrics = async () => {
       try {
-        const response = await axiosInstance.get("/shipment/metrics");
+        const response = await axiosInstance.get("/shipments/metrics");
         setTotalShipments(response.data.total || 0);
         setGrowth(response.data.monthGrowth || 0);
       } catch (error) {

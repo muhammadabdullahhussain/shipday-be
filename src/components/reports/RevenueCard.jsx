@@ -40,7 +40,7 @@ const RevenueCard = () => {
     <div className="report-card d-flex justify-content-between align-items-center">
       <div>
         <div className="report-title">Revenue</div>
-        <div className="report-value">₹{currentRevenue.toLocaleString("en-IN")}</div>
+        <div className="report-value">R {currentRevenue.toLocaleString("en-ZA")}</div>
         <div className={`report-subtext ${isPositive ? "text-success" : "text-danger"}`}>
           {isPositive ? "↑" : "↓"} {Math.abs(percentageChange).toFixed(1)}%{" "}
           {isPositive ? "Up" : "Down"} from last month

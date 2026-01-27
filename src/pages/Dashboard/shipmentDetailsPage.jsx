@@ -7,7 +7,7 @@ import Cancelshipment from "../../components/shipments/cancelshipment";
 import "../../styles/ui/transaction.css";
 import axiosInstance from "../../utils/axiosInterceptor";
 
-
+import { isAdmin, isSuperAdmin, isManager, isCustomer, isDriver } from "../../utils/authHelper";
 const ShipmentDetails = () => {
   const { id } = useParams();
   const location = useLocation();
@@ -50,7 +50,7 @@ const ShipmentDetails = () => {
           shipmentData = res.data;
         }
 
-        if (shipmentData.driverName) {
+        if (shipmentData.driverName && shipmentData.driverName !== "Unassigned") {
           try {
             const driverRes = await axiosInstance.get("/staff/driver-by-name", {
               params: { name: shipmentData.driverName },
@@ -169,15 +169,19 @@ const ShipmentDetails = () => {
       <div className="d-flex justify-content-between align-items-start mb-3 flex-wrap">
         <h2 className="shipment-title">Shipment Details</h2>
         <div className="d-flex gap-2 mt-2 mt-md-0">
-          <button
-            className={`btn ${activeAction === 'edit' ? 'btn-primary' : 'btn-outline-primary'}`}
-            onClick={() => {
-              setActiveAction('edit');
-              setShowEditModal(true);
-            }}
-          >
-            Edit Shipment
-          </button>
+
+          {(isAdmin() || isSuperAdmin() || isManager() || (isCustomer() && shipment.status === 'Pending')) && (
+            <button
+              className={`btn ${activeAction === 'edit' ? 'btn-primary' : 'btn-outline-primary'}`}
+              onClick={() => {
+                setActiveAction('edit');
+                setShowEditModal(true);
+              }}
+            >
+              Edit Shipment
+            </button>
+          )}
+
           <button
             className={`btn ${activeAction === 'addNote' ? 'btn-primary' : 'btn-outline-primary'}`}
             onClick={() => {
@@ -187,15 +191,18 @@ const ShipmentDetails = () => {
           >
             Add Note
           </button>
-          <button
-            className={`btn ${activeAction === 'cancel' ? 'btn-primary' : 'btn-outline-primary'}`}
-            onClick={() => {
-              setActiveAction('cancel');
-              setShowCancelModal(true);
-            }}
-          >
-            Cancel Shipment
-          </button>
+
+          {(isAdmin() || isSuperAdmin() || (isCustomer() && shipment.status === 'Pending')) && (
+            <button
+              className={`btn ${activeAction === 'cancel' ? 'btn-primary' : 'btn-outline-primary'}`}
+              onClick={() => {
+                setActiveAction('cancel');
+                setShowCancelModal(true);
+              }}
+            >
+              Cancel Shipment
+            </button>
+          )}
         </div>
       </div>
 
@@ -257,8 +264,8 @@ const ShipmentDetails = () => {
                 <td>
                   <span
                     className={`badge pointer ${item.status === "Delivered" ? "bg-primary" :
-                        item.status === "Pending" ? "bg-warning text-dark" :
-                          "bg-secondary"
+                      item.status === "Pending" ? "bg-warning text-dark" :
+                        "bg-secondary"
                       }`}
                     onClick={() => handleStatusClick(index)}
                     style={{ cursor: "pointer" }}

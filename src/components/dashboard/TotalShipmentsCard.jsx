@@ -13,7 +13,7 @@ const TotalShipmentsCard = () => {
   useEffect(() => {
     const fetchMetrics = async () => {
       try {
-        const res = await axiosInstance.get("/shipment/metrics");
+        const res = await axiosInstance.get("/shipments/metrics");
         setTotal(res.data.total);
         setGrowth(res.data.monthGrowth);
       } catch (error) {

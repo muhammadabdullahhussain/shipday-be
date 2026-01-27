@@ -8,6 +8,7 @@
   background-color: #f8f9fb;
   min-height: 100vh;
 }
+
 .recent-activity {
   scrollbar-width: thin;
   scrollbar-color: #d1d5db transparent;
@@ -35,39 +36,48 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   transition: transform 0.2s ease;
 }
+
 .stat-card:hover {
   transform: translateY(-2px);
 }
+
 .stat-left {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
+
 .stat-title {
   font-size: 14px;
   font-weight: 500;
   color: #727272;
 }
+
 .stat-value {
   font-size: 24px;
   font-weight: 700;
   color: #39335E;
   line-height: 1;
 }
+
 .stat-change {
   font-size: 12px;
   font-weight: 600;
 }
+
 .stat-change.positive {
   color: #22c55e;
 }
+
 .stat-change.negative {
   color: #ef4444;
 }
+
 .stat-month {
   color: #9ca3af;
   font-size: 10px;
 }
+
 .stat-icon {
   width: 48px;
   height: 48px;
@@ -113,9 +123,11 @@
   display: flex;
   gap: 16px;
 }
+
 .chart-header {
   width: 100%;
 }
+
 .chart-y-axis {
   width: 40px;
   display: flex;
@@ -123,28 +135,34 @@
   justify-content: space-between;
   padding: 10px 0 30px 0;
 }
+
 .y-axis-label {
   font-size: 11px;
   color: #9ca3af;
   text-align: right;
 }
+
 .chart-area {
   flex: 1;
   position: relative;
 }
+
 .chart-earnings {
   font-size: 1rem;
   color: #6b7280;
 }
+
 .chart-earnings-value {
   font-size: 1rem;
 }
+
 .chart-dropdown select {
   border-radius: 10px;
   padding: 6px 12px;
   font-size: 0.95rem;
   width: 123px;
 }
+
 .chart-checkboxes {
   margin-top: 16px;
 }
@@ -168,11 +186,13 @@
   align-items: center;
   justify-content: center;
 }
+
 .delay-count {
   font-size: 36px;
   font-weight: 700;
   color: #283D56;
 }
+
 .delay-label {
   font-size: 14px;
   color: #727272;
@@ -189,17 +209,20 @@
   font-size: 13px;
   padding: 0 8px;
 }
+
 .activity-header {
   font-weight: 600;
   color: #727272;
   height: 40px;
-  width:100%;
+  width: 100%;
 }
+
 .activity-title {
   font-size: 1.25rem;
   font-weight: 600;
   color: #1d2b53;
 }
+
 .recent-activity {
   font-family: 'lato', sans-serif;
   font-size: 16px;
@@ -213,10 +236,12 @@
   color: #1d2b53;
   cursor: pointer;
 }
+
 /* DashboardPage.css */
 .recent-activity table tbody tr {
   padding-bottom: 8px;
 }
+
 .recent-activity table td {
   padding: 12px 8px;
 }
@@ -225,10 +250,12 @@
   width: 12px;
   height: 12px;
 }
+
 .activity-row span {
   font-weight: 500;
   color: #374151;
 }
+
 .status {
   padding: 4px 8px;
   border-radius: 8px;
@@ -236,18 +263,22 @@
   font-weight: 500;
   text-align: center;
 }
+
 .status-delivered {
   background-color: #e6f4ea;
   color: #2e7d32;
 }
+
 .status-transit {
   background-color: #fff4e5;
   color: #ef6c00;
 }
+
 .status-delayed {
   background-color: #fdecea;
   color: #c62828;
 }
+
 .fleet-legend {
   display: flex;
   justify-content: center;
@@ -318,6 +349,7 @@
   font-weight: 600;
   margin-left: 3px;
 }
+
 .activity-overview-card {
   border-radius: 16px;
   background: #ffffff;
@@ -340,11 +372,13 @@
   flex-direction: column;
   align-items: center;
   width: 20px;
-  top:10px;
+  top: 10px;
 }
+
 .fw-bold {
   font-weight: 600 !important;
 }
+
 .timeline-indicator .dot {
   width: 14px;
   height: 14px;
@@ -379,7 +413,7 @@
     gap: 24px;
   }
 
-  .dashboard-cards > div {
+  .dashboard-cards>div {
     width: 100%;
   }
 }
@@ -390,11 +424,13 @@
     display: block;
   }
 }
+
 .row-custom-two {
   display: grid;
   grid-template-columns: 1fr;
   gap: 24px;
-  padding: 0 12px; /* Optional: aligns with Bootstrap gutter */
+  padding: 0 12px;
+  /* Optional: aligns with Bootstrap gutter */
 }
 
 /* Between 425px and 1794px: Only 2 items per row */

@@ -1,28 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Form, Button, Card, Row, Col, Badge } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 import bgHero from '../../assets/shipday_tracking_hero.png';
+import GuideModal from '../../components/public/GuideModal';
 
 const TrackingPage = () => {
-    const [trackingId, setTrackingId] = useState('');
+    const [searchParams] = useSearchParams();
+    const urlId = searchParams.get('id');
+    const [trackingId, setTrackingId] = useState(urlId || '');
     const [result, setResult] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [showGuideModal, setShowGuideModal] = useState(false);
 
-    const handleTrack = (e) => {
-        e.preventDefault();
-        if (trackingId) {
-            setResult({
-                status: 'In Transit',
-                location: 'Johannesburg Distribution Hub',
-                date: 'Updated 2 mins ago',
-                waybill: trackingId.toUpperCase(),
-                history: [
-                    { status: 'Sender Despatched', location: 'Commercial District, Sandton', date: 'Dec 26, 14:00', done: true, icon: 'bi-box-arrow-up' },
-                    { status: 'In Hub Sorting', location: 'Johannesburg Main Facility', date: 'Dec 26, 18:30', done: true, icon: 'bi-building-down' },
-                    { status: 'En Route', location: 'National Highway N1 - Southbound', date: 'Dec 27, 06:00', done: true, icon: 'bi-truck' },
-                    { status: 'Local Distribution', location: 'Cape Town Logistics Center', date: 'Expected today', done: false, icon: 'bi-geo-alt' },
-                    { status: 'Final Delivery', location: 'Destination Address', date: 'Pending', done: false, icon: 'bi-house-check' },
-                ]
-            });
+    // Auto load if ID exists
+    useEffect(() => {
+        if (urlId) {
+            handleTrack({ preventDefault: () => { } });
+        }
+    }, [urlId]);
+
+    const handleTrack = async (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        const idToTrack = trackingId || urlId;
+
+        if (!idToTrack) {
+            toast.error("Please enter a tracking number");
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/shipments/track/${idToTrack}`);
+            setResult(response.data.shipment);
+            toast.success("Shipment data synchronized");
+        } catch (error) {
+            console.error("Tracking error:", error);
+            const message = error.response?.data?.message || "Shipment not found or server error";
+            toast.error(message);
+            setResult(null);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -48,8 +67,8 @@ const TrackingPage = () => {
                     style={{ background: 'linear-gradient(to right, rgba(15, 23, 42, 0.95) 30%, rgba(15, 23, 42, 0.4) 100%)' }}></div>
 
                 <Container className="position-relative z-1 py-5">
-                    <Row className="align-items-center">
-                        <Col lg={7} className="fade-in-up">
+                    <Row className="justify-content-center text-center">
+                        <Col lg={10} xl={8} className="fade-in-up">
                             <Badge bg="warning" className="text-dark mb-4 px-4 py-2 fw-black tracking-widest shadow-lg pulse-badge">
                                 <i className="bi bi-shield-lock-fill me-2"></i>
                                 MILITARY-GRADE TRACKING
@@ -58,12 +77,12 @@ const TrackingPage = () => {
                                 Precision in every <br />
                                 <span className="text-yellow glow-text">transit mile.</span>
                             </h1>
-                            <p className="lead mb-5 text-white-50 fw-bold text-uppercase tracking-wider" style={{ fontSize: '0.9rem' }}>
+                            <p className="lead mb-5 text-white-50 fw-bold text-uppercase tracking-wider mx-auto" style={{ fontSize: '0.9rem', maxWidth: '600px' }}>
                                 Enter your waybill to unlock real-time intelligence:
                             </p>
 
-                            <Card className="border-0 shadow-2xl rounded-pill p-1 glass-card-enhanced mb-5 overflow-hidden"
-                                style={{ maxWidth: '600px', background: 'rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.2)' }}>
+                            <Card className="border-0 shadow-2xl rounded-pill p-1 glass-card-enhanced mb-5 overflow-hidden mx-auto"
+                                style={{ maxWidth: '650px', background: 'rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.2)' }}>
                                 <Form onSubmit={handleTrack} className="d-flex align-items-center">
                                     <div className="ps-4 text-yellow opacity-75">
                                         <i className="bi bi-qr-code-scan fs-4"></i>
@@ -75,14 +94,14 @@ const TrackingPage = () => {
                                         onChange={e => setTrackingId(e.target.value)}
                                         style={{ fontSize: '1.2rem' }}
                                     />
-                                    <Button type="submit" className="btn-yellow rounded-pill px-5 fw-black m-1 h-auto py-3 border-0 transition-all hover-lift position-relative overflow-hidden btn-glow">
-                                        <span className="position-relative z-1">TRACK NOW</span>
+                                    <Button type="submit" disabled={loading} className="btn-yellow rounded-pill px-5 fw-black m-1 h-auto py-3 border-0 transition-all hover-lift position-relative overflow-hidden btn-glow">
+                                        <span className="position-relative z-1">{loading ? 'SCANNING...' : 'TRACK NOW'}</span>
                                         <div className="btn-shine"></div>
                                     </Button>
                                 </Form>
                             </Card>
 
-                            <div className="d-flex flex-wrap gap-5 pt-4 border-top border-light border-opacity-10">
+                            <div className="d-flex flex-wrap justify-content-center gap-5 pt-4 border-top border-light border-opacity-10">
                                 {[
                                     { label: 'SLA COMPLIANCE', value: '100%', icon: 'bi-check-all' },
                                     { label: 'GLOBAL NETWORK', value: '24/7', icon: 'bi-broadcast-pin' },
@@ -92,7 +111,7 @@ const TrackingPage = () => {
                                         <div className="rounded-circle bg-yellow bg-opacity-10 p-2 me-3 border border-yellow border-opacity-25">
                                             <i className={`bi ${stat.icon} text-yellow`}></i>
                                         </div>
-                                        <div>
+                                        <div className="text-start">
                                             <div className="h4 fw-black mb-0 text-white">{stat.value}</div>
                                             <div className="text-white-50 fw-bold" style={{ fontSize: '0.65rem', letterSpacing: '1px' }}>{stat.label}</div>
                                         </div>
@@ -171,11 +190,14 @@ const TrackingPage = () => {
                             100% damage-free delivery starts with a perfect wrap.
                         </p>
                         <div className="d-flex flex-wrap justify-content-center gap-4">
-                            <Button className="btn-yellow rounded-pill px-5 py-4 fw-black hover-lift transition-all btn-glow shadow-2xl">
+                            <Button
+                                className="btn-yellow rounded-pill px-5 py-4 fw-black hover-lift transition-all btn-glow shadow-2xl"
+                                onClick={() => setShowGuideModal(true)}
+                            >
                                 <i className="bi bi-file-earmark-pdf-fill me-2"></i> DOWNLOAD GUIDE
                             </Button>
-                            <Button variant="outline-light" className="rounded-pill px-5 py-4 fw-bold glass-hover border-2 border-white border-opacity-25 shadow-lg">
-                                ORDER MATERIALS
+                            <Button variant="outline-light" className="rounded-pill px-5 py-4 fw-bold glass-hover border-2 border-white border-opacity-25 shadow-lg" as="a" href="tel:0100014421">
+                                ORDER MATERIALS (010 001 4421)
                             </Button>
                         </div>
                     </div>
@@ -183,9 +205,9 @@ const TrackingPage = () => {
             </section>
 
             {/* 4. COVERAGE & INFRASTRUCTURE - PREMIUM REDESIGN */}
-            <section className="py-5 position-relative overflow-hidden" 
+            <section className="py-5 position-relative overflow-hidden"
                 style={{ background: 'linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%)' }}>
-                
+
                 {/* Subtle Geometric Background Elements */}
                 <div className="position-absolute top-0 start-0 w-100 h-100 opacity-5" style={{ zIndex: 0, pointerEvents: 'none' }}>
                     <div className="position-absolute" style={{ top: '10%', left: '5%', width: '300px', height: '300px', border: '2px solid #0f172a', borderRadius: '30% 70% 70% 30% / 30% 30% 70% 70%' }}></div>
@@ -205,44 +227,44 @@ const TrackingPage = () => {
 
                     <Row className="g-4">
                         {[
-                            { 
-                                title: 'ELITE DIRECT', 
-                                icon: 'bi-truck-flatbed', 
-                                desc: 'Dedicated B2B and retail solutions with priority handling.', 
+                            {
+                                title: 'ELITE DIRECT',
+                                icon: 'bi-truck-flatbed',
+                                desc: 'Dedicated B2B and retail solutions with priority handling.',
                                 btn: 'Direct Service',
                                 color: '#fabb05'
                             },
-                            { 
-                                title: 'SMART LOCKER', 
-                                icon: 'bi-safe-fill', 
-                                desc: '24/7 contactless pickup through our secure national network.', 
+                            {
+                                title: 'SMART LOCKER',
+                                icon: 'bi-safe-fill',
+                                desc: '24/7 contactless pickup through our secure national network.',
                                 btn: 'Find Locker',
                                 color: '#0f172a'
                             },
-                            { 
-                                title: 'KIOSK HUBS', 
-                                icon: 'bi-shop', 
-                                desc: 'High-visibility drop-off points in every major commercial district.', 
+                            {
+                                title: 'KIOSK HUBS',
+                                icon: 'bi-shop',
+                                desc: 'High-visibility drop-off points in every major commercial district.',
                                 btn: 'Locate Hub',
                                 color: '#fabb05'
                             },
-                            { 
-                                title: 'HEAVY FLEET', 
-                                icon: 'bi-speedometer2', 
-                                desc: 'High-velocity line-haul transit for heavy and bulk shipments.', 
+                            {
+                                title: 'HEAVY FLEET',
+                                icon: 'bi-speedometer2',
+                                desc: 'High-velocity line-haul transit for heavy and bulk shipments.',
                                 btn: 'Fleet Tracking',
                                 color: '#0f172a'
                             }
                         ].map((serv, i) => (
                             <Col lg={3} md={6} key={i} className="fade-in-up" style={{ animationDelay: `${i * 0.1}s` }}>
-                                <Card className="border-0 rounded-5 h-100 overflow-hidden shadow-2xl hover-lift transition-all bg-white group border-top border-4" 
+                                <Card className="border-0 rounded-5 h-100 overflow-hidden shadow-2xl hover-lift transition-all bg-white group border-top border-4"
                                     style={{ borderColor: serv.color === '#fabb05' ? '#fabb05' : '#0f172a' }}>
                                     <Card.Body className="p-4 d-flex flex-column">
                                         <div className="d-flex align-items-center mb-4">
-                                            <div className="rounded-circle d-flex align-items-center justify-content-center shadow-sm" 
-                                                style={{ 
-                                                    width: '60px', 
-                                                    height: '60px', 
+                                            <div className="rounded-circle d-flex align-items-center justify-content-center shadow-sm"
+                                                style={{
+                                                    width: '60px',
+                                                    height: '60px',
                                                     backgroundColor: serv.color === '#fabb05' ? 'rgba(250, 187, 5, 0.1)' : 'rgba(15, 23, 42, 0.05)',
                                                     border: serv.color === '#fabb05' ? '1px solid rgba(250, 187, 5, 0.2)' : '1px solid rgba(15, 23, 42, 0.1)'
                                                 }}>
@@ -252,12 +274,12 @@ const TrackingPage = () => {
                                                 <Badge bg="light" className="text-dark border p-1 px-2 mb-1" style={{ fontSize: '0.6rem' }}>ACTIVE</Badge>
                                             </div>
                                         </div>
-                                        
+
                                         <h5 className="fw-black text-dark mb-3 tracking-tighter" style={{ fontSize: '1.25rem' }}>{serv.title}</h5>
                                         <p className="text-muted small mb-4 lh-base" style={{ fontSize: '0.9rem' }}>{serv.desc}</p>
-                                        
+
                                         <Button className="w-100 rounded-pill py-2 fw-black mt-auto border-0 shadow-sm transition-all position-relative overflow-hidden"
-                                            style={{ 
+                                            style={{
                                                 backgroundColor: serv.color === '#fabb05' ? '#fabb05' : '#0f172a',
                                                 color: serv.color === '#fabb05' ? '#0f172a' : '#fff'
                                             }}>
@@ -274,81 +296,166 @@ const TrackingPage = () => {
 
             {/* MODERN TRACKING OVERLAY */}
             {result && (
-                <div className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center px-3 py-5"
+                <div className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center px-4 py-5"
                     style={{
-                        backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                        backgroundColor: 'rgba(2, 4, 8, 0.85)', // Cinematic dark overlay
                         zIndex: 2000,
-                        backdropFilter: 'blur(10px)',
-                        overflowY: 'auto',
-                        alignItems: 'start'
+                        backdropFilter: 'blur(12px)',
                     }}>
-                    <Container style={{ maxWidth: '950px' }}>
-                        <Card className="border-0 shadow-2xl rounded-5 overflow-hidden bg-white fade-in-up my-auto">
-                            <div className="p-4 p-md-5 position-relative">
-                                <button className="btn-close position-absolute top-0 end-0 m-4 shadow-none border-0 bg-yellow rounded-circle p-3 z-3"
-                                    onClick={() => setResult(null)}></button>
+                    <Container style={{ maxWidth: '1000px' }} className="fade-in-up">
+                        <Card className="border-0 shadow-2xl rounded-5 overflow-hidden"
+                            style={{ background: '#0f172a', border: '1px solid rgba(255,255,255,0.08)' }}>
+                            <Card.Body className="p-0">
+                                <Row className="g-0">
+                                    {/* LEFT: STATUS DASHBOARD */}
+                                    <Col lg={5} className="p-5 position-relative overflow-hidden d-flex flex-column text-white"
+                                        style={{
+                                            background: 'linear-gradient(160deg, #1e293b 0%, #0f172a 100%)',
+                                            borderRight: '1px solid rgba(255,255,255,0.05)'
+                                        }}>
 
-                                <Row className="align-items-center mb-5 g-4">
-                                    <Col md={7}>
-                                        <div className="d-flex align-items-center gap-3 mb-3">
-                                            <div className="p-3 bg-yellow rounded-4">
-                                                <i className="bi bi-box-seam-fill fs-3 text-dark"></i>
+                                        {/* Background Pattern */}
+                                        <div className="position-absolute top-0 start-0 w-100 h-100 opacity-5"
+                                            style={{
+                                                backgroundImage: 'radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px)',
+                                                backgroundSize: '24px 24px'
+                                            }}></div>
+
+                                        {/* Content */}
+                                        <div className="position-relative z-1 h-100 d-flex flex-column">
+                                            <div className="d-flex align-items-center gap-3 mb-5">
+                                                <div className="rounded-4 d-flex align-items-center justify-content-center bg-yellow text-dark fw-bold shadow-lg"
+                                                    style={{ width: '48px', height: '48px' }}>
+                                                    <i className="bi bi-box-seam-fill fs-5"></i>
+                                                </div>
+                                                <div>
+                                                    <small className="text-white-50 fw-bold tracking-widest text-uppercase d-block" style={{ fontSize: '0.65rem' }}>WAYBILL ID</small>
+                                                    <div className="fw-black text-white h3 mb-0 tracking-tight">{result.trackingNumber}</div>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <h3 className="fw-black mb-0 text-dark">WAYBILL {result.waybill}</h3>
-                                                <Badge bg="warning" className="text-dark rounded-pill px-3 py-1 fw-bold tracking-widest mt-1">
-                                                    LIVE FEED: IN TRANSIT
-                                                </Badge>
+
+                                            <div className="mb-auto">
+                                                <div className="p-4 rounded-4 bg-black bg-opacity-20 border border-white border-opacity-5 mb-4">
+                                                    <div className="d-flex justify-content-between align-items-end mb-4">
+                                                        <div>
+                                                            <small className="text-yellow fw-bold tracking-widest text-uppercase d-block mb-1" style={{ fontSize: '0.6rem' }}>ORIGIN</small>
+                                                            <span className="fw-bold fs-5 text-white">{result.history[0]?.location || 'Origin Station'}</span>
+                                                        </div>
+                                                        <div className="text-white-50 mb-1"><i className="bi bi-arrow-right fs-5"></i></div>
+                                                        <div className="text-end">
+                                                            <small className="text-yellow fw-bold tracking-widest text-uppercase d-block mb-1" style={{ fontSize: '0.6rem' }}>DESTINATION</small>
+                                                            <span className="fw-bold fs-5 text-white">{result.history[result.history.length - 1]?.location || 'In Transit'}</span>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Progress Bar */}
+                                                    <div className="position-relative pt-2">
+                                                        <div className="d-flex justify-content-between text-white-50 x-small fw-bold mb-2">
+                                                            <span>Progress</span>
+                                                            <span>{result.status === 'Delivered' ? '100%' : 'In Transit'}</span>
+                                                        </div>
+                                                        <div className="h-2 w-100 bg-white bg-opacity-10 rounded-pill overflow-hidden" style={{ height: '6px' }}>
+                                                            <div className="h-100 bg-yellow position-relative" style={{ width: result.status === 'Delivered' ? '100%' : '65%' }}>
+                                                                <div className="position-absolute top-0 end-0 h-100 w-100 bg-white opacity-25" style={{ animation: 'shimmer 2s infinite linear', background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent)' }}></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <Row className="g-3">
+                                                    <Col xs={6}>
+                                                        <div className="p-3 rounded-4 bg-black bg-opacity-20 border border-white border-opacity-5 text-center">
+                                                            <i className="bi bi-calendar-event text-white-50 mb-2 d-block"></i>
+                                                            <small className="text-white-50 d-block text-uppercase fw-bold mb-0" style={{ fontSize: '0.6rem' }}>Est. Arrival</small>
+                                                            <span className="fw-bold text-white small">End of Day</span>
+                                                        </div>
+                                                    </Col>
+                                                    <Col xs={6}>
+                                                        <div className="p-3 rounded-4 bg-black bg-opacity-20 border border-white border-opacity-5 text-center">
+                                                            <i className="bi bi-box text-white-50 mb-2 d-block"></i>
+                                                            <small className="text-white-50 d-block text-uppercase fw-bold mb-0" style={{ fontSize: '0.6rem' }}>Weight</small>
+                                                            <span className="fw-bold text-white small">2.5 KG</span>
+                                                        </div>
+                                                    </Col>
+                                                </Row>
+                                            </div>
+
+                                            <div className="mt-4 pt-4 border-top border-white border-opacity-10">
+                                                <div className="d-flex align-items-center gap-3 text-white-50 x-small">
+                                                    <div className="spinner-grow spinner-grow-sm text-success" role="status"></div>
+                                                    <span className="tracking-widest fw-bold text-uppercase">Live Satellite Link Active</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </Col>
-                                    <Col md={5} className="text-md-end">
-                                        <div className="bg-light p-4 rounded-5 border border-dark border-opacity-10">
-                                            <small className="text-muted d-block text-uppercase fw-black mb-1 tracking-widest" style={{ fontSize: '0.6rem' }}>INTELLIGENCE NODE</small>
-                                            <span className="fw-black text-dark fs-5">{result.location}</span>
-                                            <p className="text-yellow fw-bold small mb-0 mt-2"><i className="bi bi-check2-circle"></i> {result.date}</p>
+
+                                    {/* RIGHT: TIMELINE */}
+                                    <Col lg={7} className="bg-white position-relative">
+                                        <button className="btn-close position-absolute top-0 end-0 m-4 z-3 p-2 bg-light rounded-circle" onClick={() => setResult(null)}></button>
+
+                                        <div className="p-5 h-100 d-flex flex-column">
+                                            <h4 className="fw-black text-dark mb-5 tracking-tight px-2">Shipment Journey</h4>
+
+                                            <div className="position-relative ps-2 flex-grow-1 overflow-auto" style={{ maxHeight: '500px' }}>
+                                                {/* Vertical Line */}
+                                                <div className="position-absolute h-100 bg-light opacity-50"
+                                                    style={{ width: '2px', left: '23px', top: '10px', height: 'calc(100% - 20px)' }}></div>
+
+                                                {result.history.map((step, idx) => (
+                                                    <div key={idx} className="d-flex position-relative mb-5 last-no-mb group">
+                                                        {/* Node */}
+                                                        <div className={`
+                                                            z-2 rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 transition-all border
+                                                            ${step.done ? 'bg-dark text-yellow shadow-lg scale-105 border-dark' : 'bg-white text-muted border-light-subtle'}
+                                                        `} style={{ width: '48px', height: '48px' }}>
+                                                            <i className={`bi ${step.icon} fs-5`}></i>
+                                                        </div>
+
+                                                        {/* Text */}
+                                                        <div className="ms-4 pt-1 w-100">
+                                                            <div className="d-flex justify-content-between align-items-start">
+                                                                <div>
+                                                                    <h6 className={`fw-black mb-1 text-uppercase tracking-wide ${step.done ? 'text-dark' : 'text-muted'}`}>
+                                                                        {step.status}
+                                                                    </h6>
+                                                                    <p className="mb-0 text-muted small fw-medium">{step.location}</p>
+                                                                </div>
+                                                                <div className="text-end">
+                                                                    <span className={`badge rounded-pill ${step.done ? 'bg-light text-dark border' : 'text-light-50'} fw-bold px-3 py-2 x-small`}>
+                                                                        {step.done ? (new Date(step.date).toLocaleDateString()) : 'Pending'}
+                                                                    </span>
+                                                                    {step.done && <div className="text-muted x-small mt-1 fw-bold">{new Date(step.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+
+                                            <div className="mt-4 pt-4 border-top">
+                                                <div className="d-flex justify-content-between align-items-center">
+                                                    <div className="nav-link text-muted x-small fw-bold text-uppercase p-0">
+                                                        <i className="bi bi-shield-check me-2"></i> Verified Route
+                                                    </div>
+                                                    <Button variant="link" className="text-dark fw-black text-decoration-none p-0 d-flex align-items-center gap-2 hover-opacity"
+                                                        onClick={() => handleTrack({ preventDefault: () => { } })}>
+                                                        REFRESH DATA <i className="bi bi-arrow-repeat"></i>
+                                                    </Button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </Col>
                                 </Row>
-
-                                <div className="position-relative ps-4 ps-md-5">
-                                    <div className="position-absolute h-100 bg-light-dark opacity-10" style={{ width: '4px', left: '26px', top: '0', background: '#0f172a' }}></div>
-                                    {result.history.map((step, idx) => (
-                                        <div key={idx} className="position-relative ps-5 pb-5 last-no-pb">
-                                            <div
-                                                className={`position-absolute top-0 rounded-circle shadow-lg d-flex align-items-center justify-content-center pulse-icon
-                                                ${step.done ? 'bg-yellow text-dark' : 'bg-light text-muted border'}`}
-                                                style={{ width: '44px', height: '44px', left: '-22px', zIndex: 10, border: step.done ? '4px solid white' : '4px solid #f8f9fa' }}
-                                            >
-                                                <i className={`bi ${step.icon} fs-5`}></i>
-                                            </div>
-                                            <Row className="align-items-center">
-                                                <Col xs={12} md={5}>
-                                                    <h5 className={`fw-black mb-1 ${step.done ? 'text-dark' : 'text-muted opacity-50'}`}>{step.status}</h5>
-                                                    <small className="text-yellow fw-black tracking-wider text-uppercase" style={{ fontSize: '0.7rem' }}>{step.date}</small>
-                                                </Col>
-                                                <Col xs={12} md={7}>
-                                                    <p className={`mb-0 fw-bold ${step.done ? 'text-muted' : 'text-light opacity-25'}`} style={{ fontSize: '0.9rem' }}>
-                                                        <i className="bi bi-geo-alt-fill me-2 text-yellow"></i> {step.location}
-                                                    </p>
-                                                </Col>
-                                            </Row>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                            <div className="bg-dark p-4 d-flex justify-content-between align-items-center border-top border-light border-opacity-10">
-                                <div className="text-white-50 small fw-bold"><i className="bi bi-info-circle me-2"></i> Powered by ShipDay OS v2.0</div>
-                                <Button className="btn-yellow px-5 py-3 fw-black rounded-pill shadow-2xl border-0 overflow-hidden position-relative btn-glow"
-                                    onClick={() => handleTrack({ preventDefault: () => { } })}>
-                                    <span className="position-relative z-1">REFRESH LIVE DATA</span>
-                                    <div className="btn-shine"></div>
-                                </Button>
-                            </div>
+                            </Card.Body>
                         </Card>
                     </Container>
                 </div>
             )}
+
+            <GuideModal
+                show={showGuideModal}
+                onHide={() => setShowGuideModal(false)}
+            />
 
             <style>{`
                 .fw-black { font-weight: 900 !important; }
@@ -432,7 +539,7 @@ const TrackingPage = () => {
                     color: rgba(255,255,255,0.5);
                 }
             `}</style>
-        </div>
+        </div >
     );
 };
 

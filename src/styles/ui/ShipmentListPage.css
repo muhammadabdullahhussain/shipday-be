@@ -17,8 +17,59 @@
 
 .badge {
   font-size: 0.75rem;
-  padding: 6px 10px;
-  border-radius: 8px;
+  padding: 8px 16px !important;
+  border-radius: 50px !important;
+  font-weight: 600;
+  text-transform: capitalize;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+  min-width: 120px;
+  /* Consistent width for alignment */
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  filter: brightness(0.98);
+}
+
+/* Premium Soft Colors */
+.badge-soft-success {
+  background-color: #E6F6EC !important;
+  color: #0F5132 !important;
+  border-color: #C3E6CB !important;
+}
+
+.badge-soft-warning {
+  background-color: #FFF8E1 !important;
+  color: #B76E00 !important;
+  border-color: #FFE69C !important;
+}
+
+.badge-soft-info {
+  background-color: #E7F1FF !important;
+  color: #0c63e4 !important;
+  border-color: #9EC5FE !important;
+}
+
+.badge-soft-danger {
+  background-color: #F8D7DA !important;
+  color: #842029 !important;
+  border-color: #F5C2C7 !important;
+}
+
+.badge-soft-dark {
+  background-color: #F3F4F6 !important;
+  color: #374151 !important;
+  border-color: #E5E7EB !important;
 }
 
 .bg-pink {
