@@ -60,12 +60,12 @@ const PaymentSuccessPage = () => {
             if (mPaymentId && amt && !syncingInProgress.current) {
                 syncingInProgress.current = true;
                 try {
-                    console.log('🔄 Attempting Sandbox Sync for:', mPaymentId, 'Amount:', amt);
+                    
                     await axiosInstance.post('/payments/confirm-sandbox', {
                         mPaymentId: mPaymentId,
                         amount: amt
                     });
-                    console.log('✅ Sandbox Sync Successful');
+                    
 
                     // Now safely clear session storage
                     sessionStorage.removeItem('pendingPayment');

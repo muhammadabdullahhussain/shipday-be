@@ -716,7 +716,7 @@ const Contact = () => {
                                 title: 'Strategic Location',
                                 icon: 'bi-geo-alt-fill',
                                 iconBg: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
-                                desc: '37 Main Road, Eastleigh, Edenvale 1609. South Africa\'s central logistics node.',
+                                desc: '37 Main Road, Eastleigh, Edenvale 1609. South Africa\'s central courier node.',
                                 accent: '#0f172a',
                                 badge: 'HEADQUARTERS',
                                 action: 'View on Map',
@@ -1284,7 +1284,7 @@ const Contact = () => {
                                 <Badge bg="warning" className="text-dark mb-3 px-3 py-2 fw-black">GET IN TOUCH</Badge>
                                 <h2 className="display-4 fw-black text-dark mb-4 lh-1">Send us an <br /><span className="text-yellow">intelligence request.</span></h2>
                                 <p className="text-muted lead mb-5">
-                                    Our dedicated regional experts are ready to architect your logistics solution. Fill out the form below.
+                                    Our dedicated regional experts are ready to architect your courier solution. Fill out the form below.
                                 </p>
 
                                 <Card className="border-0 shadow-2xl rounded-4 overflow-hidden bg-white border border-light">
@@ -1594,9 +1594,9 @@ const BranchesSection = () => {
             accent: "#fabb05"
         },
         {
-            name: "Logistics Hub",
+            name: "Courier Hub",
             location: "Johannesburg",
-            address: "88 Logistics Road, Kempton Park, Gauteng, 1619",
+            address: "88 Courier Road, Kempton Park, Gauteng, 1619",
             image: truckImg,
             type: "Distribution Center",
             accent: "#0f172a"

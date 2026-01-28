@@ -25,7 +25,7 @@ const PublicNavbar = () => {
 
     const navLinks = [
         { name: 'Home', path: '/' },
-        { name: 'Send Parcel', path: '/send-parcel' },
+        { name: 'Ship with Shipday', path: '/send-parcel' },
         { name: 'Services', path: '/services' },
         { name: 'Tracking', path: '/tracking' },
         { name: 'Contact', path: '/contact' },

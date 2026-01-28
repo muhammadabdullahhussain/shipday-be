@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Badge, Card, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import companyBg from '../../assets/shipday_hero_warehouse_new.jpg'; // Reusing a high-quality asset
+import ceoImage from '../../assets/martin_kekana.png';
 
 const About = () => {
     const [isLoaded, setIsLoaded] = useState(false);
@@ -101,29 +102,22 @@ const About = () => {
                         <Row className="g-5 align-items-center">
                             <Col lg={6} className="order-2 order-lg-1">
                                 <div className="pe-lg-5">
-                                    <h2 className="display-3 fw-black text-dark mb-4 fade-in-up">Our Mission</h2>
+                                    <h2 className="display-3 fw-black text-dark mb-4 fade-in-up">Our Story</h2>
                                     <p className="lead text-muted mb-4 text-justify">
-                                        To empower South African commerce with a courier network that is as reliable as it is advanced. We believe in speed, transparency, and the power of connection.
+                                        Shipday South Africa is a South African–based courier and logistics company founded by Martin Kekana. The company operates nationally, providing reliable delivery and logistics solutions across key regions of South Africa.
+                                    </p>
+                                    <p className="text-muted mb-4">
+                                        We specialize in last-mile delivery services for eCommerce businesses, retailers, and corporate clients. Our operating model incorporates strategically located retailer outlets that function as retail hubs, enabling efficient parcel handling, distribution, and customer accessibility.
                                     </p>
                                     <p className="text-muted mb-5">
-                                        Founded in 2024, ShipDay emerged from a simple need: a courier service that understands the pulse of the local market while operating with global standards. We are building the infrastructure for the next generation of African commerce.
+                                        Shipday South Africa manages end-to-end logistics for online stores, including parcel collection, sorting, and final delivery. We also offer door-to-door courier services for individuals, business-to-business (B2B), and business-to-customer (B2C) deliveries.
                                     </p>
 
                                     <div className="p-4 bg-light rounded-4 border-start border-4 border-warning shadow-sm">
-                                        <h5 className="fw-bold text-dark mb-3">The ShipDay Standard</h5>
-                                        <ul className="list-unstyled mb-0 d-grid gap-3">
-                                            {[
-                                                "24/7 Operational Hubs",
-                                                "Real-time Satellite Tracking",
-                                                "99.9% Delivery Success Rate",
-                                                "Dedicated Enterprise Support"
-                                            ].map((item, i) => (
-                                                <li key={i} className="d-flex align-items-center">
-                                                    <i className="bi bi-check-circle-fill text-yellow me-3 fs-5"></i>
-                                                    <span className="fw-medium text-dark">{item}</span>
-                                                </li>
-                                            ))}
-                                        </ul>
+                                        <h5 className="fw-bold text-dark mb-3">Our Network & Reach</h5>
+                                        <p className="text-muted small mb-0">
+                                            In addition, we actively partner with established courier companies experiencing parcel overflow, as well as smaller courier operators seeking expanded reach into remote or underserved areas. Through these partnerships, we help optimize delivery capacity while extending reliable courier coverage nationwide.
+                                        </p>
                                     </div>
                                 </div>
                             </Col>
@@ -137,12 +131,14 @@ const About = () => {
                                         <Card className="border-0 shadow-2xl rounded-5 overflow-hidden bg-dark text-white p-5 text-start hover-scale transition-all">
                                             <i className="bi bi-quote display-1 text-yellow opacity-50 mb-3"></i>
                                             <h3 className="fw-bold lh-base mb-4">
-                                                "We don't just deliver packages. We deliver promises, deadlines, and the future of your business."
+                                                "Our commitment is to deliver dependable, scalable, and customer-focused courier solutions that support business growth and connectivity across South Africa."
                                             </h3>
                                             <div className="d-flex align-items-center mt-auto">
-                                                <div className="rounded-circle bg-yellow me-3" style={{ width: '50px', height: '50px' }}></div>
+                                                <div className="rounded-circle overflow-hidden me-3 shadow-lg" style={{ width: '60px', height: '60px', border: '2px solid var(--brand-yellow)' }}>
+                                                    <img src={ceoImage} alt="Martin Kekana" className="w-100 h-100 object-fit-cover" />
+                                                </div>
                                                 <div>
-                                                    <div className="fw-bold">Muhammad Abdullah</div>
+                                                    <div className="fw-bold">Martin Kekana</div>
                                                     <div className="text-white-50 small">Founder & CEO</div>
                                                 </div>
                                             </div>

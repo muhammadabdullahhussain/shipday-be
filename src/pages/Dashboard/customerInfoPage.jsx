@@ -21,7 +21,7 @@ const CustomerInfo = () => {
         //  Changed fetch to axiosInstance
         const response = await axiosInstance.get(`/orders/by-phone/${customer.contact}`);
         const data = response.data;
-        console.log("Fetched orders by phone:", data);
+        
 
         const mappedOrders = (data.orders || []).map(order => ({
           ...order,

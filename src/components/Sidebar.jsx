@@ -37,6 +37,11 @@ const Sidebar = () => {
           <span className="text">Shipments</span>
         </NavLink>
 
+        <NavLink to="/dashboard/fulfillment-console" className={getActiveClass}>
+          <img src={ordersIcon} alt="Fulfillment Console" className="menu-icon" />
+          <span className="text">Fulfillment Console</span>
+        </NavLink>
+
         {isMgmt && (
           <NavLink to="/dashboard/route-planning" className={getActiveClass}>
             <img src={routeIcon} alt="Route Planning" className="menu-icon" />

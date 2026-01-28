@@ -1,4 +1,10 @@
 // src/main.jsx
+if (import.meta.env.PROD) {
+  console.log = () => { };
+  console.debug = () => { };
+  console.info = () => { };
+  console.warn = () => { };
+}
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
@@ -44,20 +50,16 @@ class ErrorBoundary extends React.Component {
   }
 }
 
-console.log('🚀 main.jsx: Starting React app initialization...');
 
 try {
   const rootElement = document.getElementById('root');
-  console.log('🔍 main.jsx: Root element found:', rootElement);
 
   if (!rootElement) {
     throw new Error('Root element not found in DOM');
   }
 
-  console.log('⚛️ main.jsx: Creating React root...');
   const root = ReactDOM.createRoot(rootElement);
 
-  console.log('🎨 main.jsx: Rendering app...');
   root.render(
     <React.StrictMode>
       <ErrorBoundary>
@@ -68,7 +70,6 @@ try {
     </React.StrictMode>
   );
 
-  console.log('✅ main.jsx: React app rendered successfully!');
 } catch (error) {
   console.error('❌ main.jsx: Fatal error during initialization:', error);
   document.body.innerHTML = `

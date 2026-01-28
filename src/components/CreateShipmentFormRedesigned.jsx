@@ -207,7 +207,7 @@ const CreateShipmentFormRedesigned = ({ onSubmit, onCancel, loading, isPublic, c
             }
         };
 
-        console.log("SENDING PAYLOAD:", payload); // Debug Log
+        // Debug Log
 
         onSubmit(payload);
     };

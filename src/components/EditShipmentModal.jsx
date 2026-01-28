@@ -21,7 +21,7 @@ const EditShipmentModal = ({ show, onClose, shipment, onUpdate }) => {
 
   useEffect(() => {
     if (show && shipment) {
-      console.log('Received shipment object:', shipment);
+      
 
       // Extract the correct ID from shipment object
       const id = shipment.shipmentId || shipment._id || shipment.id || '';
@@ -81,8 +81,8 @@ const EditShipmentModal = ({ show, onClose, shipment, onUpdate }) => {
         notes: formData.notes
       };
 
-      console.log('Sending PUT request to:', `/shipments/${formData.shipmentId}`);
-      console.log('Payload:', payload);
+      
+      
 
       const response = await axiosInstance.put(
         `/shipments/${formData.shipmentId}`,
@@ -94,7 +94,7 @@ const EditShipmentModal = ({ show, onClose, shipment, onUpdate }) => {
         }
       );
 
-      console.log('Update successful:', response.data);
+      
       toast.success('Shipment updated successfully!');
       onUpdate();
       onClose();

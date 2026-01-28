@@ -83,7 +83,7 @@ const PaymentSelectionModal = ({
                 // Ensure payment method is correctly set for COD
                 formattedPayload.payment.method = 'cod';
 
-                console.log('COD Payment - Sending payload:', JSON.stringify(formattedPayload, null, 2));
+                
                 const shipmentResponse = await axiosInstance.post('/shipments', formattedPayload);
 
                 setConfirmedShipment({
@@ -106,7 +106,7 @@ const PaymentSelectionModal = ({
         else if (selectedMethod === 'payfast' || selectedMethod === 'ewallet') {
             setProcessing(true);
             try {
-                console.log('PayFast/eWallet - Sending data:', JSON.stringify(formattedPayload, null, 2));
+                
                 const shipmentResponse = await axiosInstance.post('/shipments', formattedPayload);
                 const shipmentId = shipmentResponse.data.shipment._id;
                 const publicShipmentId = shipmentResponse.data.shipment.shipmentId;

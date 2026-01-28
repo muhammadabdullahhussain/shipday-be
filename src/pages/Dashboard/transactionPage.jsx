@@ -169,7 +169,7 @@ const Transactions = () => {
                     {item.type}
                   </span>
                 </td>
-                <td>{typeof item.amount === "number" ? `₹${item.amount.toLocaleString()}` : item.amount}</td>
+                <td>{typeof item.amount === "number" ? `R${item.amount.toLocaleString("en-ZA")}` : item.amount}</td>
                 <td>{item.method}</td>
                 <td>{item.date || new Date(item.createdAt).toLocaleDateString()}</td>
                 <td>

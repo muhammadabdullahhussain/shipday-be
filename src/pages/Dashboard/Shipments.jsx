@@ -221,7 +221,7 @@ const ShipmentsTable = () => {
 
   const handleDriverAssignment = async (driverId, shipmentId) => {
     try {
-      console.log('Assigning driver:', driverId, 'to shipment:', shipmentId);
+      
       // Add API call here to assign driver to shipment
       handleCloseAssignModal();
       await fetchShipments(); // Refresh shipments

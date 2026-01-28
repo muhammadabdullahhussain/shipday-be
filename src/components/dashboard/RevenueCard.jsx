@@ -36,10 +36,10 @@ const RevenueCard = () => {
     return () => clearInterval(interval); // Cleanup on unmount
   }, []);
 
-  const formatRupees = (amount) => {
-    return amount.toLocaleString("en-IN", {
+  const formatRand = (amount) => {
+    return amount.toLocaleString("en-ZA", {
       style: "currency",
-      currency: "INR",
+      currency: "ZAR",
       maximumFractionDigits: 0,
     });
   };
@@ -49,7 +49,7 @@ const RevenueCard = () => {
       <div className="card-body d-flex justify-content-between align-items-center">
         <div className="stat-left">
           <span className="stat-title">Revenue</span>
-          <span className="stat-value">{formatRupees(revenue)}</span>
+          <span className="stat-value text-dark">{formatRand(revenue)}</span>
           <span className={`stat-change ${percentChange >= 0 ? "positive" : "negative"}`}>
             <img
               src={greenArrow}

@@ -579,7 +579,7 @@ const Home = () => {
                             <Row className="mt-5 g-4 justify-content-center opacity-75">
                                 {[
                                     { text: 'No Signup Fee' },
-                                    { text: 'Instant Quote' },
+                                    { text: 'PRICING' },
                                     { text: 'Full API Access' },
                                     { text: '24/7 Support' }
                                 ].map((item, i) => (

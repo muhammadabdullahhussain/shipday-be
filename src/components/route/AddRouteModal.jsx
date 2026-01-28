@@ -39,7 +39,7 @@ const AddTrackingModal = ({ show, handleClose, handleAdd }) => {
   const handleSubmit = async () => {
     try {
       const response = await axiosInstance.post("/trackings", tracking);
-      console.log("Server response:", response.data);
+      
 
       toast.success("Tracking saved successfully!");
       if (handleAdd) handleAdd(response.data.tracking);

@@ -66,14 +66,14 @@ const NotificationsSettingsSection = ({ userId }) => {
       }
 
       const result = await response.json();
-      console.log('Notification sent:', result.notification);
+      
     } catch (error) {
       console.error('Error sending notification:', error);
     }
   };
 
   const handleSave = () => {
-    console.log('Notification Settings Saved:', { channels, alerts });
+    
     // You can extend here to send user preferences to backend if needed
   };
 

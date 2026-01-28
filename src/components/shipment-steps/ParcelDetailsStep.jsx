@@ -220,68 +220,97 @@ const ParcelDetailsStep = ({ formData, updateFormData, previousStep, nextStep })
 
                 {/* Custom Parcel Dimensions */}
                 {formData.parcelType === 'custom' && (
-                    <div className="custom-dimensions mb-4">
-                        <h6 className="mb-3">Custom Parcel Dimensions</h6>
-                        <div className="row">
-                            <div className="col-md-3 mb-3">
-                                <label className="form-label">Length (cm) *</label>
-                                <input
-                                    type="number"
-                                    step="0.1"
-                                    className="form-control"
-                                    name="dimensions.length"
-                                    value={formData.dimensions.length}
-                                    onChange={handleChange}
-                                    placeholder="20"
-                                    required
-                                />
+                    <div className="custom-dimensions-box mb-4 p-4 rounded-4 border-2 border-dashed border-warning bg-light bg-opacity-10">
+                        <div className="d-flex align-items-center mb-3">
+                            <i className="bi bi-rulers fs-4 text-warning me-3"></i>
+                            <h6 className="mb-0 fw-bold">Custom Parcel Dimensions</h6>
+                        </div>
+                        <div className="row g-3">
+                            <div className="col-12 col-md-6 col-lg-3">
+                                <div className="form-floating">
+                                    <input
+                                        type="number"
+                                        step="0.1"
+                                        className="form-control"
+                                        id="lengthInput"
+                                        name="dimensions.length"
+                                        value={formData.dimensions.length}
+                                        onChange={handleChange}
+                                        placeholder="Length"
+                                        required
+                                    />
+                                    <label htmlFor="lengthInput">Length (cm) *</label>
+                                </div>
                             </div>
-                            <div className="col-md-3 mb-3">
-                                <label className="form-label">Width (cm) *</label>
-                                <input
-                                    type="number"
-                                    step="0.1"
-                                    className="form-control"
-                                    name="dimensions.width"
-                                    value={formData.dimensions.width}
-                                    onChange={handleChange}
-                                    placeholder="10"
-                                    required
-                                />
+                            <div className="col-12 col-md-6 col-lg-3">
+                                <div className="form-floating">
+                                    <input
+                                        type="number"
+                                        step="0.1"
+                                        className="form-control"
+                                        id="widthInput"
+                                        name="dimensions.width"
+                                        value={formData.dimensions.width}
+                                        onChange={handleChange}
+                                        placeholder="Width"
+                                        required
+                                    />
+                                    <label htmlFor="widthInput">Width (cm) *</label>
+                                </div>
                             </div>
-                            <div className="col-md-3 mb-3">
-                                <label className="form-label">Height (cm) *</label>
-                                <input
-                                    type="number"
-                                    step="0.1"
-                                    className="form-control"
-                                    name="dimensions.height"
-                                    value={formData.dimensions.height}
-                                    onChange={handleChange}
-                                    placeholder="10"
-                                    required
-                                />
+                            <div className="col-12 col-md-6 col-lg-3">
+                                <div className="form-floating">
+                                    <input
+                                        type="number"
+                                        step="0.1"
+                                        className="form-control"
+                                        id="heightInput"
+                                        name="dimensions.height"
+                                        value={formData.dimensions.height}
+                                        onChange={handleChange}
+                                        placeholder="Height"
+                                        required
+                                    />
+                                    <label htmlFor="heightInput">Height (cm) *</label>
+                                </div>
                             </div>
-                            <div className="col-md-3 mb-3">
-                                <label className="form-label">Weight (kg) *</label>
-                                <input
-                                    type="number"
-                                    step="0.1"
-                                    className="form-control"
-                                    name="dimensions.weight"
-                                    value={formData.dimensions.weight}
-                                    onChange={handleChange}
-                                    placeholder="2.5"
-                                    required
-                                />
+                            <div className="col-12 col-md-6 col-lg-3">
+                                <div className="form-floating">
+                                    <input
+                                        type="number"
+                                        step="0.1"
+                                        className="form-control"
+                                        id="weightInput"
+                                        name="dimensions.weight"
+                                        value={formData.dimensions.weight}
+                                        onChange={handleChange}
+                                        placeholder="Weight"
+                                        required
+                                    />
+                                    <label htmlFor="weightInput">Weight (kg) *</label>
+                                </div>
                             </div>
+                        </div>
+
+                        {/* Status indicators */}
+                        <div className="status-indicators-strip d-flex flex-wrap gap-2">
+                            {!formData.dimensions.length && <span className="badge bg-warning-subtle text-dark px-2 py-1"><i className="bi bi-info-circle me-1"></i> Enter Length</span>}
+                            {!formData.dimensions.width && <span className="badge bg-warning-subtle text-dark px-2 py-1"><i className="bi bi-info-circle me-1"></i> Enter Width</span>}
+                            {!formData.dimensions.height && <span className="badge bg-warning-subtle text-dark px-2 py-1"><i className="bi bi-info-circle me-1"></i> Enter Height</span>}
+                            {!formData.dimensions.weight && <span className="badge bg-danger-subtle text-danger px-2 py-1"><i className="bi bi-exclamation-triangle me-1"></i> Weight Required</span>}
                         </div>
 
                         {/* Formula Display */}
                         {formData.dimensions.length && formData.dimensions.width && formData.dimensions.height && (
-                            <div className="alert alert-info mt-3">
-                                <strong>Calculation:</strong> Base R{pricingConfig[formData.serviceType].baseAmount} +
-                                (Max(Actual {formData.dimensions.weight}kg, Volumetric {((formData.dimensions.length * formData.dimensions.width * formData.dimensions.height) / pricingConfig[formData.serviceType].divisor).toFixed(2)}kg) × Rate R{pricingConfig[formData.serviceType].rate})
+                            <div className="alert alert-info mt-4 border-0 shadow-sm bg-white text-dark">
+                                <div className="d-flex align-items-center mb-2">
+                                    <i className="bi bi-calculator fs-5 text-primary me-2"></i>
+                                    <strong>Real-time Price Engine</strong>
+                                </div>
+                                <div className="small opacity-75">
+                                    Base R{pricingConfig[formData.serviceType].baseAmount} +
+                                    (Max(Actual {formData.dimensions.weight || 0}kg, Volumetric {((formData.dimensions.length * formData.dimensions.width * formData.dimensions.height) / pricingConfig[formData.serviceType].divisor).toFixed(2)}kg) × Rate R{pricingConfig[formData.serviceType].rate})
+                                </div>
                             </div>
                         )}
                     </div>

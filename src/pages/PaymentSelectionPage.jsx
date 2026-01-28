@@ -73,10 +73,10 @@ const PaymentSelectionPage = () => {
         }
     ];
 
-    // Filter methods: If public, show ONLY PayFast. If dashboard, show ALL.
+    // Filter methods: If public, show ONLY PayFast. If dashboard, show PayFast and E-Wallet.
     const paymentMethods = isPublic
         ? allPaymentMethods.filter(m => m.id === 'payfast')
-        : allPaymentMethods;
+        : allPaymentMethods.filter(m => m.id === 'payfast' || m.id === 'ewallet');
 
     const handleConfirm = async () => {
         if (!selectedMethod) {

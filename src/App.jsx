@@ -31,6 +31,7 @@ import Fleet from "./pages/Dashboard/fleetManagementPage";
 import VehicleDetailsPage from './pages/Dashboard/VehicleDetailsPage';
 import Drivers from './pages/Dashboard/Drivers';
 import Wallet from './pages/Dashboard/WalletPage';
+import FulfillmentConsole from './pages/Dashboard/FulfillmentConsole';
 import DashboardLayout from './Layouts/DashboardLayout';
 import ProtectedRoute from './components/ProtectedRoute';
 import AuthRedirect from './components/AuthRedirect';
@@ -38,7 +39,6 @@ import PaymentSuccessPage from './pages/PaymentSuccessPage';
 import PaymentCancelPage from './pages/PaymentCancelPage';
 import PaymentSelectionPage from './pages/PaymentSelectionPage';
 
-console.log('📦 App.jsx: Component file loaded');
 
 import PublicLayout from './Layouts/PublicLayout';
 import Home from './pages/Public/Home';
@@ -52,7 +52,6 @@ import FAQs from './pages/Public/FAQs';
 import Terms from './pages/Public/Terms';
 
 function App() {
-  console.log('🎯 App.jsx: App component rendering...');
 
   return (
     <>
@@ -86,6 +85,7 @@ function App() {
         {/*  Nested Dashboard Routes - Protected */}
         <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
           <Route path="shipments" element={<Shipments />} />
+          <Route path="fulfillment-console" element={<FulfillmentConsole />} />
           <Route index element={<DashboardPage />} />
           <Route path="shipments/:id" element={<ShipmentDetails />} /> {/*  new route */}
 

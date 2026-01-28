@@ -23,13 +23,13 @@ const AssignShipmentModal = ({
     setLoading(true);
     setError('');
     try {
-      console.log('🔍 Fetching drivers...');
-      console.log('🔑 Token:', localStorage.getItem('token') ? 'Present' : 'Missing');
-      console.log('🌐 Base URL:', axiosInstance.defaults.baseURL);
+      
+      
+      
 
       const driversRes = await axiosInstance.get('/admin/drivers/approved');
-      console.log('📊 Drivers API Response Status:', driversRes.status);
-      console.log('📊 Drivers API Response Data:', driversRes.data);
+      
+      
 
       // Extract drivers array - handle both response formats
       let allDrivers = [];
@@ -39,23 +39,23 @@ const AssignShipmentModal = ({
         allDrivers = driversRes.data.drivers;
       }
 
-      console.log('👥 Extracted Drivers:', allDrivers);
-      console.log('👥 Number of drivers:', allDrivers.length);
+      
+      
 
       // Fetch assigned shipments
       let assignedDriverIds = [];
       try {
         const assignedShipmentsRes = await axiosInstance.get('/admin/shipments/assign');
-        console.log('📊 Assigned Shipments Response:', assignedShipmentsRes.data);
+        
 
         const assignedShipments = assignedShipmentsRes.data.shipments || assignedShipmentsRes.data || [];
-        console.log('🚛 Assigned Shipments:', assignedShipments);
+        
 
         assignedDriverIds = assignedShipments
           .filter(s => s.driver && s.status === 'Shipping')
           .map(s => s.driver.driverId);
 
-        console.log('🚫 Assigned Driver IDs:', assignedDriverIds);
+        
       } catch (err) {
         console.warn('⚠️ Could not fetch assigned shipments, showing all drivers:', err.message);
         // Continue with all drivers if assigned shipments fetch fails
@@ -66,8 +66,8 @@ const AssignShipmentModal = ({
         !assignedDriverIds.includes(driver.driverId)
       );
 
-      console.log(' Available Drivers:', availableDrivers);
-      console.log(' Number of available drivers:', availableDrivers.length);
+      
+      
 
       if (availableDrivers.length === 0) {
         setError('No available drivers found. All drivers may be assigned to active shipments.');

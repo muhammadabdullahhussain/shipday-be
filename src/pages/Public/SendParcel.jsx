@@ -13,7 +13,7 @@ export default function SendParcel() {
     }, []);
 
     const handleShipmentSubmit = (data) => {
-        console.log("Public Shipment Data (Pre-Payment):", data);
+
         // The redirection happens inside TermsAndPaymentStep.jsx
     };
 
@@ -31,7 +31,7 @@ export default function SendParcel() {
                     <div className="text-center mb-5 pt-4">
                         <Badge bg="warning" className="text-dark mb-3 px-3 py-2 fw-black tracking-widest shadow-lg">
                             <i className="bi bi-box-seam-fill me-2"></i>
-                            INSTANT QUOTE
+                            PRICING
                         </Badge>
                         <h1 className="display-3 fw-black text-white mb-2">
                             Ship <span className="text-yellow">Anything,</span> Anywhere.

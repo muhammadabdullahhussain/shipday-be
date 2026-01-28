@@ -87,7 +87,7 @@ const RevenueChart = () => {
       legend: { display: false },
       tooltip: {
         callbacks: {
-          label: (context) => `₹${context.raw.toLocaleString("en-IN")}`,
+          label: (context) => `R${context.raw.toLocaleString("en-ZA")}`,
         },
       },
     },
@@ -102,7 +102,7 @@ const RevenueChart = () => {
       y: {
         beginAtZero: true,
         ticks: {
-          callback: (value) => `₹${value.toLocaleString("en-IN")}`,
+          callback: (value) => `R${value.toLocaleString("en-ZA")}`,
           color: '#9ca3af',
           font: { family: 'montserrat', size: 12 },
         },
@@ -120,9 +120,9 @@ const RevenueChart = () => {
             <div className="chart-earnings-container d-flex align-items-center">
               <span className="chart-earnings me-2">Earnings:</span>
               <span className="chart-earnings-value text-danger fw-bold">
-                {new Intl.NumberFormat("en-IN", {
+                {new Intl.NumberFormat("en-ZA", {
                   style: "currency",
-                  currency: "INR",
+                  currency: "ZAR",
                   maximumFractionDigits: 0,
                 }).format(totalRevenue)}
               </span>

@@ -128,7 +128,7 @@ const PublicFooter = () => {
                     <Row className="align-items-center">
                         <Col md={6} className="text-center text-md-start mb-3 mb-md-0">
                             <small className="text-white-50">
-                                &copy; 2026 ShipDay Logistics (Pty) Ltd. All rights reserved.
+                                &copy; 2026 ShipDay Courier (Pty) Ltd. All rights reserved.
                             </small>
                         </Col>
                         <Col md={6} className="text-center text-md-end">

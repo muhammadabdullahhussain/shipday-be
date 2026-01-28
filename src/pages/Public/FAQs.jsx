@@ -13,31 +13,32 @@ const FAQs = () => {
 
             <Container className="py-5" style={{ maxWidth: '800px' }}>
                 <Accordion defaultActiveKey="0" className="shadow-lg rounded-3 overflow-hidden">
-                    <Accordion.Item eventKey="0">
-                        <Accordion.Header>How do I track my parcel?</Accordion.Header>
-                        <Accordion.Body>
-                            You can track your parcel by entering your unique waybill number (e.g., SD-2024-XXXX) on our homepage or tracking page. Real-time updates are available 24/7.
-                        </Accordion.Body>
-                    </Accordion.Item>
-                    <Accordion.Item eventKey="1">
-                        <Accordion.Header>What are your delivery times?</Accordion.Header>
-                        <Accordion.Body>
-                            Standard delivery takes 1-3 business days depending on the destination. Express delivery guarantees next-day delivery for major metropolitan areas.
-                        </Accordion.Body>
-                    </Accordion.Item>
-                    <Accordion.Item eventKey="2">
-                        <Accordion.Header>Do you offer insurance?</Accordion.Header>
-                        <Accordion.Body>
-                            Yes, all shipments include basic liability cover. Additional comprehensive insurance can be added during the booking process for high-value items.
-                        </Accordion.Body>
-                    </Accordion.Item>
-                    <Accordion.Item eventKey="3">
-                        <Accordion.Header>How do I open a business account?</Accordion.Header>
-                        <Accordion.Body>
-                            Contact our sales team via the Contact page or email support@shipday.co.za to discuss enterprise solutions and volume discounts.
-                        </Accordion.Body>
-                    </Accordion.Item>
+                    {[
+                        { q: "How do I prepare my parcel for courier collection?", a: "Ensure your item is securely packaged in a sturdy box, properly sealed, and clearly labeled with the delivery and return address. The parcel must be ready before the courier arrives." },
+                        { q: "What items are prohibited from being sent?", a: "Prohibited items typically include hazardous materials, illegal goods, explosives, flammable items, and perishables. Some couriers also restrict batteries, liquids, or fragile items. Please check before booking." },
+                        { q: "What happens if my parcel is not ready at pickup time?", a: "If the parcel is not ready or accessible, the courier may skip the collection or reschedule it, which could result in additional charges or delays." },
+                        { q: "How should I label my parcel?", a: "Place the shipping label flat on the top of the parcel. Ensure the barcode is clear and not covered by tape or damaged. Remove any old labels or barcodes." },
+                        { q: "What if my parcel weighs or measures more than declared?", a: "Incorrect weight or dimensions may result in additional charges, delivery delays, or the parcel being returned. Always measure and weigh your parcel accurately before booking." },
+                        { q: "Do I need to be present during pickup?", a: "Not always. If no signature is required, you may leave the parcel in a safe, agreed pickup location. However, some services require a handover or signature." },
+                        { q: "Can I track my shipment?", a: "Yes. Once your parcel is collected, you will receive a tracking number that allows you to monitor the delivery status online." },
+                        { q: "What should I do if my parcel is delayed?", a: "Use your tracking number to check the latest updates. If the delay continues, contact customer support with your tracking details for assistance." },
+                        { q: "Is my parcel insured?", a: "Basic liability coverage is usually included, but it may be limited. Additional insurance can often be purchased for high-value items." },
+                        { q: "What happens if my parcel is damaged or lost?", a: "If damage or loss occurs, report it as soon as possible with photos and supporting documents. Claims are subject to the courier’s terms and conditions." },
+                        { q: "Can I change the delivery address after dispatch?", a: "Address changes may be possible but are not guaranteed and may incur additional fees, depending on the courier and shipment status." },
+                        { q: "Do you deliver internationally?", a: "Not yet, international delivery is not available. If you have further questions, please contact our customer support team for assistance. Contact 010 001 4421" }
+                    ].map((faq, i) => (
+                        <Accordion.Item eventKey={i.toString()} key={i}>
+                            <Accordion.Header className="fw-bold">{i + 1}. {faq.q}</Accordion.Header>
+                            <Accordion.Body className="text-muted">
+                                {faq.a}
+                            </Accordion.Body>
+                        </Accordion.Item>
+                    ))}
                 </Accordion>
+                <div className="text-center mt-5 p-4 bg-light rounded-4 border">
+                    <p className="mb-2">If you have further questions, please contact our customer support team for assistance.</p>
+                    <h4 className="fw-black text-dark">Contact 010 001 4421</h4>
+                </div>
             </Container>
         </div>
     );

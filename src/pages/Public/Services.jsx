@@ -27,7 +27,7 @@ const Services = () => {
         {
             title: 'B2B Delivery Services',
             icon: 'bi-building-fill-gear',
-            price: 'Pricing',
+            price: 'PRICING',
             desc: 'Reliable B2B delivery solutions designed to support businesses with consistent, scheduled, and on-demand deliveries.',
             features: ['Scheduled deliveries', 'Bulk order handling', 'Business accounts', 'Real-time tracking'],
             tag: 'BUSINESS',
@@ -38,7 +38,7 @@ const Services = () => {
         {
             title: 'Door-to-Door Delivery',
             icon: 'bi-house-door-fill',
-            price: 'Pricing',
+            price: 'PRICING',
             desc: 'Convenient, end-to-end parcel collection and delivery from sender to recipient with real-time tracking.',
             features: ['End-to-end service', 'Real-time tracking', 'Proof of delivery', 'SMS updates'],
             tag: 'POPULAR',
@@ -49,7 +49,7 @@ const Services = () => {
         {
             title: 'Courier Services',
             icon: 'bi-truck-front-fill',
-            price: 'Pricing',
+            price: 'PRICING',
             desc: 'Comprehensive courier solutions covering transportation, route optimization, and last-mile delivery.',
             features: ['Route optimization', 'Last-mile delivery', 'Cost reduction', 'Regional coverage'],
             tag: 'ENTERPRISE',
@@ -60,7 +60,7 @@ const Services = () => {
         {
             title: 'E-commerce Services',
             icon: 'bi-cart-check-fill',
-            price: 'Pricing',
+            price: 'PRICING',
             desc: 'Specialized delivery solutions for online retailers with high-volume order fulfillment.',
             features: ['High-volume handling', 'API integration', 'Returns management', 'Same-day options'],
             tag: 'FAST',
@@ -70,7 +70,7 @@ const Services = () => {
         {
             title: 'Retail Hub Services',
             icon: 'bi-shop-window',
-            price: 'Pricing',
+            price: 'PRICING',
             desc: 'Convenient drop-off and collection at participating retail partners with assisted booking service.',
             features: ['Retail partner network', 'Assisted booking', 'Flexible collection', 'Accessible locations'],
             tag: 'CONVENIENT',
@@ -81,7 +81,7 @@ const Services = () => {
         {
             title: 'Branch Services',
             icon: 'bi-building-check',
-            price: 'Pricing',
+            price: 'PRICING',
             desc: 'Multiple drop-off and collection options through DCs, kiosks, and district branches.',
             features: ['Distribution centres', 'Kiosk network', 'District branches', 'Reduced delivery times'],
             tag: 'NETWORK',
@@ -92,7 +92,7 @@ const Services = () => {
         {
             title: 'Warehouse & Fulfillment',
             icon: 'bi-boxes',
-            price: 'Pricing',
+            price: 'PRICING',
             desc: 'Complete warehousing and order fulfillment solutions for growing e-commerce businesses.',
             features: ['Inventory management', 'Pick & pack', 'Order processing', '24/7 security'],
             tag: 'SCALABLE',
@@ -102,7 +102,7 @@ const Services = () => {
         {
             title: 'Third-Party Partnership',
             icon: 'bi-people-fill',
-            price: 'Pricing',
+            price: 'PRICING',
             desc: 'We collaborate with corporate and emerging couriers to expand delivery coverage and service capacity.',
             features: ['System integration', 'Operational standards', 'Service scaling', 'Reliable solutions'],
             tag: 'PARTNERSHIP',
@@ -113,7 +113,7 @@ const Services = () => {
         {
             title: 'Last Mile Delivery',
             icon: 'bi-geo-alt-fill',
-            price: 'Pricing',
+            price: 'PRICING',
             desc: 'Fast and reliable final-stage delivery from warehouses directly to the customer or receiver.',
             features: ['Warehouse to doorstep', 'Fast & reliable', 'Flexible volume', 'Efficient routes'],
             tag: 'EXPERT',
@@ -124,7 +124,7 @@ const Services = () => {
     ];
 
     const steps = [
-        { num: '01', title: 'Book Online', desc: 'Get a quote and schedule your collection in seconds via our portal.', icon: 'bi-calendar-check' },
+        { num: '01', title: 'Book Online', desc: 'Secure the best PRICING and schedule your collection in seconds via our portal.', icon: 'bi-calendar-check' },
         { num: '02', title: 'We Collect', desc: 'Our courier arrives at your door to pick up your securely packed parcel.', icon: 'bi-box-seam' },
         { num: '03', title: 'We Ship', desc: 'Your parcel travels via our optimized network with live tracking.', icon: 'bi-truck' },
         { num: '04', title: 'Delivered', desc: 'Safe delivery to the destination with digital proof of delivery.', icon: 'bi-check-circle' },
@@ -202,7 +202,7 @@ const Services = () => {
                                         className="btn-premium-outline rounded-pill px-5 py-3 fw-bold">
                                         <span className="btn-content">
                                             <i className="bi bi-chat-dots me-2"></i>
-                                            Get a Quote
+                                            PRICING
                                         </span>
                                         <div className="btn-glow-border"></div>
                                     </Button>
@@ -309,7 +309,7 @@ const Services = () => {
 
                                             <div className="mb-4 p-3 rounded-3" style={{ backgroundColor: '#f8fafc' }}>
                                                 <div className="d-flex align-items-center justify-content-between">
-                                                    <small className="text-muted fw-semibold text-uppercase" style={{ fontSize: '0.7rem', letterSpacing: '0.5px' }}>Pricing</small>
+                                                    <small className="text-muted fw-semibold text-uppercase" style={{ fontSize: '0.7rem', letterSpacing: '0.5px' }}>PRICING</small>
                                                     <span className="h5 fw-bold mb-0" style={{ color: svc.accentColor || '#fabb05' }}>{svc.price}</span>
                                                 </div>
                                             </div>

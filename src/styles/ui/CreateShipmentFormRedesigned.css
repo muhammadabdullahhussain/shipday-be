@@ -248,17 +248,72 @@
   margin: 0;
 }
 
-/* Custom Dimensions Section */
-.custom-dimensions {
-  background: #f8fafc;
-  padding: 20px;
-  border-radius: 10px;
-  border: 1px solid #e2e8f0;
+/* Custom Dimensions Section Premium */
+.custom-dimensions-box {
+  background: rgba(250, 187, 5, 0.02);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  z-index: 1;
 }
 
-.custom-dimensions h6 {
-  font-weight: 700;
-  color: #1e293b;
+.custom-dimensions-box:hover {
+  background: rgba(250, 187, 5, 0.04);
+  border-color: var(--brand-yellow) !important;
+}
+
+/* Fix Floating Labels Overlap */
+.form-floating {
+  position: relative;
+}
+
+.form-floating>.form-control {
+  height: 60px !important;
+  /* Ensure enough height for floating labels */
+  padding-top: 1.625rem !important;
+  padding-bottom: 0.625rem !important;
+  line-height: 1.25;
+}
+
+.form-floating>label {
+  padding: 1rem 0.75rem !important;
+  color: #64748b;
+  transition: all 0.2s ease-in-out;
+  pointer-events: none;
+  width: 100%;
+  height: 100%;
+}
+
+.form-floating>.form-control:focus~label,
+.form-floating>.form-control:not(:placeholder-shown)~label {
+  transform: scale(0.85) translateY(-0.75rem) translateX(0.15rem) !important;
+  color: var(--brand-black) !important;
+  font-weight: 700 !important;
+  opacity: 1;
+}
+
+.pricing-logic-reveal {
+  animation: slideInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  clear: both;
+}
+
+/* Ensure status indicators don't overlap */
+.status-indicators-strip {
+  margin-top: 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(250, 187, 5, 0.1);
+  width: 100%;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .price-summary .bg-light {

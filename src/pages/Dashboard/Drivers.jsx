@@ -86,7 +86,7 @@ const Drivers = () => {
 
   const handleSaveChanges = async () => {
     try {
-      console.log('Saving changes:', editForm);
+      
       // Add API call here to update driver
       handleCloseModal();
     } catch (error) {
@@ -125,7 +125,7 @@ const Drivers = () => {
 
   const handleAssignDriver = async () => {
     try {
-      console.log('Assigning driver:', assignForm);
+      
       // Add API call here to assign driver
       handleCloseAssignModal();
     } catch (error) {
@@ -146,14 +146,14 @@ const Drivers = () => {
 
   const updateDriverStatus = async (driverId, status) => {
     try {
-      console.log('Updating driver status:', { driverId, status });
+      
 
       const response = await axiosInstance.patch('/admin/drivers/status',
         { driverId, status },
         { headers: { 'Authorization': '' } }
       );
 
-      console.log('Status update successful:', response.data);
+      
       handleCloseVerificationModal();
       fetchDrivers(filter);
     } catch (error) {
@@ -183,7 +183,7 @@ const Drivers = () => {
 
   const handleDelete = (driver) => {
     if (window.confirm(`Are you sure you want to delete driver ${driver.username}?`)) {
-      console.log("Delete driver:", driver);
+      
       setDropdownOpen(null);
     }
   };

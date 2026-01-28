@@ -107,7 +107,7 @@ const ShipmentDetails = () => {
   const handleEditEvent = (index) => {
     const absoluteIndex = (currentPage - 1) * itemsPerPage + index;
     const eventToEdit = deliveryHistory[absoluteIndex];
-    console.log("Edit Event:", eventToEdit);
+    
   };
 
   const handleDeleteEvent = (index) => {
