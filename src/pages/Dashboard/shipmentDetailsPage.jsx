@@ -107,7 +107,7 @@ const ShipmentDetails = () => {
   const handleEditEvent = (index) => {
     const absoluteIndex = (currentPage - 1) * itemsPerPage + index;
     const eventToEdit = deliveryHistory[absoluteIndex];
-    
+
   };
 
   const handleDeleteEvent = (index) => {
@@ -169,6 +169,26 @@ const ShipmentDetails = () => {
       <div className="d-flex justify-content-between align-items-start mb-3 flex-wrap">
         <h2 className="shipment-title">Shipment Details</h2>
         <div className="d-flex gap-2 mt-2 mt-md-0">
+          <button
+            className="btn btn-warning fw-bold d-flex align-items-center gap-2"
+            onClick={async () => {
+              try {
+                const response = await axiosInstance.get(`/shipment/${shipment.shipmentId}/waybill`, {
+                  responseType: 'blob'
+                });
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', `waybill-${shipment.shipmentId}.pdf`);
+                document.body.appendChild(link);
+                link.click();
+              } catch (err) {
+                toast.error("Failed to download waybill");
+              }
+            }}
+          >
+            <i className="bi bi-printer-fill"></i> Waybill
+          </button>
 
           {(isAdmin() || isSuperAdmin() || isManager() || (isCustomer() && shipment.status === 'Pending')) && (
             <button

@@ -78,7 +78,7 @@ const TrackingPage = () => {
                                 <span className="text-yellow glow-text">transit mile.</span>
                             </h1>
                             <p className="lead mb-5 text-white-50 fw-bold text-uppercase tracking-wider mx-auto" style={{ fontSize: '0.9rem', maxWidth: '600px' }}>
-                                Enter your waybill to unlock real-time intelligence:
+                                Enter your waybill or marketplace order number:
                             </p>
 
                             <Card className="border-0 shadow-2xl rounded-pill p-1 glass-card-enhanced mb-5 overflow-hidden mx-auto"
@@ -89,7 +89,7 @@ const TrackingPage = () => {
                                     </div>
                                     <Form.Control
                                         className="border-0 bg-transparent ps-3 py-4 fw-bold shadow-none text-white placeholder-light"
-                                        placeholder="SD-XXXX-XXXX"
+                                        placeholder="Waybill SD-XXXX or Order #"
                                         value={trackingId}
                                         onChange={e => setTrackingId(e.target.value)}
                                         style={{ fontSize: '1.2rem' }}
@@ -330,7 +330,12 @@ const TrackingPage = () => {
                                                 </div>
                                                 <div>
                                                     <small className="text-white-50 fw-bold tracking-widest text-uppercase d-block" style={{ fontSize: '0.65rem' }}>WAYBILL ID</small>
-                                                    <div className="fw-black text-white h3 mb-0 tracking-tight">{result.trackingNumber}</div>
+                                                    <div className="fw-black text-white h3 mb-0 tracking-tight">{result.trackingNumber || result.shipmentId}</div>
+                                                    {result.orderNumber && (
+                                                        <div className="badge bg-warning text-dark mt-1 fw-bold" style={{ fontSize: '0.65rem' }}>
+                                                            REF: {result.orderNumber} ({result.marketplaceName || 'Marketplace'})
+                                                        </div>
+                                                    )}
                                                 </div>
                                             </div>
 

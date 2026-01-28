@@ -221,7 +221,7 @@ const ShipmentsTable = () => {
 
   const handleDriverAssignment = async (driverId, shipmentId) => {
     try {
-      
+
       // Add API call here to assign driver to shipment
       handleCloseAssignModal();
       await fetchShipments(); // Refresh shipments
@@ -485,6 +485,37 @@ const ShipmentsTable = () => {
                       }}
                       onClick={(e) => e.stopPropagation()}
                     >
+                      {/* Waybill */}
+                      <button
+                        className="w-100 border-0 text-start px-3 py-2 d-flex align-items-center gap-2 rounded"
+                        style={{
+                          backgroundColor: "rgba(250, 187, 5, 0.12)",
+                          color: "#e5ab04",
+                          fontSize: "14px",
+                          transition: "background-color 0.2s",
+                          marginBottom: "6px",
+                          cursor: "pointer",
+                        }}
+                        onClick={async (e) => {
+                          e.stopPropagation();
+                          try {
+                            const response = await axiosInstance.get(`/shipment/${item.shipmentId || item._id}/waybill`, {
+                              responseType: 'blob'
+                            });
+                            const url = window.URL.createObjectURL(new Blob([response.data]));
+                            const link = document.createElement('a');
+                            link.href = url;
+                            link.setAttribute('download', `waybill-${item.shipmentId}.pdf`);
+                            document.body.appendChild(link);
+                            link.click();
+                          } catch (err) {
+                            toast.error("Failed to download waybill");
+                          }
+                        }}
+                      >
+                        📄 Waybill
+                      </button>
+
                       {/* Edit */}
                       <button
                         className="w-100 border-0 text-start px-3 py-2 d-flex align-items-center gap-2 rounded"
