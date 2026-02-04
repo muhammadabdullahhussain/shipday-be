@@ -401,14 +401,52 @@ const FulfillmentConsole = () => {
                                 </div>
                                 <div className="col-md-3">
                                     <label className="premium-label">Marketplace Name</label>
-                                    <select className="form-select premium-input border-white" value={formData.marketplaceName} onChange={(e) => handleInputChange(null, 'marketplaceName', e.target.value)}>
-                                        <option value="">Select Marketplace</option>
-                                        <option value="Amazon">Amazon</option>
-                                        <option value="Takealot">Takealot</option>
-                                        <option value="Bidorbuy">Bidorbuy</option>
-                                        <option value="Shopify">Shopify</option>
-                                        <option value="Other">Other (Custom)</option>
-                                    </select>
+                                    {/* Logic: If marketplaceName is one of the standard options, Select shows it. 
+                                        If it's regular text (custom), Select shows 'Other'.
+                                        If it's 'Other' (explicitly selected), Select shows 'Other' and input appears.
+                                    */}
+                                    {(() => {
+                                        const standardOptions = ['Amazon', 'Takealot', 'Bidorbuy', 'Shopify', 'Majjversity', 'Leroy Merlin'];
+                                        const isCustom = formData.marketplaceName && !standardOptions.includes(formData.marketplaceName);
+                                        const selectValue = isCustom || formData.marketplaceName === 'Other' ? 'Other' : formData.marketplaceName;
+
+                                        return (
+                                            <>
+                                                <select
+                                                    className="form-select premium-input border-white"
+                                                    value={selectValue}
+                                                    onChange={(e) => {
+                                                        const val = e.target.value;
+                                                        if (val === 'Other') {
+                                                            // Keep current custom value if exists, or set to 'Other' placeholder to trigger input
+                                                            handleInputChange(null, 'marketplaceName', 'Other');
+                                                        } else {
+                                                            handleInputChange(null, 'marketplaceName', val);
+                                                        }
+                                                    }}
+                                                >
+                                                    <option value="">Select Marketplace</option>
+                                                    {standardOptions.map(opt => (
+                                                        <option key={opt} value={opt}>{opt}</option>
+                                                    ))}
+                                                    <option value="Other">Other (Custom)</option>
+                                                </select>
+
+                                                {(selectValue === 'Other') && (
+                                                    <div className="mt-2">
+                                                        <input
+                                                            type="text"
+                                                            className="form-control premium-input border-white"
+                                                            placeholder="Enter Marketplace Name"
+                                                            value={formData.marketplaceName === 'Other' ? '' : formData.marketplaceName}
+                                                            onChange={(e) => handleInputChange(null, 'marketplaceName', e.target.value)}
+                                                            autoFocus
+                                                        />
+                                                    </div>
+                                                )}
+                                            </>
+                                        );
+                                    })()}
                                 </div>
                                 <div className="col-md-2">
                                     <label className="premium-label">Parcel Count</label>

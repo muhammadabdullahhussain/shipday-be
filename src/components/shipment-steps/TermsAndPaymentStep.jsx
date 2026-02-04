@@ -234,6 +234,10 @@ const TermsAndPaymentStep = ({ formData, updateFormData, previousStep, onSubmit,
                                 }
 
                                 // Structure the data to match the public/selection page expectations
+                                // Calculate total dimensions/weight for compat
+                                const totalWeight = formData.dimensions.reduce((acc, dim) => acc + (parseFloat(dim.weight) || 0), 0);
+                                const firstDim = formData.dimensions[0] || { length: 0, width: 0, height: 0, weight: 0 };
+
                                 const payload = {
                                     senderDetails: {
                                         customerId: formData.senderCustomerId,
@@ -264,9 +268,23 @@ const TermsAndPaymentStep = ({ formData, updateFormData, previousStep, onSubmit,
                                     parcelDetails: {
                                         serviceType: formData.serviceType,
                                         parcelType: formData.parcelType,
-                                        dimensions: formData.dimensions,
+                                        // Provide first dimension or aggregate
+                                        dimensions: {
+                                            length: firstDim.length,
+                                            width: firstDim.width,
+                                            height: firstDim.height,
+                                            weight: totalWeight
+                                        },
                                         specialInstructions: formData.specialInstructions
                                     },
+                                    // NEW: Pass explicit parcels array for multi-box support
+                                    parcels: formData.dimensions.map(dim => ({
+                                        length: dim.length,
+                                        width: dim.width,
+                                        height: dim.height,
+                                        weight: dim.weight
+                                    })),
+                                    numberOfBoxes: formData.dimensions.length,
                                     payment: {
                                         method: '', // Will be selected on selection page
                                         amount: formData.calculatedPrice

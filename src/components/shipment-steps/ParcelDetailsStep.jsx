@@ -4,14 +4,11 @@ import axiosInstance from '../../utils/axiosInterceptor';
 
 const ParcelDetailsStep = ({ formData, updateFormData, previousStep, nextStep }) => {
     const [calculatedPrice, setCalculatedPrice] = useState(0);
-
-
-
     const [loading, setLoading] = useState(true);
     const [pricingConfig, setPricingConfig] = useState({
         economy: { baseAmount: 20, divisor: 5000, rate: 1.2, eta: '1-4 days', icon: '🚚' },
         express: { baseAmount: 40, divisor: 4000, rate: 1.2, eta: '1-2 days', icon: '⚡' },
-        satchel: { a4: 90, a3: 110 }
+        satchel: { a4: 99, a3: 120 }
     });
 
     useEffect(() => {
@@ -19,7 +16,6 @@ const ParcelDetailsStep = ({ formData, updateFormData, previousStep, nextStep })
             try {
                 const response = await axiosInstance.get('/pricing');
                 if (response.data) {
-                    // Merge API data with icons (since icons aren't in DB)
                     setPricingConfig(prev => ({
                         ...prev,
                         economy: { ...prev.economy, ...response.data.economy },
@@ -36,19 +32,31 @@ const ParcelDetailsStep = ({ formData, updateFormData, previousStep, nextStep })
         fetchPricing();
     }, []);
 
-    const handleChange = (e) => {
+    const handleChange = (e, index) => {
         const { name, value } = e.target;
 
         if (name.startsWith('dimensions.')) {
-            const dimensionField = name.split('.')[1];
-            updateFormData({
-                dimensions: {
-                    ...formData.dimensions,
-                    [dimensionField]: value
-                }
-            });
+            // Handle array update
+            const newDimensions = [...formData.dimensions];
+            const field = name.split('.')[1];
+            newDimensions[index] = { ...newDimensions[index], [field]: value };
+
+            updateFormData({ dimensions: newDimensions });
         } else {
             updateFormData({ [name]: value });
+        }
+    };
+
+    const addBox = () => {
+        updateFormData({
+            dimensions: [...formData.dimensions, { length: '', width: '', height: '', weight: '' }]
+        });
+    };
+
+    const removeBox = (index) => {
+        if (formData.dimensions.length > 1) {
+            const newDimensions = formData.dimensions.filter((_, i) => i !== index);
+            updateFormData({ dimensions: newDimensions });
         }
     };
 
@@ -58,10 +66,7 @@ const ParcelDetailsStep = ({ formData, updateFormData, previousStep, nextStep })
     }, [
         formData.serviceType,
         formData.parcelType,
-        formData.dimensions.length,
-        formData.dimensions.width,
-        formData.dimensions.height,
-        formData.dimensions.weight
+        JSON.stringify(formData.dimensions)
     ]);
 
     const calculatePrice = () => {
@@ -72,18 +77,20 @@ const ParcelDetailsStep = ({ formData, updateFormData, previousStep, nextStep })
         } else if (formData.parcelType === 'satchel-a3') {
             price = pricingConfig.satchel.a3;
         } else if (formData.parcelType === 'custom') {
-            const { length, width, height } = formData.dimensions;
+            const config = pricingConfig[formData.serviceType];
+            let totalVolumetricWeight = 0;
+            let totalActualWeight = 0;
 
-            if (length && width && height) {
-                const config = pricingConfig[formData.serviceType];
-                const volumetricWeight = (parseFloat(length) * parseFloat(width) * parseFloat(height)) / config.divisor;
-                const actualWeight = parseFloat(formData.dimensions.weight) || 0;
-                const chargeableWeight = Math.max(actualWeight, volumetricWeight);
+            formData.dimensions.forEach(dim => {
+                if (dim.length && dim.width && dim.height) {
+                    const volWeight = (parseFloat(dim.length) * parseFloat(dim.width) * parseFloat(dim.height)) / config.divisor;
+                    totalVolumetricWeight += volWeight;
+                    totalActualWeight += (parseFloat(dim.weight) || 0);
+                }
+            });
 
-                // Logic: Base + (Chargeable * Rate) 
-                // Note: User prompt asked for "Max(...) * Multiplier", we keep Base Amount as usually required for courier start fees.
-                price = config.baseAmount + (chargeableWeight * config.rate);
-            }
+            const chargeableWeight = Math.max(totalActualWeight, totalVolumetricWeight);
+            price = config.baseAmount + (chargeableWeight * config.rate);
         }
 
         setCalculatedPrice(price);
@@ -94,9 +101,9 @@ const ParcelDetailsStep = ({ formData, updateFormData, previousStep, nextStep })
         e.preventDefault();
 
         if (formData.parcelType === 'custom') {
-            const { length, width, height, weight } = formData.dimensions;
-            if (!length || !width || !height || !weight) {
-                toast.error('Please fill in all parcel dimensions');
+            const isValid = formData.dimensions.every(dim => dim.length && dim.width && dim.height && dim.weight);
+            if (!isValid) {
+                toast.error('Please fill in dimensions for all boxes');
                 return;
             }
         }
@@ -221,98 +228,107 @@ const ParcelDetailsStep = ({ formData, updateFormData, previousStep, nextStep })
                 {/* Custom Parcel Dimensions */}
                 {formData.parcelType === 'custom' && (
                     <div className="custom-dimensions-box mb-4 p-4 rounded-4 border-2 border-dashed border-warning bg-light bg-opacity-10">
-                        <div className="d-flex align-items-center mb-3">
-                            <i className="bi bi-rulers fs-4 text-warning me-3"></i>
-                            <h6 className="mb-0 fw-bold">Custom Parcel Dimensions</h6>
-                        </div>
-                        <div className="row g-3">
-                            <div className="col-12 col-md-6 col-lg-3">
-                                <div className="form-floating">
-                                    <input
-                                        type="number"
-                                        step="0.1"
-                                        className="form-control"
-                                        id="lengthInput"
-                                        name="dimensions.length"
-                                        value={formData.dimensions.length}
-                                        onChange={handleChange}
-                                        placeholder="Length"
-                                        required
-                                    />
-                                    <label htmlFor="lengthInput">Length (cm) *</label>
-                                </div>
+                        <div className="d-flex align-items-center justify-content-between mb-3">
+                            <div className="d-flex align-items-center">
+                                <i className="bi bi-rulers fs-4 text-warning me-3"></i>
+                                <h6 className="mb-0 fw-bold">Parcel Dimensions</h6>
                             </div>
-                            <div className="col-12 col-md-6 col-lg-3">
-                                <div className="form-floating">
-                                    <input
-                                        type="number"
-                                        step="0.1"
-                                        className="form-control"
-                                        id="widthInput"
-                                        name="dimensions.width"
-                                        value={formData.dimensions.width}
-                                        onChange={handleChange}
-                                        placeholder="Width"
-                                        required
-                                    />
-                                    <label htmlFor="widthInput">Width (cm) *</label>
-                                </div>
-                            </div>
-                            <div className="col-12 col-md-6 col-lg-3">
-                                <div className="form-floating">
-                                    <input
-                                        type="number"
-                                        step="0.1"
-                                        className="form-control"
-                                        id="heightInput"
-                                        name="dimensions.height"
-                                        value={formData.dimensions.height}
-                                        onChange={handleChange}
-                                        placeholder="Height"
-                                        required
-                                    />
-                                    <label htmlFor="heightInput">Height (cm) *</label>
-                                </div>
-                            </div>
-                            <div className="col-12 col-md-6 col-lg-3">
-                                <div className="form-floating">
-                                    <input
-                                        type="number"
-                                        step="0.1"
-                                        className="form-control"
-                                        id="weightInput"
-                                        name="dimensions.weight"
-                                        value={formData.dimensions.weight}
-                                        onChange={handleChange}
-                                        placeholder="Weight"
-                                        required
-                                    />
-                                    <label htmlFor="weightInput">Weight (kg) *</label>
-                                </div>
-                            </div>
+                            <button type="button" className="btn btn-sm btn-outline-warning" onClick={addBox}>
+                                <i className="bi bi-plus-lg me-1"></i> Add Box
+                            </button>
                         </div>
 
-                        {/* Status indicators */}
-                        <div className="status-indicators-strip d-flex flex-wrap gap-2">
-                            {!formData.dimensions.length && <span className="badge bg-warning-subtle text-dark px-2 py-1"><i className="bi bi-info-circle me-1"></i> Enter Length</span>}
-                            {!formData.dimensions.width && <span className="badge bg-warning-subtle text-dark px-2 py-1"><i className="bi bi-info-circle me-1"></i> Enter Width</span>}
-                            {!formData.dimensions.height && <span className="badge bg-warning-subtle text-dark px-2 py-1"><i className="bi bi-info-circle me-1"></i> Enter Height</span>}
-                            {!formData.dimensions.weight && <span className="badge bg-danger-subtle text-danger px-2 py-1"><i className="bi bi-exclamation-triangle me-1"></i> Weight Required</span>}
+                        {formData.dimensions.map((dim, index) => (
+                            <div key={index} className="position-relative mb-4 p-3 border rounded bg-white shadow-sm">
+                                {formData.dimensions.length > 1 && (
+                                    <button
+                                        type="button"
+                                        className="btn-close position-absolute top-0 end-0 m-2"
+                                        aria-label="Remove"
+                                        onClick={() => removeBox(index)}
+                                    ></button>
+                                )}
+                                <h6 className="text-muted small mb-2">Box {index + 1}</h6>
+                                <div className="row g-3">
+                                    <div className="col-6 col-md-3">
+                                        <div className="form-floating">
+                                            <input
+                                                type="number"
+                                                step="0.1"
+                                                className="form-control form-control-sm"
+                                                name="dimensions.length"
+                                                value={dim.length}
+                                                onChange={(e) => handleChange(e, index)}
+                                                placeholder="L"
+                                                required
+                                            />
+                                            <label>Length (cm)</label>
+                                        </div>
+                                    </div>
+                                    <div className="col-6 col-md-3">
+                                        <div className="form-floating">
+                                            <input
+                                                type="number"
+                                                step="0.1"
+                                                className="form-control form-control-sm"
+                                                name="dimensions.width"
+                                                value={dim.width}
+                                                onChange={(e) => handleChange(e, index)}
+                                                placeholder="W"
+                                                required
+                                            />
+                                            <label>Width (cm)</label>
+                                        </div>
+                                    </div>
+                                    <div className="col-6 col-md-3">
+                                        <div className="form-floating">
+                                            <input
+                                                type="number"
+                                                step="0.1"
+                                                className="form-control form-control-sm"
+                                                name="dimensions.height"
+                                                value={dim.height}
+                                                onChange={(e) => handleChange(e, index)}
+                                                placeholder="H"
+                                                required
+                                            />
+                                            <label>Height (cm)</label>
+                                        </div>
+                                    </div>
+                                    <div className="col-6 col-md-3">
+                                        <div className="form-floating">
+                                            <input
+                                                type="number"
+                                                step="0.1"
+                                                className="form-control form-control-sm"
+                                                name="dimensions.weight"
+                                                value={dim.weight}
+                                                onChange={(e) => handleChange(e, index)}
+                                                placeholder="Kg"
+                                                required
+                                            />
+                                            <label>Weight (kg)</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+
+                        {/* Status indicators for last box */}
+                        <div className="status-indicators-strip d-flex flex-wrap gap-2 mt-2">
+
                         </div>
 
                         {/* Formula Display */}
-                        {formData.dimensions.length && formData.dimensions.width && formData.dimensions.height && (
-                            <div className="alert alert-info mt-4 border-0 shadow-sm bg-white text-dark">
-                                <div className="d-flex align-items-center mb-2">
-                                    <i className="bi bi-calculator fs-5 text-primary me-2"></i>
-                                    <strong>Real-time Price Engine</strong>
-                                </div>
-                                <div className="small opacity-75">
-                                    Base R{pricingConfig[formData.serviceType].baseAmount} +
-                                    (Max(Actual {formData.dimensions.weight || 0}kg, Volumetric {((formData.dimensions.length * formData.dimensions.width * formData.dimensions.height) / pricingConfig[formData.serviceType].divisor).toFixed(2)}kg) × Rate R{pricingConfig[formData.serviceType].rate})
-                                </div>
+                        <div className="alert alert-info mt-4 border-0 shadow-sm bg-white text-dark">
+                            <div className="d-flex align-items-center mb-2">
+                                <i className="bi bi-calculator fs-5 text-primary me-2"></i>
+                                <strong>Real-time Price Engine</strong>
                             </div>
-                        )}
+                            <div className="small opacity-75">
+                                Pricing based on total volumetric vs actual weight of all boxes.
+                            </div>
+                        </div>
                     </div>
                 )}
 

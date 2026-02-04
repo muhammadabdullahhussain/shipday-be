@@ -138,12 +138,12 @@ const CreateShipmentFormRedesigned = ({ onSubmit, onCancel, loading, isPublic, c
         // Parcel Details
         serviceType: 'economy', // economy or express
         parcelType: 'custom', // satchel-a4, satchel-a3, custom
-        dimensions: {
+        dimensions: [{
             length: '',
             width: '',
             height: '',
             weight: ''
-        },
+        }],
         specialInstructions: '',
         calculatedPrice: 0,
 

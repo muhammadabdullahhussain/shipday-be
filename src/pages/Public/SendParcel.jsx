@@ -34,7 +34,7 @@ export default function SendParcel() {
                             PRICING
                         </Badge>
                         <h1 className="display-3 fw-black text-white mb-2">
-                            Ship <span className="text-yellow">Anything,</span> Anywhere.
+                            Send <span className="text-yellow">Parcel</span>
                         </h1>
                         <p className="lead text-white-50 mx-auto" style={{ maxWidth: '600px' }}>
                             Get an instant price estimate and book your delivery in under 60 seconds with our smart portal.

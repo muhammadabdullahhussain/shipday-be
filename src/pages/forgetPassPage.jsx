@@ -38,9 +38,16 @@ const ForgetPassPage = () => {
         autoClose: 3000,
       });
     } catch (error) {
-      toast.error(
-        error.response?.data?.message || "User node not found or system error."
-      );
+      const errorMsg = error.response?.data?.message || "System error.";
+
+      if (errorMsg.includes("User not found")) {
+        // Friendlier UI for "User not found"
+        toast.info("No account found with this email. Please register first.", {
+          icon: "👋"
+        });
+      } else {
+        toast.error(errorMsg);
+      }
     } finally {
       setLoading(false);
     }
