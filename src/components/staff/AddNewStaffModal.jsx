@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
+import { Modal, Button, Form, Row, Col } from "react-bootstrap";
 import "react-toastify/dist/ReactToastify.css";
-import "../../styles/ui/staff.css";
+import "../../styles/ui/transaction.css";
 import axiosInstance from "../../utils/axiosInterceptor";
 
 const AddNewStaffModal = ({ onClose, onStaffAdded }) => {
@@ -14,9 +15,13 @@ const AddNewStaffModal = ({ onClose, onStaffAdded }) => {
     email: "",
     baseLocation: "New York Warehouse",
     warehouseName: "", // selected from dropdown
+    latitude: null, // New field
+    longitude: null, // New field,
+    locationAddress: "" // To display fetched address or coords
   });
 
   const [loading, setLoading] = useState(false);
+  const [locationLoading, setLocationLoading] = useState(false); // For GPS button
   const [validationErrors, setValidationErrors] = useState({});
   const [warehouseOptions, setWarehouseOptions] = useState([]);
 
@@ -33,6 +38,35 @@ const AddNewStaffModal = ({ onClose, onStaffAdded }) => {
       })
       .catch((err) => console.error("Failed to load warehouses", err));
   }, []);
+
+  const handleGetLocation = () => {
+    if (!navigator.geolocation) {
+      toast.error("Geolocation is not supported by your browser");
+      return;
+    }
+
+    setLocationLoading(true);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setFormData((prev) => ({
+          ...prev,
+          latitude,
+          longitude,
+          baseLocation: `${latitude.toFixed(6)}, ${longitude.toFixed(6)}`, // Display coords in input
+          locationAddress: "GPS Location Fetched"
+        }));
+        setLocationLoading(false);
+        toast.success("Location fetched successfully!");
+      },
+      (error) => {
+        console.error("Error getting location:", error);
+        toast.error("Unable to retrieve location. Please allow location access.");
+        setLocationLoading(false);
+      }
+    );
+  };
+
 
   /* Removed useEffect for validation on every keystroke to prevent premature error messages */
 
@@ -138,123 +172,159 @@ const AddNewStaffModal = ({ onClose, onStaffAdded }) => {
   return (
     <>
       <ToastContainer position="top-right" autoClose={2000} />
-      <div className="modal-overlay">
-        <div className="add-staff-modal">
-          <div className="modal-header-custom">
-            <h5 className="modal-title-custom">Add New Staff</h5>
-            <button className="modal-close-btn" onClick={onClose}>×</button>
-          </div>
+      <Modal show onHide={onClose} centered size="lg">
+        <Modal.Header closeButton className="border-0 pb-0">
+          <Modal.Title className="fw-bold">Add New Staff</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="pt-3">
+          <Form>
+            <Row className="mb-3">
+              <Col md={12} className="mb-3">
+                <Form.Label className="small fw-bold text-muted">Profile Picture</Form.Label>
+                <Form.Control
+                  type="file"
+                  name="profilePicture"
+                  accept="image/*"
+                  onChange={handleChange}
+                />
+              </Col>
+            </Row>
 
-          <div className="modal-form-grid">
-            <div className="form-group">
-              <label>Profile Picture</label>
-              <input
-                type="file"
-                name="profilePicture"
-                accept="image/*"
-                className="form-control"
-                onChange={handleChange}
-              />
-            </div>
+            <Row className="mb-3">
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label className="small fw-bold text-muted">Full Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="fullName"
+                    placeholder="John Doe"
+                    value={formData.fullName}
+                    onChange={handleChange}
+                    isInvalid={!!validationErrors.fullName}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {validationErrors.fullName}
+                  </Form.Control.Feedback>
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label className="small fw-bold text-muted">Contact Info</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="contactInfo"
+                    placeholder="9876543210"
+                    value={formData.contactInfo}
+                    onChange={handleChange}
+                    isInvalid={!!validationErrors.contactInfo}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {validationErrors.contactInfo}
+                  </Form.Control.Feedback>
+                </Form.Group>
+              </Col>
+            </Row>
 
-            <div className="form-group">
-              <label>Full Name</label>
-              <input
-                type="text"
-                name="fullName"
-                className="form-control"
-                placeholder="John Doe"
-                value={formData.fullName}
-                onChange={handleChange}
-              />
-              {validationErrors.fullName && (
-                <small className="text-danger">{validationErrors.fullName}</small>
-              )}
-            </div>
+            <Row className="mb-3">
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label className="small fw-bold text-muted">Role</Form.Label>
+                  <Form.Select
+                    name="role"
+                    value={formData.role}
+                    onChange={handleChange}
+                  >
+                    <option>Driver</option>
+                    <option>Warehouse Manager</option>
+                    <option>Delivery Coordinator</option>
+                    <option>Security</option>
+                    <option>Inventory Coordinator</option>
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label className="small fw-bold text-muted">Shift</Form.Label>
+                  <Form.Select
+                    name="shift"
+                    value={formData.shift}
+                    onChange={handleChange}
+                  >
+                    <option>Morning</option>
+                    <option>Evening</option>
+                    <option>Night</option>
+                    <option>Rotational</option>
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+            </Row>
 
-            <div className="form-group">
-              <label>Contact Info</label>
-              <input
-                type="text"
-                name="contactInfo"
-                className="form-control"
-                placeholder="9876543210"
-                value={formData.contactInfo}
-                onChange={handleChange}
-              />
-              {validationErrors.contactInfo && (
-                <small className="text-danger">{validationErrors.contactInfo}</small>
-              )}
-            </div>
-
-            <div className="form-group">
-              <label>Role</label>
-              <select
-                name="role"
-                className="form-select"
-                value={formData.role}
-                onChange={handleChange}
-              >
-                <option>Driver</option>
-                <option>Warehouse Manager</option>
-                <option>Delivery Coordinator</option>
-                <option>Security</option>
-                <option>Inventory Coordinator</option>
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label>Shift</label>
-              <select
-                name="shift"
-                className="form-select"
-                value={formData.shift}
-                onChange={handleChange}
-              >
-                <option>Morning</option>
-                <option>Evening</option>
-                <option>Night</option>
-                <option>Rotational</option>
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label>Email</label>
-              <input
+            <Form.Group className="mb-3">
+              <Form.Label className="small fw-bold text-muted">Email</Form.Label>
+              <Form.Control
                 type="email"
                 name="email"
-                className="form-control"
                 placeholder="example@domain.com"
                 value={formData.email}
                 onChange={handleChange}
+                isInvalid={!!validationErrors.email}
               />
-              {validationErrors.email && (
-                <small className="text-danger">{validationErrors.email}</small>
-              )}
-            </div>
+              <Form.Control.Feedback type="invalid">
+                {validationErrors.email}
+              </Form.Control.Feedback>
+            </Form.Group>
 
             {formData.role === "Driver" ? (
-              <div className="form-group full-width">
-                <label>Base Location</label>
-                <select
-                  name="baseLocation"
-                  className="form-select"
-                  value={formData.baseLocation}
-                  onChange={handleChange}
-                >
-                  <option>New York Warehouse</option>
-                  <option>Los Angeles Hub</option>
-                  <option>Chicago Delivery Zone</option>
-                </select>
-              </div>
+              <Form.Group className="mb-3">
+                <Form.Label className="small fw-bold text-muted">Base Location (GPS)</Form.Label>
+                <div className="input-group">
+                  <Form.Control
+                    type="text"
+                    name="baseLocation"
+                    placeholder="Click button to get GPS coordinates"
+                    value={formData.baseLocation}
+                    onChange={handleChange}
+                    readOnly={!!formData.latitude}
+                  />
+                  <Button
+                    variant="outline-primary"
+                    onClick={handleGetLocation}
+                    disabled={locationLoading}
+                    style={{ minWidth: "140px" }}
+                  >
+                    {locationLoading ? (
+                      <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    ) : (
+                      <>
+                        <i className="bi bi-geo-alt-fill me-1"></i> Get GPS
+                      </>
+                    )}
+                  </Button>
+                  {formData.latitude && (
+                    <Button
+                      variant="outline-danger"
+                      onClick={() => setFormData(prev => ({ ...prev, baseLocation: "", latitude: null, longitude: null }))}
+                      title="Clear Location"
+                    >
+                      <i className="bi bi-x-lg"></i>
+                    </Button>
+                  )}
+                </div>
+                {formData.latitude && (
+                  <small className="text-success mt-1 d-block">
+                    <i className="bi bi-check-circle-fill me-1"></i>
+                    Location captured: {formData.latitude.toFixed(6)}, {formData.longitude.toFixed(6)}
+                  </small>
+                )}
+              </Form.Group>
             ) : (
-              <div className="form-group full-width">
-                <label>Warehouse Name</label>
-                <select
+              <Form.Group className="mb-3">
+                <Form.Label className="small fw-bold text-muted">Warehouse Name</Form.Label>
+                <Form.Select
                   name="warehouseName"
-                  className="form-select"
                   value={formData.warehouseName}
                   onChange={handleChange}
+                  isInvalid={!!validationErrors.warehouseName}
                 >
                   {warehouseOptions.length > 0 ? (
                     warehouseOptions.map((wh) => (
@@ -265,22 +335,28 @@ const AddNewStaffModal = ({ onClose, onStaffAdded }) => {
                   ) : (
                     <option disabled>No warehouses found</option>
                   )}
-                </select>
-                {validationErrors.warehouseName && (
-                  <small className="text-danger">{validationErrors.warehouseName}</small>
-                )}
-              </div>
+                </Form.Select>
+                <Form.Control.Feedback type="invalid">
+                  {validationErrors.warehouseName}
+                </Form.Control.Feedback>
+              </Form.Group>
             )}
-          </div>
-
-          <div className="modal-footer-custom">
-            <button className="btn cancel-btn" onClick={onClose} disabled={loading}>Cancel</button>
-            <button className="btn save-btn" onClick={handleSubmit} disabled={loading}>
-              {loading ? "Saving..." : "Save Staff"}
-            </button>
-          </div>
-        </div>
-      </div>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer className="border-0">
+          <Button variant="light" onClick={onClose} disabled={loading} className="rounded-3">
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            onClick={handleSubmit}
+            disabled={loading}
+            className="rounded-3 px-4 shadow-sm"
+          >
+            {loading ? "Saving..." : "Save Staff"}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };

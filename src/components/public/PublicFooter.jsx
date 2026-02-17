@@ -28,7 +28,7 @@ const PublicFooter = () => {
                         <div className="d-flex gap-3">
                             {['bi-facebook', 'bi-twitter-x', 'bi-linkedin', 'bi-instagram'].map((icon, i) => {
                                 const links = [
-                                    'https://facebook.com/shipday',
+                                    'https://web.facebook.com/ShipdayCourier/',
                                     'https://twitter.com/shipday',
                                     'https://linkedin.com/company/shipday',
                                     'https://instagram.com/shipday'

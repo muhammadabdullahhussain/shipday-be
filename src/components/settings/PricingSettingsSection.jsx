@@ -143,26 +143,98 @@ const PricingSettingsSection = () => {
                     <div className="card">
                         <div className="card-header bg-light">
                             <h5 className="mb-0">Satchel Flat Rates</h5>
+                            <small className="text-muted">Set different prices for Economy and Express service types</small>
                         </div>
                         <div className="card-body">
                             <div className="row">
-                                <div className="col-md-6 mb-3">
-                                    <label className="form-label">Satchel A4 Cost (R)</label>
-                                    <input
-                                        type="number"
-                                        className="form-control"
-                                        value={config.satchel.a4}
-                                        onChange={(e) => handleChange('satchel', 'a4', e.target.value)}
-                                    />
+                                {/* Economy Satchels */}
+                                <div className="col-md-6 mb-4">
+                                    <h6 className="text-primary mb-3">Economy Service</h6>
+                                    <div className="mb-3">
+                                        <label className="form-label">Satchel A4 (Economy) - R</label>
+                                        <input
+                                            type="number"
+                                            className="form-control"
+                                            value={config.satchel?.economy?.a4 || config.satchel?.a4 || 90}
+                                            onChange={(e) => {
+                                                setConfig(prev => ({
+                                                    ...prev,
+                                                    satchel: {
+                                                        ...prev.satchel,
+                                                        economy: {
+                                                            ...prev.satchel?.economy,
+                                                            a4: parseFloat(e.target.value) || 0
+                                                        }
+                                                    }
+                                                }));
+                                            }}
+                                        />
+                                    </div>
+                                    <div className="mb-3">
+                                        <label className="form-label">Satchel A3 (Economy) - R</label>
+                                        <input
+                                            type="number"
+                                            className="form-control"
+                                            value={config.satchel?.economy?.a3 || config.satchel?.a3 || 110}
+                                            onChange={(e) => {
+                                                setConfig(prev => ({
+                                                    ...prev,
+                                                    satchel: {
+                                                        ...prev.satchel,
+                                                        economy: {
+                                                            ...prev.satchel?.economy,
+                                                            a3: parseFloat(e.target.value) || 0
+                                                        }
+                                                    }
+                                                }));
+                                            }}
+                                        />
+                                    </div>
                                 </div>
-                                <div className="col-md-6 mb-3">
-                                    <label className="form-label">Satchel A3 Cost (R)</label>
-                                    <input
-                                        type="number"
-                                        className="form-control"
-                                        value={config.satchel.a3}
-                                        onChange={(e) => handleChange('satchel', 'a3', e.target.value)}
-                                    />
+
+                                {/* Express Satchels */}
+                                <div className="col-md-6 mb-4">
+                                    <h6 className="text-warning mb-3">Express Service</h6>
+                                    <div className="mb-3">
+                                        <label className="form-label">Satchel A4 (Express) - R</label>
+                                        <input
+                                            type="number"
+                                            className="form-control"
+                                            value={config.satchel?.express?.a4 || 110}
+                                            onChange={(e) => {
+                                                setConfig(prev => ({
+                                                    ...prev,
+                                                    satchel: {
+                                                        ...prev.satchel,
+                                                        express: {
+                                                            ...prev.satchel?.express,
+                                                            a4: parseFloat(e.target.value) || 0
+                                                        }
+                                                    }
+                                                }));
+                                            }}
+                                        />
+                                    </div>
+                                    <div className="mb-3">
+                                        <label className="form-label">Satchel A3 (Express) - R</label>
+                                        <input
+                                            type="number"
+                                            className="form-control"
+                                            value={config.satchel?.express?.a3 || 130}
+                                            onChange={(e) => {
+                                                setConfig(prev => ({
+                                                    ...prev,
+                                                    satchel: {
+                                                        ...prev.satchel,
+                                                        express: {
+                                                            ...prev.satchel?.express,
+                                                            a3: parseFloat(e.target.value) || 0
+                                                        }
+                                                    }
+                                                }));
+                                            }}
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </div>

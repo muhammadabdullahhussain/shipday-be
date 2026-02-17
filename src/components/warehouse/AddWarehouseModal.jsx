@@ -16,6 +16,8 @@ const AddWarehouseModal = ({ show, handleClose, onWarehouseAdded, onWarehouseUpd
     adminContact: "",
     centerEmail: "",
     adminEmail: "",
+    capacity: "",
+    spaceUsed: "",
     status: "Active",
   });
 
@@ -64,6 +66,8 @@ const AddWarehouseModal = ({ show, handleClose, onWarehouseAdded, onWarehouseUpd
           contactNumber: "",
           centerEmail: "",
           adminEmail: "",
+          capacity: "",
+          spaceUsed: "",
           status: "Active",
         });
       } catch (err) {
@@ -137,6 +141,29 @@ const AddWarehouseModal = ({ show, handleClose, onWarehouseAdded, onWarehouseUpd
                 placeholder="Admin Name"
                 name="adminName"
                 value={form.adminName}
+                onChange={handleChange}
+              />
+            </Col>
+          </Row>
+
+          <Row className="mb-3">
+            <Col>
+              <Form.Label>Capacity (sq ft)</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="e.g. 5000"
+                name="capacity"
+                value={form.capacity}
+                onChange={handleChange}
+              />
+            </Col>
+            <Col>
+              <Form.Label>Space Used (sq ft)</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="e.g. 1200"
+                name="spaceUsed"
+                value={form.spaceUsed}
                 onChange={handleChange}
               />
             </Col>

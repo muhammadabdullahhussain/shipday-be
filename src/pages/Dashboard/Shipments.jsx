@@ -145,19 +145,12 @@ const ShipmentsTable = () => {
   );
 
   const statusBadge = (status) => {
-    switch (status) {
-      case t("shipments.delivered"):
-        return "badge-soft-success";
-      case t("shipments.pending"):
-      case t("shipments.pending_collect"):
-        return "badge-soft-warning";
-      case t("shipments.shipping"):
-        return "badge-soft-info";
-      case t("shipments.delayed"):
-        return "badge-soft-danger";
-      default:
-        return "badge-soft-dark";
-    }
+    const s = status ? status.toLowerCase() : "";
+    if (s.includes("delivered")) return "badge-soft-success";
+    if (s.includes("pending") || s.includes("created") || s.includes("awaiting")) return "badge-soft-warning";
+    if (s.includes("transit") || s.includes("picked") || s.includes("sorting") || s.includes("warehouse") || s.includes("assigned") || s.includes("out_for_delivery")) return "badge-soft-info";
+    if (s.includes("failed") || s.includes("cancelled") || s.includes("hold") || s.includes("return") || s.includes("rescheduled") || s.includes("delayed")) return "badge-soft-danger";
+    return "badge-soft-dark";
   };
 
 
@@ -364,18 +357,16 @@ const ShipmentsTable = () => {
               style={{ width: "200px" }}
             >
               <option value="">{t("shipments.allStatuses")}</option>
-              <option value={t("shipments.delivered")}>
-                {t("shipments.delivered")}
-              </option>
-              <option value={t("shipments.pending")}>
-                {t("shipments.pending")}
-              </option>
-              <option value={t("shipments.shipping")}>
-                {t("shipments.shipping")}
-              </option>
-              <option value={t("shipments.delayed")}>
-                {t("shipments.delayed")}
-              </option>
+              {[
+                'Order Created', 'Pending Collection', 'Driver Assigned', 'Picked Up',
+                'In Transit', 'Inter branch Transit', 'Delivered', 'Delivery Failed',
+                'Rescheduled', 'Return to Sender', 'Returning to hub', 'Delivery cancelled',
+                'At Warehouse', 'Parcel in Sorting Facility', 'Out for Delivery', 'On Hold', 'Awaiting Payment'
+              ].map(st => (
+                <option key={st} value={t(`shipments.${st.toLowerCase().replace(/ /g, '_')}`)}>
+                  {t(`shipments.${st.toLowerCase().replace(/ /g, '_')}`)}
+                </option>
+              ))}
             </select>
           )}
         </div>

@@ -1,5 +1,6 @@
 // Warehouse.jsx
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import AddWarehouseModal from "../../components/warehouse/AddWarehouseModal";
 import "../../styles/ui/transaction.css";
@@ -17,6 +18,9 @@ const Warehouse = () => {
   const [editingWarehouse, setEditingWarehouse] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
+
+  // Custom Portal Menu State
+  const [menuConfig, setMenuConfig] = useState(null); // { id, top, left }
 
   const navigate = useNavigate();
 
@@ -97,6 +101,36 @@ const Warehouse = () => {
     );
   };
 
+  const handleDotsClick = (e, warehouseId) => {
+    e.stopPropagation();
+    if (menuConfig?.id === warehouseId) {
+      setMenuConfig(null);
+      return;
+    }
+    const rect = e.currentTarget.getBoundingClientRect();
+    const menuHeight = 100; // approximate height
+    const spacing = 5;
+
+    // Check if there's enough space below
+    const showUp = rect.bottom + menuHeight + spacing > window.innerHeight;
+
+    setMenuConfig({
+      id: warehouseId,
+      top: showUp ? rect.top - menuHeight - spacing : rect.bottom + spacing,
+      left: rect.left - 120,
+    });
+  };
+
+  useEffect(() => {
+    const handleEvents = () => setMenuConfig(null);
+    window.addEventListener("click", handleEvents);
+    window.addEventListener("scroll", handleEvents, true);
+    return () => {
+      window.removeEventListener("click", handleEvents);
+      window.removeEventListener("scroll", handleEvents, true);
+    };
+  }, []);
+
   return (
     <div className="container-fluid shipments-table-section">
       {/* Search + Add */}
@@ -160,13 +194,13 @@ const Warehouse = () => {
                   </span>
                 </td>
                 <td onClick={(e) => e.stopPropagation()}>
-                  <div className="dropdown">
-                    <button className="btn btn-light btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">⋯</button>
-                    <ul className="dropdown-menu dropdown-menu-end">
-                      <li><button className="dropdown-item" onClick={() => handleEdit(w)}>Edit</button></li>
-                      <li><button className="dropdown-item text-danger" onClick={() => handleDeleteClick(w)}>Delete</button></li>
-                    </ul>
-                  </div>
+                  <button
+                    className="btn btn-light btn-sm rounded-circle p-2 border-0"
+                    onClick={(e) => handleDotsClick(e, w._id)}
+                    style={{ width: "32px", height: "32px", display: "inline-flex", alignItems: "center", justifyContent: "center" }}
+                  >
+                    <i className="bi bi-three-dots-vertical" style={{ fontSize: "1.1rem", color: "#64748b" }}></i>
+                  </button>
                 </td>
               </tr>
             ))}
@@ -221,6 +255,45 @@ const Warehouse = () => {
         confirmText="Delete"
         variant="danger"
       />
+
+      {/* PORTAL MENU */}
+      {menuConfig && createPortal(
+        <div
+          className="position-fixed bg-white border shadow-lg rounded-3 p-1 animate-fade-in"
+          style={{
+            top: menuConfig.top,
+            left: menuConfig.left,
+            zIndex: 9999,
+            minWidth: "150px",
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <button
+            className="dropdown-item py-2 px-3 rounded-2 d-flex align-items-center gap-2"
+            onClick={() => {
+              handleEdit(warehouses.find(w => w._id === menuConfig.id));
+              setMenuConfig(null);
+            }}
+            style={{ fontSize: "14px", border: "none", background: "none", textAlign: "left", width: "100%" }}
+          >
+            <i className="bi bi-pencil-square text-primary"></i>
+            <span>Edit</span>
+          </button>
+          <button
+            className="dropdown-item py-2 px-3 rounded-2 d-flex align-items-center gap-2 text-danger"
+            onClick={() => {
+              const w = warehouses.find(wh => wh._id === menuConfig.id);
+              if (w) handleDeleteClick(w);
+              setMenuConfig(null);
+            }}
+            style={{ fontSize: "14px", border: "none", background: "none", textAlign: "left", width: "100%" }}
+          >
+            <i className="bi bi-trash3"></i>
+            <span>Delete</span>
+          </button>
+        </div>,
+        document.body
+      )}
     </div>
   );
 };

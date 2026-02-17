@@ -316,6 +316,83 @@ h2.shipment-title {
 }
 
 
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.2s ease-out forwards;
+}
+
+.bg-success-subtle {
+  background-color: #d1fae5 !important;
+  color: #065f46 !important;
+}
+
+.bg-danger-subtle {
+  background-color: #fee2e2 !important;
+  color: #991b1b !important;
+}
+
+.premium-modal .modal-content {
+  border: none;
+  border-radius: 1.25rem;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.premium-tabs .nav-link {
+  color: #64748b;
+  font-weight: 600;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+  margin-right: 10px;
+}
+
+.premium-tabs .nav-link.active {
+  background-color: #715aff !important;
+  color: #fff !important;
+  box-shadow: 0 4px 12px rgba(113, 90, 255, 0.2);
+}
+
+.premium-tabs .nav-link:hover:not(.active) {
+  background-color: #f1f5f9;
+  color: #334155;
+}
+
+.custom-premium-table {
+  border-collapse: separate;
+  border-spacing: 0 8px;
+}
+
+.custom-premium-table tr {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.01);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.custom-premium-table tr:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  background-color: #fff !important;
+}
+
+.btn-action-dots {
+  background: #f8fafc;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+}
+
+.btn-action-dots:hover {
+  background: #e2e8f0;
+}
+
+
 @media (max-width: 1440px) {
 .d-flex.flex-wrap.align-items-center.gap-3 {
   gap: 0 !important;
@@ -335,4 +412,98 @@ padding: 0px;
   font-weight: 400;
   font-size: 16px;
   }
+}
+/* Premium Modal Enhancements */
+.premium-modal .modal-content {
+  border-radius: 24px;
+  border: none;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.premium-modal-header {
+  background: linear-gradient(135deg, #f8faff 0%, #ffffff 100%);
+  padding: 1.5rem 2rem;
+}
+
+.premium-form-card {
+  background: #ffffff;
+  border: 1px solid #eef2f6;
+  border-radius: 16px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.premium-form-card:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+}
+
+.premium-input-group {
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.premium-input-group .form-control,
+.premium-input-group .form-select {
+  border: 1.5px solid #eef2f6;
+  border-radius: 12px;
+  background-color: #fcfdfe;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+}
+
+.premium-input-group .form-control:focus,
+.premium-input-group .form-select:focus {
+  background-color: #fff;
+  border-color: #715aff;
+  box-shadow: 0 0 0 4px rgba(113, 90, 255, 0.1);
+}
+
+.premium-input-icon {
+  position: absolute;
+  right: 1.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.wallet-hero-card {
+  background: linear-gradient(135deg, #715aff 0%, #5a45ff 100%);
+  padding: 2.5rem 1.5rem;
+  border-radius: 20px;
+  color: white;
+  text-align: center;
+  box-shadow: 0 15px 30px -10px rgba(113, 90, 255, 0.3);
+  margin-bottom: 2rem;
+}
+
+.wallet-hero-card .balance-label {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.wallet-hero-card .balance-amount {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-top: 0.5rem;
+}
+
+.modern-btn-group {
+  background: #f1f5f9;
+  padding: 0.5rem;
+  border-radius: 14px;
+  display: flex;
+  gap: 0.25rem;
+}
+
+.modern-btn-group .btn {
+  flex: 1;
+  border-radius: 10px;
+  padding: 0.6rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border: none;
 }

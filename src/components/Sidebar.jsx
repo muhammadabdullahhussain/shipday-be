@@ -105,7 +105,7 @@ const Sidebar = () => {
         )}
 
         {isMgmt && (
-          <NavLink to="/dashboard/Wherehouse" className={getActiveClass}>
+          <NavLink to="/dashboard/wherehouse" className={getActiveClass}>
             <img src={Wherehouse} alt="Wherehouse" className="menu-icon" />
             <span className="text">Warehouse</span>
           </NavLink>

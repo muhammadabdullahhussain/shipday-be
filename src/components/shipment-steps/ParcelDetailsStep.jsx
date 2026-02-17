@@ -8,7 +8,10 @@ const ParcelDetailsStep = ({ formData, updateFormData, previousStep, nextStep })
     const [pricingConfig, setPricingConfig] = useState({
         economy: { baseAmount: 20, divisor: 5000, rate: 1.2, eta: '1-4 days', icon: '🚚' },
         express: { baseAmount: 40, divisor: 4000, rate: 1.2, eta: '1-2 days', icon: '⚡' },
-        satchel: { a4: 99, a3: 120 }
+        satchel: {
+            economy: { a4: 90, a3: 110 },
+            express: { a4: 110, a3: 130 }
+        }
     });
 
     useEffect(() => {
@@ -20,7 +23,14 @@ const ParcelDetailsStep = ({ formData, updateFormData, previousStep, nextStep })
                         ...prev,
                         economy: { ...prev.economy, ...response.data.economy },
                         express: { ...prev.express, ...response.data.express },
-                        satchel: { ...prev.satchel, ...response.data.satchel }
+                        satchel: response.data.satchel?.economy ? {
+                            economy: { ...prev.satchel.economy, ...response.data.satchel.economy },
+                            express: { ...prev.satchel.express, ...response.data.satchel.express }
+                        } : {
+                            // Backward compatibility: if old format, use for both services
+                            economy: { a4: response.data.satchel?.a4 || 90, a3: response.data.satchel?.a3 || 110 },
+                            express: { a4: response.data.satchel?.a4 || 110, a3: response.data.satchel?.a3 || 130 }
+                        }
                     }));
                 }
             } catch (err) {
@@ -73,13 +83,16 @@ const ParcelDetailsStep = ({ formData, updateFormData, previousStep, nextStep })
         let price = 0;
 
         if (formData.parcelType === 'satchel-a4') {
-            price = pricingConfig.satchel.a4;
+            // Use service-specific satchel pricing
+            price = pricingConfig.satchel[formData.serviceType]?.a4 || pricingConfig.satchel.economy.a4;
         } else if (formData.parcelType === 'satchel-a3') {
-            price = pricingConfig.satchel.a3;
+            // Use service-specific satchel pricing
+            price = pricingConfig.satchel[formData.serviceType]?.a3 || pricingConfig.satchel.economy.a3;
         } else if (formData.parcelType === 'custom') {
             const config = pricingConfig[formData.serviceType];
             let totalVolumetricWeight = 0;
             let totalActualWeight = 0;
+            const numBoxes = formData.dimensions.length;
 
             formData.dimensions.forEach(dim => {
                 if (dim.length && dim.width && dim.height) {
@@ -90,7 +103,8 @@ const ParcelDetailsStep = ({ formData, updateFormData, previousStep, nextStep })
             });
 
             const chargeableWeight = Math.max(totalActualWeight, totalVolumetricWeight);
-            price = config.baseAmount + (chargeableWeight * config.rate);
+            // Apply base amount PER BOX (not per shipment)
+            price = (config.baseAmount * numBoxes) + (chargeableWeight * config.rate);
         }
 
         setCalculatedPrice(price);
@@ -184,7 +198,7 @@ const ParcelDetailsStep = ({ formData, updateFormData, previousStep, nextStep })
                                 />
                                 <div className="parcel-content">
                                     <h6>Satchel A4</h6>
-                                    <p className="price">R{pricingConfig.satchel.a4}</p>
+                                    <p className="price">R{pricingConfig.satchel[formData.serviceType]?.a4 || pricingConfig.satchel.economy.a4}</p>
                                 </div>
                             </label>
                         </div>
@@ -201,7 +215,7 @@ const ParcelDetailsStep = ({ formData, updateFormData, previousStep, nextStep })
                                 />
                                 <div className="parcel-content">
                                     <h6>Satchel A3</h6>
-                                    <p className="price">R{pricingConfig.satchel.a3}</p>
+                                    <p className="price">R{pricingConfig.satchel[formData.serviceType]?.a3 || pricingConfig.satchel.economy.a3}</p>
                                 </div>
                             </label>
                         </div>
