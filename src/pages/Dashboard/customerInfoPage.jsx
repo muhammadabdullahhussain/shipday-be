@@ -21,7 +21,7 @@ const CustomerInfo = () => {
         //  Changed fetch to axiosInstance
         const response = await axiosInstance.get(`/orders/by-phone/${customer.contact}`);
         const data = response.data;
-        
+
 
         const mappedOrders = (data.orders || []).map(order => ({
           ...order,
@@ -31,13 +31,30 @@ const CustomerInfo = () => {
         }));
         setItems(mappedOrders);
 
-        // FIX: If address is an object, extract its fields
+        // FIX: Handle structured address object or legacy string/location
         if (data.user?.address) {
           const addr = data.user.address;
           if (typeof addr === "string") {
             setAddress(addr);
           } else if (typeof addr === "object") {
-            setAddress(`${addr.address || ''} (${addr.latitude}, ${addr.longitude})`);
+            // Build a clean address string from structured fields
+            const parts = [
+              addr.street,
+              addr.complexOrBusinessHub,
+              addr.city,
+              addr.province,
+              addr.postalCode,
+              addr.country
+            ].filter(part => part && typeof part === 'string' && part.trim() !== '' && part !== 'N/A');
+
+            let formattedAddr = parts.join(", ");
+
+            // Add coordinates only if they exist
+            if (addr.latitude !== undefined && addr.latitude !== null && addr.longitude !== undefined && addr.longitude !== null) {
+              formattedAddr += ` (${addr.latitude}, ${addr.longitude})`;
+            }
+
+            setAddress(formattedAddr || "N/A");
           }
         } else {
           setAddress("N/A");
@@ -139,7 +156,7 @@ const CustomerInfo = () => {
               </td>
               <td>
                 <span className="badge bg-light-success text-success border border-success">
-                 {"Delivered"}
+                  {"Delivered"}
                 </span>
               </td>
               <td className="position-relative">

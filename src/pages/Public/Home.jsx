@@ -424,7 +424,7 @@ const Home = () => {
                     <Col lg={6} className="py-5 px-4 px-md-5 bg-light">
                         <div className="py-5 max-width-700">
                             <Badge bg="warning" className="text-dark mb-4 px-3 py-2 fw-bold tracking-wider">
-                                WHY SHIP WITH US
+                                WHY SEND PARCEL WITH US
                             </Badge>
                             <h2 className="display-4 fw-bold text-dark mb-4 lh-1">Excellence in every <span className="text-yellow">delivery mile.</span></h2>
                             <p className="text-muted lead mb-5">

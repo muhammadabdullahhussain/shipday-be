@@ -11,6 +11,7 @@ const AddNewCustomerModal = ({ show, handleClose, onCustomerAdded }) => {
         companyName: "",
         phone: "",
         address: {
+            street: "",
             complexOrBusinessHub: "",
             city: "",
             province: "",
@@ -61,6 +62,7 @@ const AddNewCustomerModal = ({ show, handleClose, onCustomerAdded }) => {
                     companyName: "",
                     phone: "",
                     address: {
+                        street: "",
                         complexOrBusinessHub: "",
                         city: "",
                         province: "",
@@ -169,6 +171,22 @@ const AddNewCustomerModal = ({ show, handleClose, onCustomerAdded }) => {
                     {/* Address Section */}
                     <div className="border-top pt-3 mt-3">
                         <h6 className="fw-bold mb-3">Address Information</h6>
+
+                        <Row className="mb-3">
+                            <Col md={12}>
+                                <Form.Group>
+                                    <Form.Label>Physical Address *</Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        name="address.street"
+                                        value={formData.address.street}
+                                        onChange={handleChange}
+                                        placeholder="Street name and house/building number"
+                                        required
+                                    />
+                                </Form.Group>
+                            </Col>
+                        </Row>
 
                         <Row className="mb-3">
                             <Col md={12}>

@@ -30,8 +30,17 @@ const ForgetPassPage = () => {
         source: "forgot"
       });
 
+      setLoading(false);
+
+      // Log for development if email was delayed
+      if (data.dev_code) {
+        console.log("%c--- DEV MODE: VERIFICATION CODE ---", "color: #fabb05; font-weight: bold; font-size: 14px;");
+        console.log(`Code for ${email}: ${data.dev_code}`);
+        console.log("-----------------------------------");
+      }
+
       // Show success toast and navigate
-      toast.success("Recovery protocol initiated. Check your inbox.", {
+      toast.success(data.message || "Recovery protocol initiated. Check your inbox.", {
         onClose: () => {
           navigate("/verification", { state: { email, source: "forgot" } });
         },

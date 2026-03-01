@@ -173,7 +173,7 @@ const ShipmentDetails = () => {
             className="btn btn-warning fw-bold d-flex align-items-center gap-2"
             onClick={async () => {
               try {
-                const response = await axiosInstance.get(`/shipment/${shipment.shipmentId}/waybill`, {
+                const response = await axiosInstance.get(`/shipments/${shipment.shipmentId}/waybill`, {
                   responseType: 'blob'
                 });
                 const url = window.URL.createObjectURL(new Blob([response.data]));

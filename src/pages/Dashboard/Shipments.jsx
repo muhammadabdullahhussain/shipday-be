@@ -6,7 +6,7 @@ import "../../styles/ui/ShipmentListPage.css";
 import axiosInstance from "../../utils/axiosInterceptor";
 import AssignShipmentModal from "../../components/AssignShipmentModal";
 import CreateShipmentFormRedesigned from "../../components/CreateShipmentFormRedesigned";
-import EditShipmentModal from "../../components/EditShipmentModal";
+import EditShipmentModal from "../../components/shipments/EditShipmentModal";
 import ShipmentDetailsModal from "../../components/ShipmentDetailsModal";
 import Button from "../../components/ui/Button";
 import ActionButton from "../../components/ui/ActionButton";
@@ -190,14 +190,8 @@ const ShipmentsTable = () => {
   };
 
   const handleEdit = (shipment) => {
-    if (shipment.status === t("shipments.pending") || shipment.status === "Pending") {
-      setEditingShipment(shipment);
-      setShowEditModal(true);
-    } else {
-      navigate(`/dashboard/shipments/${shipment.shipmentId}`, {
-        state: { shipment, action: "edit" },
-      });
-    }
+    setEditingShipment(shipment);
+    setShowEditModal(true);
     setDropdownOpen(null);
   };
 
@@ -429,7 +423,19 @@ const ShipmentsTable = () => {
                     onChange={() => handleSelectShipment(item.shipmentId)}
                   />
                 </td>
-                <td className="text-primary">{item.shipmentId}</td>
+                <td className="text-primary">
+                  <span
+                    style={{ cursor: "pointer", fontWeight: "600", textDecoration: "underline" }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate(`/dashboard/shipments/${item.shipmentId || item._id}`, {
+                        state: { shipment: item },
+                      });
+                    }}
+                  >
+                    {item.shipmentId}
+                  </span>
+                </td>
                 <td>
                   <div>{item.senderName || "N/A"}</div>
                   <small className="text-muted">{item.senderPhone || "N/A"}</small>
@@ -490,7 +496,7 @@ const ShipmentsTable = () => {
                         onClick={async (e) => {
                           e.stopPropagation();
                           try {
-                            const response = await axiosInstance.get(`/shipment/${item.shipmentId || item._id}/waybill`, {
+                            const response = await axiosInstance.get(`/shipments/${item.shipmentId || item._id}/waybill`, {
                               responseType: 'blob'
                             });
                             const url = window.URL.createObjectURL(new Blob([response.data]));
@@ -505,6 +511,27 @@ const ShipmentsTable = () => {
                         }}
                       >
                         📄 Waybill
+                      </button>
+
+                      {/* View Details */}
+                      <button
+                        className="w-100 border-0 text-start px-3 py-2 d-flex align-items-center gap-2 rounded"
+                        style={{
+                          backgroundColor: "rgba(131, 110, 254, 0.12)",
+                          color: "#836EFE",
+                          fontSize: "14px",
+                          transition: "background-color 0.2s",
+                          marginBottom: "6px",
+                          cursor: "pointer",
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/dashboard/shipments/${item.shipmentId || item._id}`, {
+                            state: { shipment: item },
+                          });
+                        }}
+                      >
+                        👁️ View Details
                       </button>
 
                       {/* Edit */}
@@ -648,7 +675,7 @@ const ShipmentsTable = () => {
           setShowEditModal(false);
           setEditingShipment(null);
         }}
-        shipment={editingShipment}
+        shipmentData={editingShipment}
         onUpdate={fetchShipments}
       />
 

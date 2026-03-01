@@ -46,6 +46,7 @@ const Customers = () => {
           name: cust.fullName || "N/A",
           company: cust.company || "N/A",
           address: cust.location?.address || "N/A",
+          structuredAddress: cust.address || {}, // Include the structured address object
           email: cust.email || "N/A",
           contact: cust.phone || "N/A",
           totalOrders: cust.totalOrders || "0",

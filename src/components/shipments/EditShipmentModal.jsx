@@ -1,21 +1,24 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/ui/pop.css";
+import axiosInstance from "../../utils/axiosInterceptor";
+import { toast } from 'react-toastify';
 
-const EditShipmentModal = ({ show, onClose, shipmentData, onSave }) => {
+const EditShipmentModal = ({ show, onClose, shipmentData, onSave, onUpdate }) => {
   const [formData, setFormData] = useState({
     origin: "",
     destination: "",
     status: "",
     deliveryDate: ""
   });
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (shipmentData) {
       setFormData({
-        origin: shipmentData.origin || "",
-        destination: shipmentData.destination || "",
+        origin: shipmentData.origin || shipmentData.start || "",
+        destination: shipmentData.destination || shipmentData.end || "",
         status: shipmentData.status || "",
-        deliveryDate: shipmentData.deliveryDate || ""
+        deliveryDate: shipmentData.deliveryDate || (shipmentData.eta ? new Date(shipmentData.eta).toISOString().split('T')[0] : "")
       });
     }
   }, [shipmentData]);
@@ -24,9 +27,31 @@ const EditShipmentModal = ({ show, onClose, shipmentData, onSave }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSave = () => {
-    onSave(formData);
-    onClose();
+  const handleSave = async () => {
+    setLoading(true);
+    try {
+      const payload = {
+        shipmentId: shipmentData.shipmentId,
+        start: formData.origin,
+        end: formData.destination,
+        status: formData.status,
+        eta: formData.deliveryDate
+      };
+
+      await axiosInstance.put(`/shipments/${shipmentData.shipmentId}`, payload);
+
+      toast.success("Shipment updated successfully!");
+
+      if (onSave) onSave(formData); // For Details page local update
+      if (onUpdate) onUpdate();     // For Shipments list refresh
+
+      onClose();
+    } catch (error) {
+      console.error("Error updating shipment:", error);
+      toast.error(error.response?.data?.message || "Failed to update shipment");
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (!show) return null;
@@ -68,10 +93,14 @@ const EditShipmentModal = ({ show, onClose, shipmentData, onSave }) => {
               value={formData.status}
               onChange={handleChange}
             >
-              <option>Pending</option>
-              <option>In Transit</option>
-              <option>Delivered</option>
-              <option>Completed</option>
+              {[
+                'Order Created', 'Pending Collection', 'Driver Assigned', 'Picked Up',
+                'In Transit', 'Inter branch Transit', 'Delivered', 'Delivery Failed',
+                'Rescheduled', 'Return to Sender', 'Returning to hub', 'Delivery cancelled',
+                'At Warehouse', 'Parcel in Sorting Facility', 'Out for Delivery', 'On Hold', 'Awaiting Payment'
+              ].map(st => (
+                <option key={st} value={st}>{st}</option>
+              ))}
             </select>
           </div>
 
@@ -88,8 +117,10 @@ const EditShipmentModal = ({ show, onClose, shipmentData, onSave }) => {
         </div>
 
         <div className="modal-actions">
-          <button className="btn cancel-btn" onClick={onClose}>Cancel</button>
-          <button className="btn save-btn" onClick={handleSave}>Save</button>
+          <button className="btn cancel-btn" onClick={onClose} disabled={loading}>Cancel</button>
+          <button className="btn save-btn" onClick={handleSave} disabled={loading}>
+            {loading ? "Updating..." : "Save"}
+          </button>
         </div>
       </div>
     </div>

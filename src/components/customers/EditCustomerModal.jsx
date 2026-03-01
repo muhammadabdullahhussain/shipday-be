@@ -11,6 +11,14 @@ const EditCustomerModal = ({ show, handleClose, customer, onUpdate }) => {
         companyName: "",
         phone: "",
         status: "Active",
+        address: {
+            street: "",
+            complexOrBusinessHub: "",
+            city: "",
+            province: "",
+            postalCode: "",
+            country: "South Africa"
+        }
     });
     const [walletAdjustment, setWalletAdjustment] = useState({
         amount: "",
@@ -26,13 +34,32 @@ const EditCustomerModal = ({ show, handleClose, customer, onUpdate }) => {
                 companyName: customer.company || "",
                 phone: customer.contact || "",
                 status: customer.status || "Active",
+                address: {
+                    street: customer.structuredAddress?.street || "",
+                    complexOrBusinessHub: customer.structuredAddress?.complexOrBusinessHub || "",
+                    city: customer.structuredAddress?.city || "",
+                    province: customer.structuredAddress?.province || "",
+                    postalCode: customer.structuredAddress?.postalCode || "",
+                    country: customer.structuredAddress?.country || "South Africa"
+                }
             });
         }
     }, [customer]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        if (name.startsWith('address.')) {
+            const field = name.split('.')[1];
+            setFormData(prev => ({
+                ...prev,
+                address: {
+                    ...prev.address,
+                    [field]: value
+                }
+            }));
+        } else {
+            setFormData({ ...formData, [name]: value });
+        }
     };
 
     const handleWalletChange = (e) => {
@@ -52,6 +79,8 @@ const EditCustomerModal = ({ show, handleClose, customer, onUpdate }) => {
                 fullName: formData.fullName,
                 email: formData.email,
                 companyName: formData.companyName,
+                address: formData.address,
+                phone: formData.phone,
             });
 
             toast.success("Customer updated successfully!");
@@ -182,6 +211,21 @@ const EditCustomerModal = ({ show, handleClose, customer, onUpdate }) => {
                                         </Col>
                                         <Col md={6}>
                                             <Form.Group className="premium-input-group">
+                                                <Form.Label className="small fw-bold text-muted mb-2">Phone Number</Form.Label>
+                                                <div className="position-relative">
+                                                    <Form.Control
+                                                        type="text"
+                                                        name="phone"
+                                                        value={formData.phone}
+                                                        onChange={handleInputChange}
+                                                        placeholder="+27 12 345 6789"
+                                                    />
+                                                    <i className="bi bi-telephone premium-input-icon"></i>
+                                                </div>
+                                            </Form.Group>
+                                        </Col>
+                                        <Col md={12}>
+                                            <Form.Group className="premium-input-group">
                                                 <Form.Label className="small fw-bold text-muted mb-2">Company Name</Form.Label>
                                                 <div className="position-relative">
                                                     <Form.Control
@@ -192,6 +236,114 @@ const EditCustomerModal = ({ show, handleClose, customer, onUpdate }) => {
                                                         placeholder="Optional"
                                                     />
                                                     <i className="bi bi-building premium-input-icon"></i>
+                                                </div>
+                                            </Form.Group>
+                                        </Col>
+                                    </Row>
+
+                                    {/* Address Section */}
+                                    <h6 className="fw-bold mb-4 mt-5 text-dark d-flex align-items-center gap-2">
+                                        <i className="bi bi-geo-alt text-primary"></i>
+                                        Address Information
+                                    </h6>
+                                    <Row className="g-4">
+                                        <Col md={12}>
+                                            <Form.Group className="premium-input-group">
+                                                <Form.Label className="small fw-bold text-muted mb-2">Physical Address *</Form.Label>
+                                                <div className="position-relative">
+                                                    <Form.Control
+                                                        type="text"
+                                                        name="address.street"
+                                                        value={formData.address.street}
+                                                        onChange={handleInputChange}
+                                                        placeholder="Street and Number"
+                                                        required
+                                                    />
+                                                    <i className="bi bi-geo premium-input-icon"></i>
+                                                </div>
+                                            </Form.Group>
+                                        </Col>
+                                        <Col md={12}>
+                                            <Form.Group className="premium-input-group">
+                                                <Form.Label className="small fw-bold text-muted mb-2">Complex or Business Hub</Form.Label>
+                                                <div className="position-relative">
+                                                    <Form.Control
+                                                        type="text"
+                                                        name="address.complexOrBusinessHub"
+                                                        value={formData.address.complexOrBusinessHub}
+                                                        onChange={handleInputChange}
+                                                        placeholder="Optional"
+                                                    />
+                                                    <i className="bi bi-building premium-input-icon"></i>
+                                                </div>
+                                            </Form.Group>
+                                        </Col>
+                                        <Col md={6}>
+                                            <Form.Group className="premium-input-group">
+                                                <Form.Label className="small fw-bold text-muted mb-2">City</Form.Label>
+                                                <div className="position-relative">
+                                                    <Form.Control
+                                                        type="text"
+                                                        name="address.city"
+                                                        value={formData.address.city}
+                                                        onChange={handleInputChange}
+                                                        placeholder="Johannesburg"
+                                                    />
+                                                    <i className="bi bi-map premium-input-icon"></i>
+                                                </div>
+                                            </Form.Group>
+                                        </Col>
+                                        <Col md={6}>
+                                            <Form.Group className="premium-input-group">
+                                                <Form.Label className="small fw-bold text-muted mb-2">Province</Form.Label>
+                                                <div className="position-relative">
+                                                    <Form.Select
+                                                        name="address.province"
+                                                        value={formData.address.province}
+                                                        onChange={handleInputChange}
+                                                    >
+                                                        <option value="">Select Province</option>
+                                                        <option value="Gauteng">Gauteng</option>
+                                                        <option value="Western Cape">Western Cape</option>
+                                                        <option value="KwaZulu-Natal">KwaZulu-Natal</option>
+                                                        <option value="Eastern Cape">Eastern Cape</option>
+                                                        <option value="Free State">Free State</option>
+                                                        <option value="Limpopo">Limpopo</option>
+                                                        <option value="Mpumalanga">Mpumalanga</option>
+                                                        <option value="Northern Cape">Northern Cape</option>
+                                                        <option value="North West">North West</option>
+                                                    </Form.Select>
+                                                    <i className="bi bi-geo-alt premium-input-icon"></i>
+                                                </div>
+                                            </Form.Group>
+                                        </Col>
+                                        <Col md={6}>
+                                            <Form.Group className="premium-input-group">
+                                                <Form.Label className="small fw-bold text-muted mb-2">Postal Code</Form.Label>
+                                                <div className="position-relative">
+                                                    <Form.Control
+                                                        type="text"
+                                                        name="address.postalCode"
+                                                        value={formData.address.postalCode}
+                                                        onChange={handleInputChange}
+                                                        placeholder="2000"
+                                                    />
+                                                    <i className="bi bi-mailbox premium-input-icon"></i>
+                                                </div>
+                                            </Form.Group>
+                                        </Col>
+                                        <Col md={6}>
+                                            <Form.Group className="premium-input-group">
+                                                <Form.Label className="small fw-bold text-muted mb-2">Country</Form.Label>
+                                                <div className="position-relative">
+                                                    <Form.Control
+                                                        type="text"
+                                                        name="address.country"
+                                                        value={formData.address.country}
+                                                        onChange={handleInputChange}
+                                                        placeholder="South Africa"
+                                                    />
+                                                    <i className="bi bi-globe premium-input-icon"></i>
                                                 </div>
                                             </Form.Group>
                                         </Col>
