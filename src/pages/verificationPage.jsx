@@ -91,10 +91,22 @@ const VerificationPage = () => {
             autoClose: 3000,
           });
         } else {
-          toast.success("Registration successful! Please log in.", {
-            onClose: () => navigate("/login"),
-            autoClose: 3000,
-          });
+          if (data.token) {
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("email", email);
+            if (data.user) {
+              localStorage.setItem("user", JSON.stringify(data.user));
+            }
+            toast.success("Registration successful! Securing system access...", {
+              onClose: () => navigate("/dashboard"),
+              autoClose: 2000,
+            });
+          } else {
+            toast.success("Registration successful! Please log in.", {
+              onClose: () => navigate("/login"),
+              autoClose: 3000,
+            });
+          }
         }
       } else if (source === "forgot") {
         const { data } = await axiosInstance.post("/verification/verify-code", {
